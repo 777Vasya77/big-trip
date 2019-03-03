@@ -1,4 +1,4 @@
-import {dataFilters} from './data';
+import {dataFilters, getTripPointData} from './data';
 import {getRandomInteger, clearNode} from './util';
 import getFilterItem from './get-filter-item';
 import getTripPointItem from './get-trip-point-item';
@@ -14,7 +14,10 @@ const getAllTripPoints = (pointCount = 7) => {
   const points = new Array(pointCount);
   return points
     .fill()
-    .map(() => getTripPointItem());
+    .map(() => {
+      const tripPoint = getTripPointData();
+      return getTripPointItem(tripPoint);
+    });
 };
 
 tripFilterElement.addEventListener(`click`, (evt) => {
