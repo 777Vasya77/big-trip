@@ -1,8 +1,5 @@
-import {getRandomInteger} from './util';
-
 export default (offers) => {
-  return offers.sort(() => 0.5 - Math.random())
-    .slice(0, getRandomInteger(0, 2))
+  return offers
     .map((item) => {
       return `
         <li>

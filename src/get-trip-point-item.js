@@ -1,6 +1,5 @@
 import {getTimeFromTimestamp, getTimetableDiff} from './util';
 import getOffersMarkdown from './get-offers-markdown';
-import {offers} from './data';
 
 export default (point) => {
   return `
@@ -13,7 +12,7 @@ export default (point) => {
       </p>
       <p class="trip-point__price">&euro;&nbsp;${point.price}</p>
       <ul class="trip-point__offers">
-        ${getOffersMarkdown(offers)}
+        ${getOffersMarkdown(point.offers)}
       </ul>
     </article>
   `;

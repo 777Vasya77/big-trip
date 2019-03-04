@@ -28,7 +28,7 @@ export const getTimeFromTimestamp = (timestamp) => {
 };
 
 export const getTimetableDiff = (from, to) => {
-  let hours = moment
+  const hours = moment
     .duration(moment.unix(to).diff(moment.unix(from)))
     .asHours();
   return `${hours}h 00m`;
@@ -38,6 +38,16 @@ export const getRandomText = (text) => {
   const textArray = text.split(`. `);
   textArray
     .sort(() => 0.5 - Math.random())
-    .splice(0, 3)
+    .slice(0, 3)
     .join(``);
+};
+
+export const getRandomArrayItem = (array) => {
+  return array[getRandomInteger(0, array.length - 1)];
+};
+
+export const getRandomArrayItems = (array, itemsCount) => {
+  return array
+    .sort(() => 0.5 - Math.random())
+    .slice(0, itemsCount);
 };
