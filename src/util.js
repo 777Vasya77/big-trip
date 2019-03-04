@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const clearNode = (node) => {
   while (node.firstChild) {
     node.removeChild(node.firstChild);
@@ -7,4 +9,49 @@ export const clearNode = (node) => {
 export const getRandomInteger = (min, max) => {
   const rand = min - 0.5 + Math.random() * (max - min + 1);
   return Math.round(rand);
+};
+
+export const getRandomTimestampFrom = () => {
+  return moment()
+    .subtract(`${getRandomInteger(1, 12)}`, `hours`)
+    .format(`X`);
+};
+
+export const getRandomTimestampTo = () => {
+  return moment.unix(getRandomTimestampFrom())
+    .add(`${getRandomInteger(12, 24)}`, `hours`)
+    .format(`X`);
+};
+
+export const getTimeFromTimestamp = (timestamp) => {
+  return moment.unix(timestamp).format(`HH:MM`);
+};
+
+export const getTimetableDiff = (from, to) => {
+  const hours = moment
+    .duration(moment.unix(to).diff(moment.unix(from)))
+    .asHours();
+  return `${hours}h 00m`;
+};
+
+export const getRandomText = (text) => {
+  const textArray = text.split(`. `);
+  textArray
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 3)
+    .join(``);
+};
+
+export const getRandomArrayItem = (array) => {
+  return array[getRandomInteger(0, array.length - 1)];
+};
+
+export const getRandomArrayItems = (array, itemsCount) => {
+  return array
+    .sort(() => 0.5 - Math.random())
+    .slice(0, itemsCount);
+};
+
+export const generateTripPointsTitle = (array) => {
+  return array.join(`&nbsp;&mdash;&nbsp;`);
 };
