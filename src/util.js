@@ -51,3 +51,7 @@ export const getRandomArrayItems = (array, itemsCount) => {
     .sort(() => 0.5 - Math.random())
     .slice(0, itemsCount);
 };
+
+export const generateTripPointsTitle = (array) => {
+  return array.join(`&nbsp;&mdash;&nbsp;`);
+};

@@ -1,4 +1,4 @@
-import {getRandomArrayItem, getRandomArrayItems, getRandomInteger, getRandomText, getRandomTimestampFrom, getRandomTimestampTo} from './util';
+import * as util from './util';
 
 const POINT_DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 const MIN_POINT_PRICE = 20;
@@ -23,19 +23,19 @@ export const dataFilters = [
 const offers = [
   {
     title: `Add luggage`,
-    price: getRandomInteger(10, 100)
+    price: util.getRandomInteger(10, 100)
   },
   {
     title: `Switch to comfort class`,
-    price: getRandomInteger(10, 100)
+    price: util.getRandomInteger(10, 100)
   },
   {
     title: `Add meal`,
-    price: getRandomInteger(10, 100)
+    price: util.getRandomInteger(10, 100)
   },
   {
     title: `Choose seats`,
-    price: getRandomInteger(10, 100)
+    price: util.getRandomInteger(10, 100)
   }
 ];
 
@@ -82,16 +82,22 @@ const pointTypes = [
   },
 ];
 
+export const cities = [
+  `Amsterdam`,
+  `Geneva`,
+  `Chamonix`,
+];
+
 export const getTripPointData = () => (
   {
-    type: getRandomArrayItem(pointTypes),
+    type: util.getRandomArrayItem(pointTypes),
     timetable: {
-      from: getRandomTimestampFrom(),
-      to: getRandomTimestampTo()
+      from: util.getRandomTimestampFrom(),
+      to: util.getRandomTimestampTo()
     },
-    offers: getRandomArrayItems(offers, getRandomInteger(0, MAX_OFFERS_COUNT)),
-    price: getRandomInteger(MIN_POINT_PRICE, MAX_POINT_PRICE),
-    description: getRandomText(POINT_DESCRIPTION),
+    offers: util.getRandomArrayItems(offers, util.getRandomInteger(0, MAX_OFFERS_COUNT)),
+    price: util.getRandomInteger(MIN_POINT_PRICE, MAX_POINT_PRICE),
+    description: util.getRandomText(POINT_DESCRIPTION),
     images: new Array(3).fill(`http://picsum.photos/300/150?r=${Math.random()}`)
   }
 );
