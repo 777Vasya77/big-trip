@@ -23,20 +23,9 @@ export const getRandomTimestampTo = () => {
     .format(`X`);
 };
 
-export const getTimeFromTimestamp = (timestamp) => {
-  return moment.unix(timestamp).format(`HH:MM`);
-};
-
-export const getTimetableDiff = (from, to) => {
-  const hours = moment
-    .duration(moment.unix(to).diff(moment.unix(from)))
-    .asHours();
-  return `${hours}h 00m`;
-};
-
 export const getRandomText = (text) => {
-  const textArray = text.split(`. `);
-  textArray
+  return text
+    .split(`. `)
     .sort(() => 0.5 - Math.random())
     .slice(0, 3)
     .join(``);
@@ -54,4 +43,10 @@ export const getRandomArrayItems = (array, itemsCount) => {
 
 export const generateTripPointsTitle = (array) => {
   return array.join(`&nbsp;&mdash;&nbsp;`);
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
 };
