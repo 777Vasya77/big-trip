@@ -1,15 +1,15 @@
-import {createElement} from './util';
+import Component from './component';
 
-export default class PointEdit {
+export default class PointEdit extends Component {
 
   constructor(data) {
+    super();
+
     this._type = data.type;
     this._offers = data.offers;
     this._price = data.price;
     this._description = data.description;
     this._images = data.images;
-
-    this._element = null;
 
     this._onSubmit = null;
     this._onCancel = null;
@@ -127,12 +127,6 @@ export default class PointEdit {
     `.trim();
   }
 
-  get element() {
-    return (this._element)
-      ? this._element
-      : this.render();
-  }
-
   set onCancel(fn) {
     if (typeof fn === `function`) {
       this._onCancel = fn;
@@ -143,17 +137,6 @@ export default class PointEdit {
     if (typeof fn === `function`) {
       this._onSubmit = fn;
     }
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this._bind();
-    return this._element;
-  }
-
-  unrender() {
-    this._unbind();
-    this._element = null;
   }
 
   _getOffersMarkdown() {
@@ -195,7 +178,7 @@ export default class PointEdit {
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    this._onCancel();
+    this._onSubmit();
   }
 
 }
