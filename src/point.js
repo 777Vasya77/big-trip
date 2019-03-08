@@ -1,15 +1,16 @@
 import moment from 'moment';
-import {createElement} from './util';
+import Component from './component';
 
-export default class Point {
+export default class Point extends Component {
 
   constructor(data) {
+    super();
+
     this._type = data.type;
     this._timetable = data.timetable;
     this._offers = data.offers;
     this._price = data.price;
 
-    this._element = null;
     this._onEdit = null;
 
     this._onElementClick = this._onElementClick.bind(this);
@@ -46,27 +47,10 @@ export default class Point {
       </article>`.trim();
   }
 
-  get element() {
-    return (this._element)
-      ? this._element
-      : this.render();
-  }
-
   set onEdit(fn) {
     if (typeof fn === `function`) {
       this._onEdit = fn;
     }
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this._bind();
-    return this._element;
-  }
-
-  unrender() {
-    this._unbind();
-    this._element = null;
   }
 
   _getOffersMarkdown() {
