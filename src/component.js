@@ -31,6 +31,8 @@ export default class Component {
     this._element = null;
   }
 
+  update() {}
+
   _bind() {}
 
   _unbind() {}

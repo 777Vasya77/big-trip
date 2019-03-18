@@ -82,6 +82,68 @@ const pointTypes = [
   },
 ];
 
+export const PointTypes = {
+  taxi: {
+    title: `Taxi`,
+    icon: `🚕`
+  },
+  bus: {
+    title: `Bus`,
+    icon: `🚌`
+  },
+  train: {
+    title: `Train`,
+    icon: `🚂`
+  },
+  ship: {
+    title: `Ship`,
+    icon: `🛳️`
+  },
+  transport: {
+    title: `Transport`,
+    icon: `🚊`
+  },
+  drive: {
+    title: `Drive`,
+    icon: `🚗`
+  },
+  flight: {
+    title: `Flight`,
+    icon: `✈️️`
+  },
+  checkin: {
+    title: `Check-in`,
+    icon: `🏨`
+  },
+  sightseeing: {
+    title: `Sightseeing`,
+    icon: `🏛️️️`
+  },
+  restaurant: {
+    title: `Restaurant`,
+    icon: `🍴️️`
+  },
+};
+
+export const Offers = {
+  [`add-luggage`]: {
+    title: `Add luggage`,
+    price: util.getRandomInteger(10, 100)
+  },
+  [`switch-to-comfort-class`]: {
+    title: `Switch to comfort class`,
+    price: util.getRandomInteger(10, 100)
+  },
+  [`add-meal`]: {
+    title: `Add meal`,
+    price: util.getRandomInteger(10, 100)
+  },
+  [`choose-seats`]: {
+    title: `Choose seats`,
+    price: util.getRandomInteger(10, 100)
+  }
+};
+
 export const cities = [
   `Amsterdam`,
   `Geneva`,

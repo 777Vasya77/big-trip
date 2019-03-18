@@ -16,6 +16,13 @@ export default class Point extends Component {
     this._onElementClick = this._onElementClick.bind(this);
   }
 
+  update(data) {
+    this._type = data.type;
+    this._timetable = data.timetable;
+    this._offers = data.offers;
+    this._price = data.price;
+  }
+
   get timeFrom() {
     return moment.unix(this._timetable.from).format(`HH:MM`);
   }
