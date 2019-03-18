@@ -231,7 +231,7 @@ export default class PointEdit extends Component {
   static createMapper(target) {
     return {
       [`travel-way`](value) {
-        target.type = PointTypes[value];
+        target.type = PointTypes[value.toUpperCase()];
       },
       timetable(value) {
         target.timetable.from = value;

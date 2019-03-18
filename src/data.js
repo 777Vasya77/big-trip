@@ -83,43 +83,43 @@ const pointTypes = [
 ];
 
 export const PointTypes = {
-  taxi: {
+  TAXI: {
     title: `Taxi`,
     icon: `🚕`
   },
-  bus: {
+  BUS: {
     title: `Bus`,
     icon: `🚌`
   },
-  train: {
+  TRAIN: {
     title: `Train`,
     icon: `🚂`
   },
-  ship: {
+  SHIP: {
     title: `Ship`,
     icon: `🛳️`
   },
-  transport: {
+  TRANSPORT: {
     title: `Transport`,
     icon: `🚊`
   },
-  drive: {
+  DRIVE: {
     title: `Drive`,
     icon: `🚗`
   },
-  flight: {
+  FLIGHT: {
     title: `Flight`,
     icon: `✈️️`
   },
-  checkin: {
+  CHECKIN: {
     title: `Check-in`,
     icon: `🏨`
   },
-  sightseeing: {
+  SIGHTSEEING: {
     title: `Sightseeing`,
     icon: `🏛️️️`
   },
-  restaurant: {
+  RESTAURANT: {
     title: `Restaurant`,
     icon: `🍴️️`
   },
