@@ -25,7 +25,7 @@ const getAllTripPoints = (pointCount = null) => {
     const point = new Point(item);
     const pointEdit = new PointEdit(item);
 
-    const renderPointComponent = (newData) => {
+    const renderPointComponent = (newData = item) => {
       item.type = newData.type;
       item.offers = newData.offers;
       item.price = newData.price;
