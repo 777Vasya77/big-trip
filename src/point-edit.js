@@ -1,6 +1,6 @@
 import Component from './component';
 import flatpickr from 'flatpickr';
-import {Offers, PointTypes} from './data';
+import {offersData, PointTypes} from './data';
 import moment from "moment";
 
 export default class PointEdit extends Component {
@@ -238,7 +238,7 @@ export default class PointEdit extends Component {
         target.timetable.to = value;
       },
       offer(value) {
-        target.offers.push(Offers[value]);
+        target.offers.push(offersData[value]);
       },
       price(value) {
         target.price = value;

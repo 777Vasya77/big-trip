@@ -125,7 +125,7 @@ export const PointTypes = {
   },
 };
 
-export const Offers = {
+export const offersData = {
   [`add-luggage`]: {
     title: `Add luggage`,
     price: util.getRandomInteger(10, 100)
