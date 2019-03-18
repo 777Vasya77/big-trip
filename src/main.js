@@ -25,7 +25,11 @@ const getAllTripPoints = (pointCount = null) => {
     const point = new Point(item);
     const pointEdit = new PointEdit(item);
 
-    const renderPointComponent = () => {
+    const renderPointComponent = (newData) => {
+      item.type = newData.type;
+      item.offers = newData.offers;
+      item.price = newData.price;
+
       point.update(item);
       point.render();
       tripDayItemsElement.replaceChild(point.element, pointEdit.element);
@@ -42,11 +46,7 @@ const getAllTripPoints = (pointCount = null) => {
     pointEdit.onCancel = renderPointComponent;
 
     pointEdit.onSubmit = (newData) => {
-      item.type = newData.type;
-      item.offers = newData.offers;
-      item.price = newData.price;
-
-      renderPointComponent();
+      renderPointComponent(newData);
     };
 
     point.render();
