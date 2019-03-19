@@ -2,6 +2,7 @@ import Component from './component';
 import flatpickr from 'flatpickr';
 import {offersData, PointTypes} from './data';
 import moment from "moment";
+import {parseTimestamp} from "./util";
 
 export default class PointEdit extends Component {
 
@@ -108,7 +109,7 @@ export default class PointEdit extends Component {
               
               <label class="point__time">
                 choose time
-                <input class="point__input" type="text" value="${this.timeFrom} — ${this.timeTo}" name="time" placeholder="${this.timeFrom} — ${this.timeTo}">
+                <input class="point__input" type="text" value="${this._timetable.from} — ${this._timetable.to}" name="time" placeholder="${this.timeFrom} — ${this.timeTo}">
               </label>
               
               <label class="point__price">
@@ -195,11 +196,11 @@ export default class PointEdit extends Component {
     document.addEventListener(`keyup`, this._onEscKeyup);
 
     flatpickr(this._element.querySelector(`.point__time > .point__input`), {
-      range: true,
+      mode: `range`,
       enableTime: true,
-      noCalendar: true,
       altInput: true,
-      altFormat: `h:i`,
+      altFormat: `H:i`,
+      time_24hr: true,
       dateFormat: `U`
     });
   }
@@ -233,9 +234,9 @@ export default class PointEdit extends Component {
       [`travel-way`](value) {
         target.type = PointTypes[value.toUpperCase()];
       },
-      timetable(value) {
-        target.timetable.from = value;
-        target.timetable.to = value;
+      time(value) {
+        target.timetable.from = parseTimestamp(value).from;
+        target.timetable.to = parseTimestamp(value).to;
       },
       offer(value) {
         target.offers.push(offersData[value]);

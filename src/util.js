@@ -50,3 +50,10 @@ export const createElement = (template) => {
   newElement.innerHTML = template;
   return newElement.firstChild;
 };
+
+export const parseTimestamp = (string) => {
+  const from = string.split(` to `)[0];
+  const to = string.split(` to `)[1];
+
+  return {from, to};
+};

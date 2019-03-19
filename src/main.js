@@ -29,6 +29,7 @@ const getAllTripPoints = (pointCount = null) => {
       item.type = newData.type;
       item.offers = newData.offers;
       item.price = newData.price;
+      item.timetable = newData.timetable;
 
       point.update(item);
       point.render();
