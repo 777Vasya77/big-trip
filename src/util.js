@@ -52,8 +52,6 @@ export const createElement = (template) => {
 };
 
 export const parseTimestamp = (string) => {
-  const from = string.split(` to `)[0];
-  const to = string.split(` to `)[1];
-
+  const [from, to] = string.split(` to `);
   return {from, to};
 };
