@@ -82,7 +82,7 @@ const pointTypes = [
   },
 ];
 
-export const PointTypes = {
+export const PointType = {
   TAXI: {
     title: `Taxi`,
     icon: `🚕`

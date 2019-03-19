@@ -1,6 +1,6 @@
 import Component from './component';
 import flatpickr from 'flatpickr';
-import {offersData, PointTypes} from './data';
+import {offersData, PointType} from './data';
 import moment from "moment";
 import {parseTimestamp} from "./util";
 
@@ -232,7 +232,7 @@ export default class PointEdit extends Component {
   static createMapper(target) {
     return {
       [`travel-way`](value) {
-        target.type = PointTypes[value.toUpperCase()];
+        target.type = PointType[value.toUpperCase()];
       },
       time(value) {
         target.timetable.from = parseTimestamp(value).from;
