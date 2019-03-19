@@ -200,7 +200,7 @@ export default class PointEdit extends Component {
       enableTime: true,
       altInput: true,
       altFormat: `H:i`,
-      time_24hr: true,
+      [`time_24hr`]: true,
       dateFormat: `U`
     });
   }
