@@ -232,7 +232,7 @@ export default class PointEdit extends Component {
   static createMapper(target) {
     return {
       [`travel-way`](value) {
-        target.type = PointType[value.toUpperCase()];
+        target.type = PointType[value.split(`-`).join(``).toUpperCase()];
       },
       time(value) {
         target.timetable.from = parseTimestamp(value).from;
