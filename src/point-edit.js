@@ -62,39 +62,8 @@ export default class PointEdit extends Component {
         
                 <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
         
-                <div class="travel-way__select">
-                  <div class="travel-way__select-group">
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi" ${this.typeTitle === `Taxi` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-        
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus" ${this.typeTitle === `Bus` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-          
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train" ${this.typeTitle === `Train` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-                    
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-ship" name="travel-way" value="ship" ${this.typeTitle === `Ship` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-ship">🛳 ship</label>
-                    
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-transport" name="travel-way" value="transport" ${this.typeTitle === `Transport` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-transport">🚊 transport</label>
-                
-                      <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="flight" ${this.typeTitle === `Flight` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
-                  </div>
-            
-                  <div class="travel-way__select-group">
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in" ${this.typeTitle === `Check-in` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
- 
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing" ${this.typeTitle === `Sightseeing` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
-                        
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-restaurant" name="travel-way" value="restaurant" ${this.typeTitle === `Restaurant` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-restaurant">🍴️️ Restaurant</label>
-                    </div>
-                  </div>
-                </div>
+                ${this._getTravelWaySelectMarkdown()}
+              </div>
               
               <div class="point__destination-wrap">
                 <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
@@ -170,6 +139,43 @@ export default class PointEdit extends Component {
     this._timetable = data.timetable;
     this._offers = data.offers;
     this._price = data.price;
+  }
+
+  _getTravelWaySelectMarkdown() {
+    return `
+      <div class="travel-way__select">
+        <div class="travel-way__select-group">
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi" ${this.typeTitle === `Taxi` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus" ${this.typeTitle === `Bus` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train" ${this.typeTitle === `Train` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-ship" name="travel-way" value="ship" ${this.typeTitle === `Ship` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-ship">🛳 ship</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-transport" name="travel-way" value="transport" ${this.typeTitle === `Transport` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-transport">🚊 transport</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="flight" ${this.typeTitle === `Flight` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
+      </div>
+  
+      <div class="travel-way__select-group">
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in" ${this.typeTitle === `Check-in` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing" ${this.typeTitle === `Sightseeing` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-restaurant" name="travel-way" value="restaurant" ${this.typeTitle === `Restaurant` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-restaurant">🍴️️ Restaurant</label>
+      </div>
+    </div>
+    `;
   }
 
   _getOffersMarkdown() {
