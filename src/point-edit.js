@@ -1,6 +1,6 @@
 import Component from './component';
 import flatpickr from 'flatpickr';
-import {offersData, PointType} from './data';
+import {Offer, PointType} from './data';
 import moment from "moment";
 import {parseTimestamp} from "./util";
 
@@ -239,7 +239,7 @@ export default class PointEdit extends Component {
         target.timetable.to = parseTimestamp(value).to;
       },
       offer(value) {
-        target.offers.push(offersData[value]);
+        target.offers.push(Offer[value.split(`-`).join(`_`).toUpperCase()]);
       },
       price(value) {
         target.price = value;

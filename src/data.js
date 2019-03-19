@@ -125,20 +125,20 @@ export const PointType = {
   },
 };
 
-export const offersData = {
-  [`add-luggage`]: {
+export const Offer = {
+  ADD_LUGGAGE: {
     title: `Add luggage`,
     price: util.getRandomInteger(10, 100)
   },
-  [`switch-to-comfort-class`]: {
+  SWITCH_TO_COMFORT_CLASS: {
     title: `Switch to comfort class`,
     price: util.getRandomInteger(10, 100)
   },
-  [`add-meal`]: {
+  ADD_MEAL: {
     title: `Add meal`,
     price: util.getRandomInteger(10, 100)
   },
-  [`choose-seats`]: {
+  CHOOSE_SEATS: {
     title: `Choose seats`,
     price: util.getRandomInteger(10, 100)
   }
