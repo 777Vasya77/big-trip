@@ -1,5 +1,5 @@
 import {cities, dataFilters, tripPoints} from './data';
-import {getRandomInteger, clearNode, getRandomArrayItems, generateTripPointsTitle} from './util';
+import {getRandomInteger, clearNode, getRandomArrayItems, generateTripPointsTitle, removeFromArray} from './util';
 import getFilterItem from './get-filter-item';
 import Point from './point';
 import PointEdit from './point-edit';
@@ -26,10 +26,7 @@ const getAllTripPoints = (pointCount = null) => {
     const pointEdit = new PointEdit(item);
 
     const renderPointComponent = (newData = item) => {
-      item.type = newData.type;
-      item.offers = newData.offers;
-      item.price = newData.price;
-      item.timetable = newData.timetable;
+      item = newData;
 
       point.update(item);
       point.render();
@@ -48,6 +45,11 @@ const getAllTripPoints = (pointCount = null) => {
 
     pointEdit.onSubmit = (newData) => {
       renderPointComponent(newData);
+    };
+
+    pointEdit.onDelete = () => {
+      removeFromArray(points, item);
+      pointEdit.unrender();
     };
 
     point.render();

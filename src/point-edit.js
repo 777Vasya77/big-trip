@@ -18,9 +18,11 @@ export default class PointEdit extends Component {
 
     this._onSubmit = null;
     this._onCancel = null;
+    this._onDelete = null;
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
   }
 
   get timeFrom() {
@@ -134,6 +136,12 @@ export default class PointEdit extends Component {
     }
   }
 
+  set onDelete(fn) {
+    if (typeof fn === `function`) {
+      this._onDelete = fn;
+    }
+  }
+
   update(data) {
     this._type = data.type;
     this._timetable = data.timetable;
@@ -199,7 +207,12 @@ export default class PointEdit extends Component {
     this._element
       .querySelector(`form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
+
     document.addEventListener(`keyup`, this._onEscKeyup);
+
+    this._element
+      .querySelector(`button[type=reset]`)
+      .addEventListener(`click`, this._onDeleteButtonClick);
 
     flatpickr(this._element.querySelector(`.point__time > .point__input`), {
       mode: `range`,
@@ -215,7 +228,12 @@ export default class PointEdit extends Component {
     this._element
       .querySelector(`form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
+
     document.removeEventListener(`keyup`, this._onEscKeyup);
+
+    this._element
+      .querySelector(`button[type=reset]`)
+      .removeEventListener(`click`, this._onDeleteButtonClick);
 
     flatpickr(this._element.querySelector(`.point__time > .point__input`)).destroy();
   }
@@ -233,6 +251,12 @@ export default class PointEdit extends Component {
     const newData = PointEdit.processForm(formData);
 
     this._onSubmit(newData);
+  }
+
+  _onDeleteButtonClick(evt) {
+    evt.preventDefault();
+
+    this._onDelete();
   }
 
   static createMapper(target) {

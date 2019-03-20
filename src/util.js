@@ -55,3 +55,8 @@ export const parseTimestamp = (string) => {
   const [from, to] = string.split(` to `);
   return {from, to};
 };
+
+export const removeFromArray = (array, item) => {
+  const index = array.findIndex((it) => it === item);
+  array[index] = null;
+};
