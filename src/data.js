@@ -5,21 +5,6 @@ const MIN_POINT_PRICE = 20;
 const MAX_POINT_PRICE = 100;
 const MAX_OFFERS_COUNT = 2;
 
-export const dataFilters = [
-  {
-    name: `Everything`,
-    checked: true
-  },
-  {
-    name: `Future`,
-    checked: false
-  },
-  {
-    name: `Past`,
-    checked: false
-  }
-];
-
 const offers = [
   {
     title: `Add luggage`,
@@ -80,6 +65,21 @@ const pointTypes = [
     title: `Restaurant`,
     icon: `🍴️️`
   },
+];
+
+export const dataFilters = [
+  {
+    name: `Everything`,
+    checked: true
+  },
+  {
+    name: `Future`,
+    checked: false
+  },
+  {
+    name: `Past`,
+    checked: false
+  }
 ];
 
 export const PointType = {
@@ -152,6 +152,7 @@ export const cities = [
 
 export const getTripPointData = () => (
   {
+    date: util.getRandomDate(),
     type: util.getRandomArrayItem(pointTypes),
     timetable: {
       from: util.getRandomTimestampFrom(),

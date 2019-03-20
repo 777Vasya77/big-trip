@@ -1,14 +1,15 @@
 import moment from 'moment';
 
-export const clearNode = (node) => {
-  while (node.firstChild) {
-    node.removeChild(node.firstChild);
-  }
-};
-
 export const getRandomInteger = (min, max) => {
   const rand = min - 0.5 + Math.random() * (max - min + 1);
   return Math.round(rand);
+};
+
+export const getRandomDate = () => {
+  return moment()
+    .subtract(`${getRandomInteger(1, 7)}`, `days`)
+    .add(`${getRandomInteger(1, 7)}`, `days`)
+    .format(`X`);
 };
 
 export const getRandomTimestampFrom = () => {
@@ -58,5 +59,5 @@ export const parseTimestamp = (string) => {
 
 export const removeFromArray = (array, item) => {
   const index = array.findIndex((it) => it === item);
-  array[index] = null;
+  array.splice(index, 1);
 };
