@@ -4,6 +4,8 @@ import Point from './point';
 import PointEdit from './point-edit';
 import Filter from './filter';
 import moment from 'moment';
+import MoneyChart from './money-chart';
+import TransportChart from './transport-chart';
 
 const FUTURE_FILTER = `future`;
 const PAST_FILTER = `past`;
@@ -11,6 +13,24 @@ const PAST_FILTER = `past`;
 const tripFilterElement = document.querySelector(`.trip-filter`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
 const tripPointsElement = document.querySelector(`.trip__points`);
+const statsSwitcher = document.querySelector(`a[href*=stat]`);
+const tableSwitcher = document.querySelector(`a[href*=table]`);
+const table = document.querySelector(`#table`);
+const stats = document.querySelector(`#stats`);
+
+statsSwitcher.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+
+  table.classList.add(`visually-hidden`);
+  stats.classList.remove(`visually-hidden`);
+});
+
+tableSwitcher.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+
+  stats.classList.add(`visually-hidden`);
+  table.classList.remove(`visually-hidden`);
+});
 
 const getFilters = (filters) => {
   const fragment = document.createDocumentFragment();
@@ -79,6 +99,10 @@ const getTripPoints = (points) => {
       pointEdit.unrender();
     };
 
+    pointEdit.onFavorite = () => {
+      item.isFavorite = !item.isFavorite;
+    };
+
     point.render();
     fragment.appendChild(point.element);
   });
@@ -96,5 +120,9 @@ const renderFilters = () => {
 };
 
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
+
 renderFilters();
 renderTripPoints();
+
+MoneyChart.render();
+TransportChart.render();

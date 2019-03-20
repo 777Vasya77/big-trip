@@ -16,14 +16,17 @@ export default class PointEdit extends Component {
     this._price = data.price;
     this._description = data.description;
     this._images = data.images;
+    this._isFavorite = data.isFavorite;
 
     this._onSubmit = null;
     this._onCancel = null;
     this._onDelete = null;
+    this._onFavorite = null;
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
   }
 
   get timeFrom() {
@@ -96,7 +99,7 @@ export default class PointEdit extends Component {
               </div>
         
               <div class="paint__favorite-wrap">
-                <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite">
+                <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
                 <label class="point__favorite" for="favorite">favorite</label>
               </div>
             </header>
@@ -140,6 +143,12 @@ export default class PointEdit extends Component {
   set onDelete(fn) {
     if (typeof fn === `function`) {
       this._onDelete = fn;
+    }
+  }
+
+  set onFavorite(fn) {
+    if (typeof fn === `function`) {
+      this._onFavorite = fn;
     }
   }
 
@@ -216,6 +225,10 @@ export default class PointEdit extends Component {
       .querySelector(`button[type=reset]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
 
+    this._element
+      .querySelector(`.point__favorite`)
+      .addEventListener(`click`, this._onFavoriteButtonClick);
+
     flatpickr(this._element.querySelector(`.point__time > .point__input`), {
       mode: `range`,
       enableTime: true,
@@ -236,6 +249,10 @@ export default class PointEdit extends Component {
     this._element
       .querySelector(`button[type=reset]`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
+
+    this._element
+      .querySelector(`.point__favorite`)
+      .removeEventListener(`click`, this._onFavoriteButtonClick);
 
     flatpickr(this._element.querySelector(`.point__time > .point__input`)).destroy();
   }
@@ -259,6 +276,10 @@ export default class PointEdit extends Component {
     evt.preventDefault();
 
     this._onDelete();
+  }
+
+  _onFavoriteButtonClick() {
+    this._onFavorite();
   }
 
   static createMapper(target) {

@@ -5,9 +5,7 @@ export default class Filter extends Component {
     super();
 
     this._name = data.name;
-    this._state = {
-      isChecked: data.checked
-    };
+    this._checked = data.checked;
 
     this._onFilter = null;
 
@@ -26,7 +24,7 @@ export default class Filter extends Component {
           id="filter-${this.name}" 
           name="filter" 
           value="${this.name}" 
-          ${this._state.isChecked && `checked`}
+          ${this._checked && `checked`}
        >
       <label class="trip-filter__item" for="filter-${this.name}">
           ${this.name}

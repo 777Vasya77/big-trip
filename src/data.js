@@ -161,7 +161,9 @@ export const getTripPointData = () => (
     offers: util.getRandomArrayItems(offers, util.getRandomInteger(0, MAX_OFFERS_COUNT)),
     price: util.getRandomInteger(MIN_POINT_PRICE, MAX_POINT_PRICE),
     description: util.getRandomText(POINT_DESCRIPTION),
-    images: new Array(3).fill(`http://picsum.photos/300/150}`)
+    images: new Array(3).fill(`http://picsum.photos/300/150}`),
+    isFavorite: [true, false][util.getRandomInteger(0, 1)],
+    money: util.getRandomInteger(10, 100)
   }
 );
 
