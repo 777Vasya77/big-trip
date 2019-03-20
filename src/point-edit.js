@@ -27,6 +27,7 @@ export default class PointEdit extends Component {
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
+    this._onDocumentClick = this._onDocumentClick.bind(this);
   }
 
   get timeFrom() {
@@ -221,6 +222,8 @@ export default class PointEdit extends Component {
 
     document.addEventListener(`keyup`, this._onEscKeyup);
 
+    document.addEventListener(`click`, this._onDocumentClick);
+
     this._element
       .querySelector(`button[type=reset]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
@@ -245,6 +248,8 @@ export default class PointEdit extends Component {
       .removeEventListener(`submit`, this._onSubmitButtonClick);
 
     document.removeEventListener(`keyup`, this._onEscKeyup);
+
+    document.removeEventListener(`click`, this._onDocumentClick);
 
     this._element
       .querySelector(`button[type=reset]`)
@@ -280,6 +285,14 @@ export default class PointEdit extends Component {
 
   _onFavoriteButtonClick() {
     this._onFavorite();
+  }
+
+  _onDocumentClick(evt) {
+    // вот тут нужна помощь...
+    // не могу разобраться почему обработчик срабатыет при рендере компонента
+    // и так как в этом случае !this._element.contains(evt.target) вернет истину
+    // сразу перерендеривает компонент на состояние просмотра
+    return !this._element.contains(evt.target) && this._onCancel();
   }
 
   static createMapper(target) {

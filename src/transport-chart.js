@@ -1,6 +1,6 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {tripPoints} from "./data";
+import {tripPoints} from './data';
 
 const BAR_HEIGHT = 55;
 const transportCtx = document.querySelector(`.statistic__transport`);
