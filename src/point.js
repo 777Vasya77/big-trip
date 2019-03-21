@@ -6,6 +6,7 @@ export default class Point extends Component {
   constructor(data) {
     super();
 
+    this._date = data.date;
     this._type = data.type;
     this._timetable = data.timetable;
     this._offers = data.offers;
@@ -17,6 +18,7 @@ export default class Point extends Component {
   }
 
   update(data) {
+    this._date = data.date;
     this._type = data.type;
     this._timetable = data.timetable;
     this._offers = data.offers;

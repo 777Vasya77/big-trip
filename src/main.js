@@ -1,35 +1,79 @@
 import {cities, dataFilters, tripPoints} from './data';
-import {getRandomInteger, clearNode, getRandomArrayItems, generateTripPointsTitle} from './util';
-import getFilterItem from './get-filter-item';
+import {generateTripPointsTitle, removeFromArray} from './util';
 import Point from './point';
 import PointEdit from './point-edit';
+import Filter from './filter';
+import moment from 'moment';
+import moneyChart from './money-chart';
+import transportChart from './transport-chart';
 
-const MIN_TRIP_POINTS = 1;
-const MAX_TRIP_POINTS = 5;
-const DEFAULT_POINT_COUNT = 7;
+const FUTURE_FILTER = `future`;
+const PAST_FILTER = `past`;
+
 const tripFilterElement = document.querySelector(`.trip-filter`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
 const tripPointsElement = document.querySelector(`.trip__points`);
+const statsSwitcher = document.querySelector(`a[href*=stat]`);
+const tableSwitcher = document.querySelector(`a[href*=table]`);
+const table = document.querySelector(`#table`);
+const stats = document.querySelector(`#stats`);
 
-const getAllFilters = (filters) => {
-  return filters.map((item) => getFilterItem(item));
+statsSwitcher.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+
+  table.classList.add(`visually-hidden`);
+  stats.classList.remove(`visually-hidden`);
+});
+
+tableSwitcher.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+
+  stats.classList.add(`visually-hidden`);
+  table.classList.remove(`visually-hidden`);
+});
+
+const getFilters = (filters) => {
+  const fragment = document.createDocumentFragment();
+
+  filters.forEach((item) => {
+    const filter = new Filter(item);
+    filter.render();
+
+    filter.onFilter = () => {
+      switch (filter.name) {
+        case FUTURE_FILTER:
+          renderTripPoints(
+              tripPoints.filter((it) => it.date > moment().unix())
+          );
+          return;
+
+        case PAST_FILTER:
+          renderTripPoints(
+              tripPoints.filter((it) => it.date < moment().unix())
+          );
+          return;
+
+        default:
+          renderTripPoints();
+          return;
+      }
+    };
+
+    fragment.appendChild(filter.element);
+  });
+
+  return fragment;
 };
 
-const getAllTripPoints = (pointCount = null) => {
+const getTripPoints = (points) => {
   const fragment = document.createDocumentFragment();
-  const points = (pointCount)
-    ? getRandomArrayItems(tripPoints, pointCount)
-    : tripPoints;
 
   points.forEach((item) => {
     const point = new Point(item);
     const pointEdit = new PointEdit(item);
 
     const renderPointComponent = (newData = item) => {
-      item.type = newData.type;
-      item.offers = newData.offers;
-      item.price = newData.price;
-      item.timetable = newData.timetable;
+      item = newData;
 
       point.update(item);
       point.render();
@@ -50,6 +94,15 @@ const getAllTripPoints = (pointCount = null) => {
       renderPointComponent(newData);
     };
 
+    pointEdit.onDelete = () => {
+      removeFromArray(tripPoints, item);
+      pointEdit.unrender();
+    };
+
+    pointEdit.onFavorite = () => {
+      item.isFavorite = !item.isFavorite;
+    };
+
     point.render();
     fragment.appendChild(point.element);
   });
@@ -57,18 +110,19 @@ const getAllTripPoints = (pointCount = null) => {
   return fragment;
 };
 
-const renderAllTripPoints = (pointCount = DEFAULT_POINT_COUNT) => {
-  tripDayItemsElement.appendChild(getAllTripPoints(pointCount));
+const renderTripPoints = (points = tripPoints) => {
+  tripDayItemsElement.innerHTML = ``;
+  tripDayItemsElement.appendChild(getTripPoints(points));
 };
 
-tripFilterElement.addEventListener(`click`, (evt) => {
-  const pointCount = getRandomInteger(MIN_TRIP_POINTS, MAX_TRIP_POINTS);
-  if (evt.target.tagName === `INPUT`) {
-    clearNode(tripDayItemsElement);
-    renderAllTripPoints(pointCount);
-  }
-});
+const renderFilters = () => {
+  tripFilterElement.appendChild(getFilters(dataFilters));
+};
 
-tripFilterElement.insertAdjacentHTML(`beforeend`, getAllFilters(dataFilters).join(``));
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
-renderAllTripPoints();
+
+renderFilters();
+renderTripPoints();
+
+moneyChart.render();
+transportChart.render();

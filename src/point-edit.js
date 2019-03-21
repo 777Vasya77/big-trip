@@ -1,6 +1,6 @@
 import Component from './component';
 import flatpickr from 'flatpickr';
-import {offersData, PointTypes} from './data';
+import {Offer, PointType} from './data';
 import moment from "moment";
 import {parseTimestamp} from "./util";
 
@@ -9,18 +9,25 @@ export default class PointEdit extends Component {
   constructor(data) {
     super();
 
+    this._date = data.date;
     this._type = data.type;
     this._offers = data.offers;
     this._timetable = data.timetable;
     this._price = data.price;
     this._description = data.description;
     this._images = data.images;
+    this._isFavorite = data.isFavorite;
 
     this._onSubmit = null;
     this._onCancel = null;
+    this._onDelete = null;
+    this._onFavorite = null;
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
+    this._onDocumentClick = this._onDocumentClick.bind(this);
   }
 
   get timeFrom() {
@@ -62,39 +69,8 @@ export default class PointEdit extends Component {
         
                 <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
         
-                <div class="travel-way__select">
-                  <div class="travel-way__select-group">
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi" ${this.typeTitle === `Taxi` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-        
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus" ${this.typeTitle === `Bus` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-          
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train" ${this.typeTitle === `Train` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-                    
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-ship" name="travel-way" value="ship" ${this.typeTitle === `Ship` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-ship">🛳 ship</label>
-                    
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-transport" name="travel-way" value="transport" ${this.typeTitle === `Transport` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-transport">🚊 transport</label>
-                
-                      <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="flight" ${this.typeTitle === `Flight` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
-                  </div>
-            
-                  <div class="travel-way__select-group">
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in" ${this.typeTitle === `Check-in` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
- 
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing" ${this.typeTitle === `Sightseeing` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
-                        
-                    <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-restaurant" name="travel-way" value="restaurant" ${this.typeTitle === `Restaurant` && `checked`}>
-                    <label class="travel-way__select-label" for="travel-way-restaurant">🍴️️ Restaurant</label>
-                    </div>
-                  </div>
-                </div>
+                ${this._getTravelWaySelectMarkdown()}
+              </div>
               
               <div class="point__destination-wrap">
                 <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
@@ -124,7 +100,7 @@ export default class PointEdit extends Component {
               </div>
         
               <div class="paint__favorite-wrap">
-                <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite">
+                <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
                 <label class="point__favorite" for="favorite">favorite</label>
               </div>
             </header>
@@ -165,11 +141,61 @@ export default class PointEdit extends Component {
     }
   }
 
+  set onDelete(fn) {
+    if (typeof fn === `function`) {
+      this._onDelete = fn;
+    }
+  }
+
+  set onFavorite(fn) {
+    if (typeof fn === `function`) {
+      this._onFavorite = fn;
+    }
+  }
+
   update(data) {
+    this._date = data.date;
     this._type = data.type;
     this._timetable = data.timetable;
     this._offers = data.offers;
     this._price = data.price;
+  }
+
+  _getTravelWaySelectMarkdown() {
+    return `
+      <div class="travel-way__select">
+        <div class="travel-way__select-group">
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi" ${this.typeTitle === `Taxi` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus" ${this.typeTitle === `Bus` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train" ${this.typeTitle === `Train` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-ship" name="travel-way" value="ship" ${this.typeTitle === `Ship` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-ship">🛳 ship</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-transport" name="travel-way" value="transport" ${this.typeTitle === `Transport` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-transport">🚊 transport</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="flight" ${this.typeTitle === `Flight` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
+      </div>
+  
+      <div class="travel-way__select-group">
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in" ${this.typeTitle === `Check-in` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing" ${this.typeTitle === `Sightseeing` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
+  
+        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-restaurant" name="travel-way" value="restaurant" ${this.typeTitle === `Restaurant` && `checked`}>
+        <label class="travel-way__select-label" for="travel-way-restaurant">🍴️️ Restaurant</label>
+      </div>
+    </div>
+    `;
   }
 
   _getOffersMarkdown() {
@@ -193,7 +219,18 @@ export default class PointEdit extends Component {
     this._element
       .querySelector(`form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
+
     document.addEventListener(`keyup`, this._onEscKeyup);
+
+    document.addEventListener(`click`, this._onDocumentClick, true);
+
+    this._element
+      .querySelector(`button[type=reset]`)
+      .addEventListener(`click`, this._onDeleteButtonClick);
+
+    this._element
+      .querySelector(`.point__favorite`)
+      .addEventListener(`click`, this._onFavoriteButtonClick);
 
     flatpickr(this._element.querySelector(`.point__time > .point__input`), {
       mode: `range`,
@@ -209,7 +246,18 @@ export default class PointEdit extends Component {
     this._element
       .querySelector(`form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
+
     document.removeEventListener(`keyup`, this._onEscKeyup);
+
+    document.removeEventListener(`click`, this._onDocumentClick, true);
+
+    this._element
+      .querySelector(`button[type=reset]`)
+      .removeEventListener(`click`, this._onDeleteButtonClick);
+
+    this._element
+      .querySelector(`.point__favorite`)
+      .removeEventListener(`click`, this._onFavoriteButtonClick);
 
     flatpickr(this._element.querySelector(`.point__time > .point__input`)).destroy();
   }
@@ -229,17 +277,31 @@ export default class PointEdit extends Component {
     this._onSubmit(newData);
   }
 
+  _onDeleteButtonClick(evt) {
+    evt.preventDefault();
+
+    this._onDelete();
+  }
+
+  _onFavoriteButtonClick() {
+    this._onFavorite();
+  }
+
+  _onDocumentClick(evt) {
+    return !this._element.contains(evt.target) && this._onCancel();
+  }
+
   static createMapper(target) {
     return {
       [`travel-way`](value) {
-        target.type = PointTypes[value.toUpperCase()];
+        target.type = PointType[value.split(`-`).join(``).toUpperCase()];
       },
       time(value) {
         target.timetable.from = parseTimestamp(value).from;
         target.timetable.to = parseTimestamp(value).to;
       },
       offer(value) {
-        target.offers.push(offersData[value]);
+        target.offers.push(Offer[value.split(`-`).join(`_`).toUpperCase()]);
       },
       price(value) {
         target.price = value;

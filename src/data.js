@@ -5,21 +5,6 @@ const MIN_POINT_PRICE = 20;
 const MAX_POINT_PRICE = 100;
 const MAX_OFFERS_COUNT = 2;
 
-export const dataFilters = [
-  {
-    name: `Everything`,
-    checked: true
-  },
-  {
-    name: `Future`,
-    checked: false
-  },
-  {
-    name: `Past`,
-    checked: false
-  }
-];
-
 const offers = [
   {
     title: `Add luggage`,
@@ -82,7 +67,28 @@ const pointTypes = [
   },
 ];
 
-export const PointTypes = {
+const FilterName = {
+  EVERYTHING: `Everything`,
+  FUTURE: `Future`,
+  PAST: `Past`
+};
+
+export const dataFilters = [
+  {
+    name: FilterName.EVERYTHING,
+    checked: true
+  },
+  {
+    name: FilterName.FUTURE,
+    checked: false
+  },
+  {
+    name: FilterName.PAST,
+    checked: false
+  }
+];
+
+export const PointType = {
   TAXI: {
     title: `Taxi`,
     icon: `🚕`
@@ -125,20 +131,20 @@ export const PointTypes = {
   },
 };
 
-export const offersData = {
-  [`add-luggage`]: {
+export const Offer = {
+  ADD_LUGGAGE: {
     title: `Add luggage`,
     price: util.getRandomInteger(10, 100)
   },
-  [`switch-to-comfort-class`]: {
+  SWITCH_TO_COMFORT_CLASS: {
     title: `Switch to comfort class`,
     price: util.getRandomInteger(10, 100)
   },
-  [`add-meal`]: {
+  ADD_MEAL: {
     title: `Add meal`,
     price: util.getRandomInteger(10, 100)
   },
-  [`choose-seats`]: {
+  CHOOSE_SEATS: {
     title: `Choose seats`,
     price: util.getRandomInteger(10, 100)
   }
@@ -152,6 +158,7 @@ export const cities = [
 
 export const getTripPointData = () => (
   {
+    date: util.getRandomDate(),
     type: util.getRandomArrayItem(pointTypes),
     timetable: {
       from: util.getRandomTimestampFrom(),
@@ -160,7 +167,9 @@ export const getTripPointData = () => (
     offers: util.getRandomArrayItems(offers, util.getRandomInteger(0, MAX_OFFERS_COUNT)),
     price: util.getRandomInteger(MIN_POINT_PRICE, MAX_POINT_PRICE),
     description: util.getRandomText(POINT_DESCRIPTION),
-    images: new Array(3).fill(`http://picsum.photos/300/150}`)
+    images: new Array(3).fill(`http://picsum.photos/300/150}`),
+    isFavorite: [true, false][util.getRandomInteger(0, 1)],
+    money: util.getRandomInteger(10, 100)
   }
 );
 
