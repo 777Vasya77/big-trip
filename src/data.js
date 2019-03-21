@@ -67,17 +67,23 @@ const pointTypes = [
   },
 ];
 
+const FilterName = {
+  EVERYTHING: `Everything`,
+  FUTURE: `Future`,
+  PAST: `Past`
+};
+
 export const dataFilters = [
   {
-    name: `Everything`,
+    name: FilterName.EVERYTHING,
     checked: true
   },
   {
-    name: `Future`,
+    name: FilterName.FUTURE,
     checked: false
   },
   {
-    name: `Past`,
+    name: FilterName.PAST,
     checked: false
   }
 ];
