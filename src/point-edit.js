@@ -222,7 +222,7 @@ export default class PointEdit extends Component {
 
     document.addEventListener(`keyup`, this._onEscKeyup);
 
-    document.addEventListener(`click`, this._onDocumentClick);
+    document.addEventListener(`click`, this._onDocumentClick, true);
 
     this._element
       .querySelector(`button[type=reset]`)
@@ -249,7 +249,7 @@ export default class PointEdit extends Component {
 
     document.removeEventListener(`keyup`, this._onEscKeyup);
 
-    document.removeEventListener(`click`, this._onDocumentClick);
+    document.removeEventListener(`click`, this._onDocumentClick, true);
 
     this._element
       .querySelector(`button[type=reset]`)
@@ -288,10 +288,6 @@ export default class PointEdit extends Component {
   }
 
   _onDocumentClick(evt) {
-    // вот тут нужна помощь...
-    // не могу разобраться почему обработчик срабатыет при рендере компонента
-    // и так как в этом случае !this._element.contains(evt.target) вернет истину
-    // сразу перерендеривает компонент на состояние просмотра
     return !this._element.contains(evt.target) && this._onCancel();
   }
 
