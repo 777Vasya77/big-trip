@@ -4,8 +4,8 @@ import Point from './point';
 import PointEdit from './point-edit';
 import Filter from './filter';
 import moment from 'moment';
-import MoneyChart from './money-chart';
-import TransportChart from './transport-chart';
+import moneyChart from './money-chart';
+import transportChart from './transport-chart';
 
 const FUTURE_FILTER = `future`;
 const PAST_FILTER = `past`;
@@ -124,5 +124,5 @@ tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities
 renderFilters();
 renderTripPoints();
 
-MoneyChart.render();
-TransportChart.render();
+moneyChart.render();
+transportChart.render();
