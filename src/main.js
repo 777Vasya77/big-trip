@@ -39,6 +39,9 @@ tableSwitcher.addEventListener(`click`, (evt) => {
   table.classList.remove(`visually-hidden`);
 });
 
+const destinations = [];
+const getDestinations = (data) => destinations.push(...data);
+
 const getFilters = (filters) => {
   const fragment = document.createDocumentFragment();
 
@@ -88,6 +91,7 @@ const getTripPoints = (points) => {
       pointEdit.unrender();
     };
     const renderPointEditComponent = () => {
+      pointEdit.destinations = destinations;
       pointEdit.update(item);
       pointEdit.render();
       tripDayItemsElement.replaceChild(pointEdit.element, point.element);
@@ -129,11 +133,10 @@ const renderFilters = () => {
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
 renderFilters();
-// renderTripPoints();
-
-moneyChart.render();
-transportChart.render();
-
+api.get(`destinations`).then((destinations) => getDestinations(destinations));
 api.get(`points`)
   .then((points) => ModelPoint.parsePoints(points))
   .then((points) => renderTripPoints(points));
+
+moneyChart.render();
+transportChart.render();

@@ -12,9 +12,9 @@ export default class PointEdit extends Component {
     this._offers = data.offers;
     this._timetable = data.timetable;
     this._price = data.price;
-    this._description = data.destination.description;
-    this._images = data.destination.pictures;
+    this._destination = data.destination;
     this._isFavorite = data.isFavorite;
+    this._destinations = null;
 
     this._onSubmit = null;
     this._onCancel = null;
@@ -37,11 +37,15 @@ export default class PointEdit extends Component {
   }
 
   get images() {
-    return this._images
+    return this._destination.pictures
       .map((item) => {
         return `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`;
       })
       .join(``);
+  }
+
+  get description() {
+    return this._destination.description;
   }
 
   get template() {
@@ -64,12 +68,9 @@ export default class PointEdit extends Component {
               
               <div class="point__destination-wrap">
                 <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
-                <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
+                <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
                 <datalist id="destination-select">
-                  <option value="airport"></option>
-                  <option value="Geneva"></option>
-                  <option value="Chamonix"></option>
-                  <option value="hotel"></option>
+                  ${this._getDestinationSelectMarkdown()}
                 </datalist>
               </div>
               
@@ -108,7 +109,7 @@ export default class PointEdit extends Component {
               </section>
               <section class="point__destination">
                 <h3 class="point__details-title">Destination</h3>
-                <p class="point__destination-text">${this._description}</p>
+                <p class="point__destination-text">${this.description}</p>
                 <div class="point__destination-images">
                   ${this.images}
                 </div>
@@ -118,6 +119,12 @@ export default class PointEdit extends Component {
           </form>
       </article>
     `.trim();
+  }
+
+  set destinations(data) {
+    if (data) {
+      this._destinations = data;
+    }
   }
 
   set onCancel(fn) {
@@ -149,6 +156,12 @@ export default class PointEdit extends Component {
     this._timetable = data.timetable;
     this._offers = data.offers;
     this._price = data.price;
+  }
+
+  _getDestinationSelectMarkdown() {
+    return this._destinations.map((item) => {
+      return `<option value="${item.name}"></option>`.trim();
+    }).join(``);
   }
 
   _getTravelWaySelectMarkdown() {
