@@ -1,7 +1,6 @@
 import Component from './component';
 import flatpickr from 'flatpickr';
 import {Offer, PointType} from './data';
-import moment from "moment";
 import {parseTimestamp} from "./util";
 
 export default class PointEdit extends Component {
@@ -9,7 +8,6 @@ export default class PointEdit extends Component {
   constructor(data) {
     super();
 
-    this._date = data.date;
     this._type = data.type;
     this._offers = data.offers;
     this._timetable = data.timetable;
@@ -28,14 +26,6 @@ export default class PointEdit extends Component {
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
     this._onDocumentClick = this._onDocumentClick.bind(this);
-  }
-
-  get timeFrom() {
-    return moment.unix(this._timetable.from).format(`HH:MM`);
-  }
-
-  get timeTo() {
-    return moment.unix(this._timetable.to).format(`HH:MM`);
   }
 
   get typeIcon() {
@@ -83,10 +73,11 @@ export default class PointEdit extends Component {
                 </datalist>
               </div>
               
-              <label class="point__time">
+              <div class="point__time">
                 choose time
-                <input class="point__input" type="text" value="${this._timetable.from} — ${this._timetable.to}" name="time" placeholder="${this.timeFrom} — ${this.timeTo}">
-              </label>
+                <input class="point__input" type="text" value="19:00" name="date-start" placeholder="19:00">
+                <input class="point__input" type="text" value="21:00" name="date-end" placeholder="21:00">
+              </div>
               
               <label class="point__price">
                 write price
@@ -154,7 +145,6 @@ export default class PointEdit extends Component {
   }
 
   update(data) {
-    this._date = data.date;
     this._type = data.type;
     this._timetable = data.timetable;
     this._offers = data.offers;
@@ -232,12 +222,21 @@ export default class PointEdit extends Component {
       .querySelector(`.point__favorite`)
       .addEventListener(`click`, this._onFavoriteButtonClick);
 
-    flatpickr(this._element.querySelector(`.point__time > .point__input`), {
-      mode: `range`,
+    flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`), {
       enableTime: true,
       altInput: true,
       altFormat: `H:i`,
       [`time_24hr`]: true,
+      defaultDate: this._timetable.from,
+      dateFormat: `U`
+    });
+
+    flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`), {
+      enableTime: true,
+      altInput: true,
+      altFormat: `H:i`,
+      [`time_24hr`]: true,
+      defaultDate: this._timetable.to,
       dateFormat: `U`
     });
   }
@@ -259,7 +258,8 @@ export default class PointEdit extends Component {
       .querySelector(`.point__favorite`)
       .removeEventListener(`click`, this._onFavoriteButtonClick);
 
-    flatpickr(this._element.querySelector(`.point__time > .point__input`)).destroy();
+    flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`)).destroy();
+    flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`)).destroy();
   }
 
   _onEscKeyup(evt) {
@@ -288,7 +288,13 @@ export default class PointEdit extends Component {
   }
 
   _onDocumentClick(evt) {
-    return !this._element.contains(evt.target) && this._onCancel();
+    const flatpickrCalendars = document.querySelectorAll(`.flatpickr-calendar`);
+    const isOnElementClick = this._element.contains(evt.target);
+    const isOnFlatpickrCalendarClick = Array.from(flatpickrCalendars).some((item) => item.contains(evt.target));
+
+    if (!isOnElementClick && !isOnFlatpickrCalendarClick) {
+      this._onCancel();
+    }
   }
 
   static createMapper(target) {
