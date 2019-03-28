@@ -1,11 +1,18 @@
 import {cities, dataFilters, tripPoints} from './data';
 import {generateTripPointsTitle, removeFromArray} from './util';
-import Point from './point';
-import PointEdit from './point-edit';
-import Filter from './filter';
 import moment from 'moment';
 import moneyChart from './money-chart';
 import transportChart from './transport-chart';
+import Point from './point';
+import PointEdit from './point-edit';
+import Filter from './filter';
+import API from './api';
+import ModelPoint from "./model-point";
+
+const AUTHORIZATION = `Basic eo0w590ik29889a`;
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
+
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 const FUTURE_FILTER = `future`;
 const PAST_FILTER = `past`;
@@ -122,7 +129,11 @@ const renderFilters = () => {
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
 renderFilters();
-renderTripPoints();
+// renderTripPoints();
 
 moneyChart.render();
 transportChart.render();
+
+api.get(`points`)
+  .then((points) => ModelPoint.parsePoints(points))
+  .then((points) => renderTripPoints(points));

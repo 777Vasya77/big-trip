@@ -12,8 +12,8 @@ export default class PointEdit extends Component {
     this._offers = data.offers;
     this._timetable = data.timetable;
     this._price = data.price;
-    this._description = data.description;
-    this._images = data.images;
+    this._description = data.destination.description;
+    this._images = data.destination.pictures;
     this._isFavorite = data.isFavorite;
 
     this._onSubmit = null;
@@ -39,7 +39,7 @@ export default class PointEdit extends Component {
   get images() {
     return this._images
       .map((item) => {
-        return `<img src="${item}/?r=${Math.random()}" alt="picture from place" class="point__destination-image">`;
+        return `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`;
       })
       .join(``);
   }
@@ -197,6 +197,7 @@ export default class PointEdit extends Component {
           type="checkbox"
           id="${item.title.toLowerCase().split(` `).join(`-`)}"
           name="offer"
+          ${item.accepted && `checked`}
           value="${item.title.toLowerCase().split(` `).join(`-`)}">
         <label for="${item.title.toLowerCase().split(` `).join(`-`)}" class="point__offers-label">
           <span class="point__offer-service">${item.title}</span> + €<span class="point__offer-price">${item.price}</span>

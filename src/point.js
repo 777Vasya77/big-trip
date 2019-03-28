@@ -24,18 +24,19 @@ export default class Point extends Component {
   }
 
   get timeFrom() {
-    return moment.unix(this._timetable.from).format(`HH:MM`);
+    return moment(this._timetable.from).format(`HH:mm`);
   }
 
   get timeTo() {
-    return moment.unix(this._timetable.to).format(`HH:MM`);
+    return moment(this._timetable.to).format(`HH:mm`);
   }
 
   get timeDiff() {
-    const hours = moment
-      .duration(moment.unix(this._timetable.to).diff(moment.unix(this._timetable.from)))
-      .asHours();
-    return `${hours}h 00m`;
+    const duration = moment.duration(moment(this._timetable.to).diff(moment(this._timetable.from)));
+
+    return moment
+      .utc(duration.as(`milliseconds`))
+      .format(`HH[H] mm[M]`);
   }
 
   get template() {
