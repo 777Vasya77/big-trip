@@ -7,19 +7,19 @@ const MAX_OFFERS_COUNT = 2;
 
 const offers = [
   {
-    title: `Add luggage`,
+    name: `Add luggage`,
     price: util.getRandomInteger(10, 100)
   },
   {
-    title: `Switch to comfort class`,
+    name: `Switch to comfort class`,
     price: util.getRandomInteger(10, 100)
   },
   {
-    title: `Add meal`,
+    name: `Add meal`,
     price: util.getRandomInteger(10, 100)
   },
   {
-    title: `Choose seats`,
+    name: `Choose seats`,
     price: util.getRandomInteger(10, 100)
   }
 ];

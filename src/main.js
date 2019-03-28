@@ -1,4 +1,4 @@
-import {cities, dataFilters, tripPoints} from './data';
+import {cities, dataFilters, PointType, tripPoints} from './data';
 import {generateTripPointsTitle, removeFromArray} from './util';
 import moment from 'moment';
 import moneyChart from './money-chart';
@@ -40,7 +40,9 @@ tableSwitcher.addEventListener(`click`, (evt) => {
 });
 
 const destinations = [];
+const offers = [];
 const getDestinations = (data) => destinations.push(...data);
+const getOffers = (data) => offers.push(...data);
 
 const getFilters = (filters) => {
   const fragment = document.createDocumentFragment();
@@ -122,6 +124,16 @@ const getTripPoints = (points) => {
       pointEdit.destination = destination[0];
     };
 
+    pointEdit.onType = (evt) => {
+      const typeOffers = offers.filter((it) => {
+        return it.type === evt.target.value;
+      });
+      const type = evt.target.value.toUpperCase().split(`-`).join(``);
+
+      pointEdit.type = PointType[type];
+      pointEdit.offers = typeOffers;
+    };
+
     point.render();
     fragment.appendChild(point.element);
   });
@@ -142,6 +154,7 @@ tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities
 
 renderFilters();
 api.get(`destinations`).then((response) => getDestinations(response));
+api.get(`offers`).then((response) => getOffers(response));
 api.get(`points`)
   .then((points) => ModelPoint.parsePoints(points))
   .then((points) => renderTripPoints(points));

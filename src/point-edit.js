@@ -21,6 +21,7 @@ export default class PointEdit extends Component {
     this._onDelete = null;
     this._onFavorite = null;
     this._onDestination = null;
+    this._onType = null;
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
@@ -28,6 +29,7 @@ export default class PointEdit extends Component {
     this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
     this._onDocumentClick = this._onDocumentClick.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
+    this._onTypeChange = this._onTypeChange.bind(this);
   }
 
   get typeIcon() {
@@ -53,68 +55,64 @@ export default class PointEdit extends Component {
   get template() {
     return `
       <article class="point">
-        <form action="" method="get">
+        <form>
           <header class="point__header">
-              <label class="point__date">
-                choose day
-                <input class="point__input" type="text" placeholder="MAR 18" name="day">
-              </label>
-        
-              <div class="travel-way">
-                <label class="travel-way__label" for="travel-way__toggle">${this.typeIcon}️</label>
-        
-                <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-        
-                ${this._getTravelWaySelectMarkdown()}
-              </div>
-              
-              <div class="point__destination-wrap">
-                <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
-                <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
-                <datalist id="destination-select">
-                  ${this._getDestinationSelectMarkdown()}
-                </datalist>
-              </div>
-              
-              <div class="point__time">
-                choose time
-                <input class="point__input" type="text" value="19:00" name="date-start" placeholder="19:00">
-                <input class="point__input" type="text" value="21:00" name="date-end" placeholder="21:00">
-              </div>
-              
-              <label class="point__price">
-                write price
-                <span class="point__price-currency">€</span>
-                <input class="point__input" type="text" value="${this._price}" name="price">
-              </label>
-        
-              <div class="point__buttons">
-                <button class="point__button point__button--save" type="submit">Save</button>
-                <button class="point__button" type="reset">Delete</button>
-              </div>
-        
-              <div class="paint__favorite-wrap">
-                <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
-                <label class="point__favorite" for="favorite">favorite</label>
-              </div>
-            </header>
+            <label class="point__date">
+              choose day
+              <input class="point__input" type="text" placeholder="MAR 18" name="day">
+            </label>
+      
+            <div class="travel-way">
+              ${this._getTravelWaySelectMarkdown()}
+            </div>
+            
+            <div class="point__destination-wrap">
+              <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
+              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
+              <datalist id="destination-select">
+                ${this._getDestinationSelectMarkdown()}
+              </datalist>
+            </div>
+            
+            <div class="point__time">
+              choose time
+              <input class="point__input" type="text" value="19:00" name="date-start" placeholder="19:00">
+              <input class="point__input" type="text" value="21:00" name="date-end" placeholder="21:00">
+            </div>
+            
+            <label class="point__price">
+              write price
+              <span class="point__price-currency">€</span>
+              <input class="point__input" type="text" value="${this._price}" name="price">
+            </label>
+      
+            <div class="point__buttons">
+              <button class="point__button point__button--save" type="submit">Save</button>
+              <button class="point__button" type="reset">Delete</button>
+            </div>
+      
+            <div class="paint__favorite-wrap">
+              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
+              <label class="point__favorite" for="favorite">favorite</label>
+            </div>
+          </header>
         
           <section class="point__details">
             
-              <section class="point__offers" ${(!this._offers.length) ? `style="display:none"` : ``}>
-                <h3 class="point__details-title">offers</h3>
-        
-                <div class="point__offers-wrap">
-                  ${this._getOffersMarkdown()}
-                </div>
-        
-              </section>
-                <section class="point__destination">
-                  ${this._getDestinationMarkdown()}
-                </section>
-              <input type="hidden" class="point__total-price" name="total-price" value="">
+            <section class="point__offers" ${(!this._offers.length) ? `style="display:none"` : ``}>
+              <h3 class="point__details-title">offers</h3>
+      
+              <div class="point__offers-wrap">
+                ${this._getOffersMarkdown()}
+              </div>
+      
             </section>
-          </form>
+            <section class="point__destination">
+              ${this._getDestinationMarkdown()}
+            </section>
+            <input type="hidden" class="point__total-price" name="total-price" value="">
+          </section>
+        </form>
       </article>
     `.trim();
   }
@@ -128,6 +126,18 @@ export default class PointEdit extends Component {
   set destination(data) {
     if (data) {
       this._destination = data;
+    }
+  }
+
+  set offers(data) {
+    this._offers = (data.length)
+      ? data[0].offers
+      : [];
+  }
+
+  set type(data) {
+    if (data) {
+      this._type = data;
     }
   }
 
@@ -161,6 +171,12 @@ export default class PointEdit extends Component {
     }
   }
 
+  set onType(fn) {
+    if (typeof fn === `function`) {
+      this._onType = fn;
+    }
+  }
+
   update(data) {
     this._type = data.type;
     this._destination = data.destination;
@@ -188,6 +204,9 @@ export default class PointEdit extends Component {
 
   _getTravelWaySelectMarkdown() {
     return `
+      <label class="travel-way__label" for="travel-way__toggle">${this.typeIcon}️</label>
+      
+      <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
       <div class="travel-way__select">
         <div class="travel-way__select-group">
         <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi" ${this.typeTitle === `Taxi` && `checked`}>
@@ -226,16 +245,17 @@ export default class PointEdit extends Component {
   _getOffersMarkdown() {
     return this._offers
       .map((item) => {
+        const title = (item.name) ? item.name : item.title;
         return `
         <input
           class="point__offers-input visually-hidden"
           type="checkbox"
-          id="${item.title.toLowerCase().split(` `).join(`-`)}"
+          id="${title.toLowerCase().split(` `).join(`-`)}"
           name="offer"
           ${item.accepted && `checked`}
-          value="${item.title.toLowerCase().split(` `).join(`-`)}">
-        <label for="${item.title.toLowerCase().split(` `).join(`-`)}" class="point__offers-label">
-          <span class="point__offer-service">${item.title}</span> + €<span class="point__offer-price">${item.price}</span>
+          value="${title.toLowerCase().split(` `).join(`-`)}">
+        <label for="${title.toLowerCase().split(` `).join(`-`)}" class="point__offers-label">
+          <span class="point__offer-service">${title}</span> + €<span class="point__offer-price">${item.price}</span>
         </label>`.trim();
       })
       .join(``);
@@ -261,6 +281,10 @@ export default class PointEdit extends Component {
     this.element
       .querySelector(`.point__destination-input`)
       .addEventListener(`change`, this._onDestinationChange);
+
+    this.element
+      .querySelector(`.travel-way__select`)
+      .addEventListener(`change`, this._onTypeChange);
 
     flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`), {
       enableTime: true,
@@ -298,6 +322,14 @@ export default class PointEdit extends Component {
       .querySelector(`.point__favorite`)
       .removeEventListener(`click`, this._onFavoriteButtonClick);
 
+    this.element
+      .querySelector(`.point__destination-input`)
+      .removeEventListener(`change`, this._onDestinationChange);
+
+    this.element
+      .querySelector(`.travel-way__select`)
+      .removeEventListener(`change`, this._onTypeChange);
+
     flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`)).destroy();
     flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`)).destroy();
   }
@@ -330,6 +362,14 @@ export default class PointEdit extends Component {
   _onDestinationChange(evt) {
     this._onDestination(evt);
     this._element.querySelector(`.point__destination`).innerHTML = this._getDestinationMarkdown();
+  }
+
+  _onTypeChange(evt) {
+    this._onType(evt);
+    this._element.querySelector(`.travel-way__label`).innerText = this.typeIcon;
+    this._element.querySelector(`.point__destination-label`).innerText = `${this.typeTitle} to`;
+
+    this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersMarkdown();
   }
 
   _onDocumentClick(evt) {
