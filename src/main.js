@@ -114,6 +114,14 @@ const getTripPoints = (points) => {
       item.isFavorite = !item.isFavorite;
     };
 
+    pointEdit.onDestination = (evt) => {
+      const destination = destinations.filter((it) => {
+        return it.name === evt.target.value;
+      });
+
+      pointEdit.destination = destination[0];
+    };
+
     point.render();
     fragment.appendChild(point.element);
   });
@@ -133,7 +141,7 @@ const renderFilters = () => {
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
 renderFilters();
-api.get(`destinations`).then((destinations) => getDestinations(destinations));
+api.get(`destinations`).then((response) => getDestinations(response));
 api.get(`points`)
   .then((points) => ModelPoint.parsePoints(points))
   .then((points) => renderTripPoints(points));

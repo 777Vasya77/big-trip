@@ -20,12 +20,14 @@ export default class PointEdit extends Component {
     this._onCancel = null;
     this._onDelete = null;
     this._onFavorite = null;
+    this._onDestination = null;
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
     this._onDocumentClick = this._onDocumentClick.bind(this);
+    this._onDestinationChange = this._onDestinationChange.bind(this);
   }
 
   get typeIcon() {
@@ -107,13 +109,9 @@ export default class PointEdit extends Component {
                 </div>
         
               </section>
-              <section class="point__destination">
-                <h3 class="point__details-title">Destination</h3>
-                <p class="point__destination-text">${this.description}</p>
-                <div class="point__destination-images">
-                  ${this.images}
-                </div>
-              </section>
+                <section class="point__destination">
+                  ${this._getDestinationMarkdown()}
+                </section>
               <input type="hidden" class="point__total-price" name="total-price" value="">
             </section>
           </form>
@@ -124,6 +122,12 @@ export default class PointEdit extends Component {
   set destinations(data) {
     if (data) {
       this._destinations = data;
+    }
+  }
+
+  set destination(data) {
+    if (data) {
+      this._destination = data;
     }
   }
 
@@ -151,11 +155,29 @@ export default class PointEdit extends Component {
     }
   }
 
+  set onDestination(fn) {
+    if (typeof fn === `function`) {
+      this._onDestination = fn;
+    }
+  }
+
   update(data) {
     this._type = data.type;
+    this._destination = data.destination;
     this._timetable = data.timetable;
     this._offers = data.offers;
     this._price = data.price;
+  }
+
+  _getDestinationMarkdown() {
+    return `
+    <span>
+      <h3 class="point__details-title">Destination</h3>
+      <p class="point__destination-text">${this.description}</p>
+      <div class="point__destination-images">
+        ${this.images}
+      </div>
+    </span>`;
   }
 
   _getDestinationSelectMarkdown() {
@@ -236,6 +258,10 @@ export default class PointEdit extends Component {
       .querySelector(`.point__favorite`)
       .addEventListener(`click`, this._onFavoriteButtonClick);
 
+    this.element
+      .querySelector(`.point__destination-input`)
+      .addEventListener(`change`, this._onDestinationChange);
+
     flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`), {
       enableTime: true,
       altInput: true,
@@ -299,6 +325,11 @@ export default class PointEdit extends Component {
 
   _onFavoriteButtonClick() {
     this._onFavorite();
+  }
+
+  _onDestinationChange(evt) {
+    this._onDestination(evt);
+    this._element.querySelector(`.point__destination`).innerHTML = this._getDestinationMarkdown();
   }
 
   _onDocumentClick(evt) {
