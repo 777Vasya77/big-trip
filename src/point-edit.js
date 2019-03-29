@@ -130,9 +130,7 @@ export default class PointEdit extends Component {
   }
 
   set offers(data) {
-    this._offers = (data.length)
-      ? data[0].offers
-      : [];
+    this._offers = (data) ? data.offers : [];
   }
 
   set type(data) {

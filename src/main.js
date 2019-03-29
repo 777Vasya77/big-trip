@@ -117,21 +117,14 @@ const getTripPoints = (points) => {
     };
 
     pointEdit.onDestination = (evt) => {
-      const destination = destinations.filter((it) => {
-        return it.name === evt.target.value;
-      });
-
-      pointEdit.destination = destination[0];
+      pointEdit.destination = destinations.find((it) => it.name === evt.target.value);
     };
 
     pointEdit.onType = (evt) => {
-      const typeOffers = offers.filter((it) => {
-        return it.type === evt.target.value;
-      });
       const type = evt.target.value.toUpperCase().split(`-`).join(``);
 
+      pointEdit.offers = offers.find((it) => it.type === evt.target.value);
       pointEdit.type = PointType[type];
-      pointEdit.offers = typeOffers;
     };
 
     point.render();
