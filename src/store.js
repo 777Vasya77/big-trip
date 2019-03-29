@@ -60,6 +60,6 @@ export default {
   deletePoint(id) {
     const point = this.state.points.find((item) => item.id === id);
 
-    return api.delete(`points3`, {id}).then(removeFromArray(this.state.points, point));
+    return api.delete(`points`, {id}).then(removeFromArray(this.state.points, point));
   }
 };
