@@ -6,13 +6,7 @@ import moment from 'moment';
 import Point from './point';
 import PointEdit from './point-edit';
 import Filter from './filter';
-import API from './api';
-import ModelPoint from "./model-point";
-
-const AUTHORIZATION = `Basic eo0w590ik29889a`;
-const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
-
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+import store from './store';
 
 const FUTURE_FILTER = `future`;
 const PAST_FILTER = `past`;
@@ -24,6 +18,9 @@ const statsSwitcher = document.querySelector(`a[href*=stat]`);
 const tableSwitcher = document.querySelector(`a[href*=table]`);
 const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
+const tripPoints = [];
+const offers = [];
+const destinations = [];
 
 statsSwitcher.addEventListener(`click`, (evt) => {
   evt.preventDefault();
@@ -38,12 +35,6 @@ tableSwitcher.addEventListener(`click`, (evt) => {
   stats.classList.add(`visually-hidden`);
   table.classList.remove(`visually-hidden`);
 });
-
-const tripPoints = [];
-const destinations = [];
-const offers = [];
-const getDestinations = (data) => destinations.push(...data);
-const getOffers = (data) => offers.push(...data);
 
 const getFilters = (filters) => {
   const fragment = document.createDocumentFragment();
@@ -145,15 +136,20 @@ const renderFilters = () => {
 
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
-api.get(`destinations`).then((response) => getDestinations(response));
-api.get(`offers`).then((response) => getOffers(response));
-api.get(`points`)
-  .then((points) => ModelPoint.parsePoints(points))
-  .then((points) => {
-    tripPoints.push(...points);
-    renderFilters();
-    renderTripPoints(points);
-  });
+const appInit = () => {
+  tripPoints.push(...store.state.points);
+  offers.push(...store.state.offers);
+  destinations.push(...store.state.destinations);
+
+  renderFilters();
+  renderTripPoints();
+};
+
+if (store.state.isLoading) {
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">Loading...</h1>`;
+}
+
+store.loadData().then(appInit);
 
 // moneyChart.render();
 // transportChart.render();
