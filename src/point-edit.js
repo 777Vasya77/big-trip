@@ -400,7 +400,9 @@ export default class PointEdit extends Component {
       },
       offer(value) {
         target.offers.forEach((item) => {
-          const title = item.title.toLowerCase().split(` `).join(`-`);
+          const title = (item.title)
+            ? item.title.toLowerCase().split(` `).join(`-`)
+            : item.name.toLowerCase().split(` `).join(`-`);
 
           if (title === value) {
             item.accepted = true;

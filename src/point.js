@@ -64,9 +64,10 @@ export default class Point extends Component {
   _getOffersMarkdown() {
     return this._offers
       .map((item) => {
+        const title = (item.name) ? item.name : item.title;
         return `
         <li>
-          <button class="trip-point__offer">${item.title} +&euro;&nbsp;${item.price}</button>
+          <button class="trip-point__offer">${title} +&euro;&nbsp;${item.price}</button>
         </li>`.trim();
       })
       .join(``);
