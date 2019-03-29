@@ -1,5 +1,5 @@
 import {cities, dataFilters, PointType} from './data';
-import {generateTripPointsTitle, removeFromArray, updateObject} from './util';
+import {generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 // import moneyChart from './money-chart';
 // import transportChart from './transport-chart';
@@ -101,8 +101,9 @@ const getTripPoints = (points) => {
     };
 
     pointEdit.onDelete = () => {
-      removeFromArray(tripPoints, item);
-      pointEdit.unrender();
+      store.deletePoint(item.id).then(() => {
+        pointEdit.unrender();
+      });
     };
 
     pointEdit.onFavorite = () => {

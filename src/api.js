@@ -48,8 +48,8 @@ export default class API {
       .then(toJSON);
   }
 
-  delete({id}) {
-    return this._load({url: `points/${id}`, method: Method.DELETE});
+  delete(url, {id}) {
+    return this._load({url: `${url}/${id}`, method: Method.DELETE});
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

@@ -1,5 +1,6 @@
 import API from './api';
 import ModelPoint from './model-point';
+import {removeFromArray} from './util';
 
 const AUTHORIZATION = `Basic eo0w590ik2988933a`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
@@ -54,5 +55,11 @@ export default {
     const point = this.state.points.find((item) => item.id === data.id);
 
     return api.update(`points`, {id: data.id, data: point.toRAW()});
+  },
+
+  deletePoint(id) {
+    const point = this.state.points.find((item) => item.id === id);
+
+    return api.delete(`points`, {id}).then(removeFromArray(this.state.points, point));
   }
 };
