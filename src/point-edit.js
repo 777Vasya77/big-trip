@@ -185,6 +185,15 @@ export default class PointEdit extends Component {
     this._price = data.price;
   }
 
+  shake() {
+    const ANIMATION_TIMEOUT = 600;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``;
+    }, ANIMATION_TIMEOUT);
+  }
+
   _getDestinationMarkdown() {
     return `
     <span>

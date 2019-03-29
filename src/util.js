@@ -18,3 +18,23 @@ export const updateObject = (oldObject, newObject) => {
     oldObject[key] = newObject[key];
   });
 };
+
+export const disableForm = (form, action = true) => {
+  const inputs = form.querySelectorAll(`input`);
+  const buttons = form.querySelectorAll(`button`);
+
+  disableElements(inputs, action);
+  disableElements(buttons, action);
+};
+
+const disableElements = (elements, action) => {
+  Array.from(elements).forEach((item) => {
+    return (action) ?
+      item.setAttribute(`disabled`, `disabled`) :
+      item.removeAttribute(`disabled`);
+  });
+};
+
+export const errorBorder = (none, action = true) => {
+  none.style.border = action ? `1px solid red` : `none`;
+};

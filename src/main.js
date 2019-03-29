@@ -1,5 +1,5 @@
 import {cities, dataFilters, PointType} from './data';
-import {generateTripPointsTitle, updateObject} from './util';
+import {disableForm, errorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 // import moneyChart from './money-chart';
 // import transportChart from './transport-chart';
@@ -8,6 +8,8 @@ import PointEdit from './point-edit';
 import Filter from './filter';
 import store from './store';
 
+const LOADING_TEXT = `Loading route...`;
+const LOADING_FAILURE_TEXT = `Something went wrong while loading your route info. Check your connection or try again later`;
 const FUTURE_FILTER = `future`;
 const PAST_FILTER = `past`;
 
@@ -95,15 +97,47 @@ const getTripPoints = (points) => {
     pointEdit.onCancel = renderPointComponent;
 
     pointEdit.onSubmit = (newData) => {
+      const pointElement = document.querySelector(`.point`);
+      const pointFormElement = document.querySelector(`.point > form`);
+      const saveBtn = pointFormElement.querySelector(`.point__button--save`);
+
+      saveBtn.innerText = `Saving...`;
+      errorBorder(pointElement, false);
+      disableForm(pointFormElement);
       updateObject(item, newData);
 
-      store.updatePoint(item).then(() => renderPointComponent(newData));
+      store.updatePoint(item)
+        .then(() => {
+          disableForm(pointFormElement, false);
+          renderPointComponent(newData);
+        })
+        .catch(() => {
+          errorBorder(pointElement);
+          pointEdit.shake();
+          disableForm(pointFormElement, false);
+          saveBtn.innerText = `Save`;
+        });
     };
 
     pointEdit.onDelete = () => {
-      store.deletePoint(item.id).then(() => {
-        pointEdit.unrender();
-      });
+      const pointElement = document.querySelector(`.point`);
+      const pointFormElement = document.querySelector(`.point > form`);
+      const deleteBtn = pointFormElement.querySelector(`.point__button[type=reset]`);
+      deleteBtn.innerText = `Deleting...`;
+
+      errorBorder(pointElement, false);
+      disableForm(pointFormElement);
+      store.deletePoint(item.id)
+        .then(() => {
+          disableForm(pointFormElement, false);
+          pointEdit.unrender();
+        })
+        .catch(() => {
+          errorBorder(pointElement);
+          pointEdit.shake();
+          disableForm(pointFormElement, false);
+          deleteBtn.innerText = `Delete`;
+        });
     };
 
     pointEdit.onFavorite = () => {
@@ -148,11 +182,17 @@ const appInit = () => {
   renderTripPoints();
 };
 
+const showLoadingError = () => {
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;color:red;">${LOADING_FAILURE_TEXT}</h1>`;
+};
+
 if (store.state.isLoading) {
-  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">Loading...</h1>`;
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
 }
 
-store.loadData().then(appInit);
+store.loadData()
+  .then(appInit)
+  .catch(showLoadingError);
 
 // moneyChart.render();
 // transportChart.render();
