@@ -24,15 +24,15 @@ export default class Point extends Component {
   }
 
   get timeFrom() {
-    return moment(this._timetable.from).format(`HH:mm`);
+    return moment(+this._timetable.from).format(`HH:mm`);
   }
 
   get timeTo() {
-    return moment(this._timetable.to).format(`HH:mm`);
+    return moment(+this._timetable.to).format(`HH:mm`);
   }
 
   get timeDiff() {
-    const duration = moment.duration(moment(this._timetable.to).diff(moment(this._timetable.from)));
+    const duration = moment.duration(moment(+this._timetable.to).diff(moment(+this._timetable.from)));
 
     return moment
       .utc(duration.as(`milliseconds`))

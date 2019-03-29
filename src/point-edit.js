@@ -1,7 +1,8 @@
 import Component from './component';
 import flatpickr from 'flatpickr';
+import moment from 'moment';
 import {PointType} from './data';
-import {parseTimestamp} from "./util";
+import store from './store';
 
 export default class PointEdit extends Component {
 
@@ -289,7 +290,7 @@ export default class PointEdit extends Component {
       altInput: true,
       altFormat: `H:i`,
       [`time_24hr`]: true,
-      defaultDate: this._timetable.from,
+      defaultDate: +this._timetable.from,
       dateFormat: `U`
     });
 
@@ -298,7 +299,7 @@ export default class PointEdit extends Component {
       altInput: true,
       altFormat: `H:i`,
       [`time_24hr`]: true,
-      defaultDate: this._timetable.to,
+      defaultDate: +this._timetable.to,
       dateFormat: `U`
     });
   }
@@ -342,7 +343,7 @@ export default class PointEdit extends Component {
     evt.preventDefault();
 
     const formData = new FormData(this._element.querySelector(`.point > form`));
-    const newData = PointEdit.processForm(formData);
+    const newData = this.processForm(formData);
 
     this._onSubmit(newData);
   }
@@ -382,34 +383,51 @@ export default class PointEdit extends Component {
 
   static createMapper(target) {
     return {
+      day() {
+        // ToDo: Из формы приходит ["day", ""]. Без понятия что это... Надо разобраться!
+      },
       [`travel-way`](value) {
         target.type = PointType[value.split(`-`).join(``).toUpperCase()];
       },
-      time(value) {
-        target.timetable.from = parseTimestamp(value).from;
-        target.timetable.to = parseTimestamp(value).to;
+      [`date-start`](value) {
+        target.timetable.from = moment.unix(value).format(`x`);
       },
-      offer(value) {
-        target.offers.push(value);
+      [`date-end`](value) {
+        target.timetable.to = moment.unix(value).format(`x`);
       },
       price(value) {
         target.price = value;
+      },
+      offer(value) {
+        target.offers.forEach((item) => {
+          const title = item.title.toLowerCase().split(` `).join(`-`);
+
+          if (title === value) {
+            item.accepted = true;
+          }
+        });
+      },
+      destination(value) {
+        target.destination = store.state.destinations.find((item) => item.name === value);
+      },
+      [`total-price`]() {
+        // ToDo: Из формы приходит ["total-price", ""].
       }
     };
 
   }
 
-  static processForm(formData) {
+  processForm(formData) {
     const entry = {
       type: {},
       timetable: {
         from: new Date(),
         to: new Date()
       },
-      offers: [],
+      destination: [],
+      offers: this._offers,
       price: 0,
-      description: ``,
-      images: []
+      isFavorite: Boolean
     };
 
     const pointEditMapper = PointEdit.createMapper(entry);
