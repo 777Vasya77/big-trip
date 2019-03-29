@@ -1,7 +1,7 @@
 import API from './api';
 import ModelPoint from './model-point';
 
-const AUTHORIZATION = `Basic eo0w590ik29889a`;
+const AUTHORIZATION = `Basic eo0w590ik2988933a`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
@@ -48,5 +48,11 @@ export default {
       .then((data) => {
         this.state.destinations = data;
       });
+  },
+
+  updatePoint(data) {
+    const point = this.state.points.find((item) => item.id === data.id);
+
+    return api.update(`points`, {id: data.id, data: point.toRAW()});
   }
 };

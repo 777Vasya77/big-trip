@@ -12,7 +12,6 @@ export default class ModelPoint {
     this.price = data[`base_price`];
     this.destination = data[`destination`];
     this.isFavorite = Boolean(data[`is_favorite`]);
-
   }
 
   toRAW() {

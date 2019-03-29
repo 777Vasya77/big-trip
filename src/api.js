@@ -38,9 +38,9 @@ export default class API {
       .then(toJSON);
   }
 
-  update({id, data}) {
+  update(url, {id, data}) {
     return this._load({
-      url: `points/${id}`,
+      url: `${url}/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': `application/json`})

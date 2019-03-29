@@ -1,5 +1,5 @@
 import {cities, dataFilters, PointType} from './data';
-import {generateTripPointsTitle, removeFromArray} from './util';
+import {generateTripPointsTitle, removeFromArray, updateObject} from './util';
 import moment from 'moment';
 // import moneyChart from './money-chart';
 // import transportChart from './transport-chart';
@@ -95,7 +95,9 @@ const getTripPoints = (points) => {
     pointEdit.onCancel = renderPointComponent;
 
     pointEdit.onSubmit = (newData) => {
-      renderPointComponent(newData);
+      updateObject(item, newData);
+
+      store.updatePoint(item).then(() => renderPointComponent(newData));
     };
 
     pointEdit.onDelete = () => {

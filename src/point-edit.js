@@ -9,6 +9,7 @@ export default class PointEdit extends Component {
   constructor(data) {
     super();
 
+    this._id = data.id;
     this._type = data.type;
     this._offers = data.offers;
     this._timetable = data.timetable;
@@ -414,6 +415,9 @@ export default class PointEdit extends Component {
       },
       [`total-price`]() {
         // ToDo: Из формы приходит ["total-price", ""].
+      },
+      favorite(value) {
+        target.isFavorite = value === `on`;
       }
     };
 
@@ -421,6 +425,7 @@ export default class PointEdit extends Component {
 
   processForm(formData) {
     const entry = {
+      id: this._id,
       type: {},
       timetable: {
         from: new Date(),
@@ -429,7 +434,7 @@ export default class PointEdit extends Component {
       destination: [],
       offers: this._offers,
       price: 0,
-      isFavorite: Boolean
+      isFavorite: false
     };
 
     const pointEditMapper = PointEdit.createMapper(entry);
