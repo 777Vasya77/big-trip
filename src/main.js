@@ -1,8 +1,8 @@
-import {cities, dataFilters, PointType, tripPoints} from './data';
+import {cities, dataFilters, PointType} from './data';
 import {generateTripPointsTitle, removeFromArray} from './util';
 import moment from 'moment';
-import moneyChart from './money-chart';
-import transportChart from './transport-chart';
+// import moneyChart from './money-chart';
+// import transportChart from './transport-chart';
 import Point from './point';
 import PointEdit from './point-edit';
 import Filter from './filter';
@@ -39,6 +39,7 @@ tableSwitcher.addEventListener(`click`, (evt) => {
   table.classList.remove(`visually-hidden`);
 });
 
+const tripPoints = [];
 const destinations = [];
 const offers = [];
 const getDestinations = (data) => destinations.push(...data);
@@ -50,18 +51,17 @@ const getFilters = (filters) => {
   filters.forEach((item) => {
     const filter = new Filter(item);
     filter.render();
-
     filter.onFilter = () => {
       switch (filter.name) {
         case FUTURE_FILTER:
           renderTripPoints(
-              tripPoints.filter((it) => it.date > moment().unix())
+              tripPoints.filter((it) => it.timetable.from > +moment().format(`x`))
           );
           return;
 
         case PAST_FILTER:
           renderTripPoints(
-              tripPoints.filter((it) => it.date < moment().unix())
+              tripPoints.filter((it) => it.timetable.to < +moment().format(`x`))
           );
           return;
 
@@ -152,12 +152,15 @@ const renderFilters = () => {
 
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
-renderFilters();
 api.get(`destinations`).then((response) => getDestinations(response));
 api.get(`offers`).then((response) => getOffers(response));
 api.get(`points`)
   .then((points) => ModelPoint.parsePoints(points))
-  .then((points) => renderTripPoints(points));
+  .then((points) => {
+    tripPoints.push(...points);
+    renderFilters();
+    renderTripPoints(points);
+  });
 
-moneyChart.render();
-transportChart.render();
+// moneyChart.render();
+// transportChart.render();

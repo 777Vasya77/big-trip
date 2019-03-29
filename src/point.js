@@ -7,8 +7,8 @@ export default class Point extends Component {
     super();
 
     this._type = data.type;
-    this._timetable = data.timetable;
     this._offers = data.offers;
+    this._timetable = data.timetable;
     this._price = data.price;
 
     this._onEdit = null;
