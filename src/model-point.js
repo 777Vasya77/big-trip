@@ -15,6 +15,19 @@ export default class ModelPoint {
 
   }
 
+  toRAW() {
+    return {
+      'id': this.id,
+      'type': this.type.title,
+      'date_from': this.timetable.from,
+      'date_to': this.timetable.to,
+      'destination': this.destination,
+      'base_price': this.price,
+      'is_favorite': this.isFavorite,
+      'offers': this.offers
+    };
+  }
+
   static parsePoint(data) {
     return new ModelPoint(data);
   }
