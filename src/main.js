@@ -154,7 +154,6 @@ const getTripPoints = (points) => {
 
       pointEdit.offers = offers.find((it) => it.type === evt.target.value);
       pointEdit.type = PointType[type];
-      // TODO отрендерить изменения
     };
 
     point.render();
