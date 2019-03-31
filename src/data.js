@@ -1,25 +1,3 @@
-const FilterName = {
-  EVERYTHING: `Everything`,
-  FUTURE: `Future`,
-  PAST: `Past`
-};
-
-// TODO перенести в store
-export const dataFilters = [
-  {
-    name: FilterName.EVERYTHING,
-    checked: true
-  },
-  {
-    name: FilterName.FUTURE,
-    checked: false
-  },
-  {
-    name: FilterName.PAST,
-    checked: false
-  }
-];
-
 export const PointType = {
   TAXI: {
     title: `Taxi`,

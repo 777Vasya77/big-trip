@@ -1,4 +1,4 @@
-import {cities, dataFilters, PointType} from './data';
+import {cities, PointType} from './data';
 import {disableForm, errorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 // import moneyChart from './money-chart';
@@ -21,6 +21,7 @@ const tableSwitcher = document.querySelector(`a[href*=table]`);
 const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
 // TODO брать данные из store
+const dataFilters = store.state.filters;
 const tripPoints = [];
 const offers = [];
 const destinations = [];

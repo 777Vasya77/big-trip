@@ -2,8 +2,13 @@ import API from './api';
 import ModelPoint from './model-point';
 import {removeFromArray} from './util';
 
-const AUTHORIZATION = `Basic eo0w590ik2988933a`;
+const AUTHORIZATION = `Basic eo0w590ik298ww8933a`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
+const FilterName = {
+  EVERYTHING: `Everything`,
+  FUTURE: `Future`,
+  PAST: `Past`
+};
 
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
@@ -13,7 +18,21 @@ export default {
     isLoading: true,
     points: [],
     offers: [],
-    destinations: []
+    destinations: [],
+    filters: [
+      {
+        name: FilterName.EVERYTHING,
+        checked: true
+      },
+      {
+        name: FilterName.FUTURE,
+        checked: false
+      },
+      {
+        name: FilterName.PAST,
+        checked: false
+      }
+    ]
   },
 
   loadData() {
