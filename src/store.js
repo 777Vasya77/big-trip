@@ -9,6 +9,7 @@ const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 export default {
   state: {
+    // TODO ставим loading после начала загрузки
     isLoading: true,
     points: [],
     offers: [],

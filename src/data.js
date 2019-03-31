@@ -4,6 +4,7 @@ const FilterName = {
   PAST: `Past`
 };
 
+// TODO перенести в store
 export const dataFilters = [
   {
     name: FilterName.EVERYTHING,

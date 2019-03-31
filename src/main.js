@@ -176,7 +176,7 @@ const renderTripPoints = (points = tripPoints) => {
 const renderFilters = () => {
   tripFilterElement.appendChild(getFilters(dataFilters));
 };
-
+// TODO использовать актуальные города
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
 const appInit = () => {

@@ -188,7 +188,7 @@ export default class PointEdit extends Component {
   shake() {
     const ANIMATION_TIMEOUT = 600;
     this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
-
+    // TODO привязаться к событию animationend
     setTimeout(() => {
       this._element.style.animation = ``;
     }, ANIMATION_TIMEOUT);
@@ -426,7 +426,7 @@ export default class PointEdit extends Component {
         // ToDo: Из формы приходит ["total-price", ""].
       },
       favorite(value) {
-        target.isFavorite = value === `on`;
+        target.isFavorite = value === `on`; // TODO вынести в константы
       }
     };
 
