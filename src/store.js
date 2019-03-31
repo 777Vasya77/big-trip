@@ -35,6 +35,10 @@ export default {
     ]
   },
 
+  getPoints() {
+    return this.state.points;
+  },
+
   loadData() {
     return Promise.all([
       this.fetchPoints(),
@@ -74,7 +78,7 @@ export default {
   updatePoint(data) {
     const point = this.state.points.find((item) => item.id === data.id);
 
-    return api.update(`points`, {id: data.id, data: point.toRAW()});
+    return api.update(`poinets`, {id: data.id, data: point.toRAW()});
   },
 
   deletePoint(id) {

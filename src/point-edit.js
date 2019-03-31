@@ -189,12 +189,11 @@ export default class PointEdit extends Component {
   }
 
   shake() {
-    const ANIMATION_TIMEOUT = 600;
-    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
-    // TODO привязаться к событию animationend
-    setTimeout(() => {
+    const ANIMATION_TIMEOUT = 0.6;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT}s`;
+    this._element.addEventListener(`animationend`, () => {
       this._element.style.animation = ``;
-    }, ANIMATION_TIMEOUT);
+    });
   }
 
   block() {

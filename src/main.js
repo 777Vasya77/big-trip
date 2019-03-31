@@ -1,5 +1,5 @@
 import {cities, PointType} from './data';
-import {disableForm, errorBorder, generateTripPointsTitle, updateObject} from './util';
+import {errorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 // import moneyChart from './money-chart';
 // import transportChart from './transport-chart';
@@ -24,11 +24,6 @@ const statsSwitcher = document.querySelector(`a[href*=stat]`);
 const tableSwitcher = document.querySelector(`a[href*=table]`);
 const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
-// TODO брать данные из store
-const dataFilters = store.state.filters;
-const tripPoints = [];
-const offers = [];
-const destinations = [];
 
 statsSwitcher.addEventListener(`click`, (evt) => {
   evt.preventDefault();
@@ -55,13 +50,13 @@ const getFilters = (filters) => {
       switch (filter.name) {
         case FUTURE_FILTER:
           renderTripPoints(
-              tripPoints.filter((it) => it.timetable.from > +moment().format(`x`))
+              store.state.points.filter((it) => it.timetable.from > +moment().format(`x`))
           );
           return;
 
         case PAST_FILTER:
           renderTripPoints(
-              tripPoints.filter((it) => it.timetable.to < +moment().format(`x`))
+              store.state.points.filter((it) => it.timetable.to < +moment().format(`x`))
           );
           return;
 
@@ -93,7 +88,7 @@ const getTripPoints = (points) => {
       pointEdit.unrender();
     };
     const renderPointEditComponent = () => {
-      pointEdit.destinations = destinations;
+      pointEdit.destinations = store.state.destinations;
       pointEdit.update(item);
       pointEdit.render();
       tripDayItemsElement.replaceChild(pointEdit.element, point.element);
@@ -146,13 +141,13 @@ const getTripPoints = (points) => {
     };
 
     pointEdit.onDestination = (evt) => {
-      pointEdit.destination = destinations.find((it) => it.name === evt.target.value);
+      pointEdit.destination = store.state.destinations.find((it) => it.name === evt.target.value);
     };
 
     pointEdit.onType = (evt) => {
       const type = evt.target.value.toUpperCase().split(`-`).join(``);
 
-      pointEdit.offers = offers.find((it) => it.type === evt.target.value);
+      pointEdit.offers = store.state.offers.find((it) => it.type === evt.target.value);
       pointEdit.type = PointType[type];
     };
 
@@ -163,22 +158,18 @@ const getTripPoints = (points) => {
   return fragment;
 };
 
-const renderTripPoints = (points = tripPoints) => {
+const renderTripPoints = (points = store.state.points) => {
   tripDayItemsElement.innerHTML = ``;
   tripDayItemsElement.appendChild(getTripPoints(points));
 };
 
 const renderFilters = () => {
-  tripFilterElement.appendChild(getFilters(dataFilters));
+  tripFilterElement.appendChild(getFilters(store.state.filters));
 };
 // TODO использовать актуальные города
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
 const appInit = () => {
-  tripPoints.push(...store.state.points);
-  offers.push(...store.state.offers);
-  destinations.push(...store.state.destinations);
-
   renderFilters();
   renderTripPoints();
 };
