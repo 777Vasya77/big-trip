@@ -1,27 +1,30 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {tripPoints} from './data';
-
-const BAR_HEIGHT = 55;
-const moneyCtx = document.querySelector(`.statistic__money`);
-const pointsCount = tripPoints.length;
-
-moneyCtx.height = BAR_HEIGHT * pointsCount;
-
-const moneyChartData = {
-  labels: tripPoints.map(({type}) => `${type.icon} ${type.title.toUpperCase()}`),
-  data: tripPoints.map((item) => item.money)
-};
 
 export default {
+  _labels: [],
+  _data: [],
+  _moneyCtx: null,
+  init(points) {
+    const BAR_HEIGHT = 55;
+    const moneyCtx = document.querySelector(`.statistic__money`);
+
+    this._moneyCtx = moneyCtx;
+    this._labels = points.map(({type}) => `${type.icon} ${type.title.toUpperCase()}`);
+    this._data = points.map((item) => item.price);
+
+    moneyCtx.height = BAR_HEIGHT * this._labels.length;
+
+    this.render();
+  },
   render() {
-    return new Chart(moneyCtx, {
+    return new Chart(this._moneyCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: moneyChartData.labels,
+        labels: this._labels,
         datasets: [{
-          data: moneyChartData.data,
+          data: this._data,
           backgroundColor: `#ffffff`,
           hoverBackgroundColor: `#ffffff`,
           anchor: `start`
