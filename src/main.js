@@ -183,11 +183,6 @@ const showLoadingError = () => {
   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;color:red;">${LOADING_FAILURE_TEXT}</h1>`;
 };
 
-// TODO перенести сообщение в старт загрузки
-// if (store.state.isLoading) {
-// //   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
-// // }
-
 store.loadData()
   .then(appInit)
   .catch(showLoadingError);

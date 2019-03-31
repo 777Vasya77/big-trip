@@ -2,6 +2,7 @@ import API from './api';
 import ModelPoint from './model-point';
 import {removeFromArray} from './util';
 
+const LOADING_TEXT = `Loading route...`;
 const AUTHORIZATION = `Basic eo0w590ik298ww8933a`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const FilterName = {
@@ -9,13 +10,12 @@ const FilterName = {
   FUTURE: `Future`,
   PAST: `Past`
 };
+const tripDayItemsElement = document.querySelector(`.trip-day__items`);
 
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 export default {
   state: {
-    // TODO ставим loading после начала загрузки
-    isLoading: true,
     points: [],
     offers: [],
     destinations: [],
@@ -35,11 +35,8 @@ export default {
     ]
   },
 
-  getPoints() {
-    return this.state.points;
-  },
-
   loadData() {
+    tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
     return Promise.all([
       this.fetchPoints(),
       this.fetchOffers(),
