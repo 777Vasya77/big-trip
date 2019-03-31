@@ -78,7 +78,7 @@ export default {
   updatePoint(data) {
     const point = this.state.points.find((item) => item.id === data.id);
 
-    return api.update(`poinets`, {id: data.id, data: point.toRAW()});
+    return api.update(`points`, {id: data.id, data: point.toRAW()});
   },
 
   deletePoint(id) {

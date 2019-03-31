@@ -27,8 +27,10 @@ const stats = document.querySelector(`#stats`);
 
 statsSwitcher.addEventListener(`click`, (evt) => {
   evt.preventDefault();
-  // TODO classList.toggle
+
   table.classList.add(`visually-hidden`);
+  tableSwitcher.classList.remove(`view-switch__item--active`);
+  statsSwitcher.classList.add(`view-switch__item--active`);
   stats.classList.remove(`visually-hidden`);
   // TODO отрисовка статистики
 });
@@ -37,7 +39,9 @@ tableSwitcher.addEventListener(`click`, (evt) => {
   evt.preventDefault();
 
   stats.classList.add(`visually-hidden`);
+  tableSwitcher.classList.add(`view-switch__item--active`);
   table.classList.remove(`visually-hidden`);
+  statsSwitcher.classList.remove(`view-switch__item--active`);
 });
 
 const getFilters = (filters) => {
@@ -170,6 +174,7 @@ const renderFilters = () => {
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
 const appInit = () => {
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
   renderFilters();
   renderTripPoints();
 };
@@ -179,9 +184,9 @@ const showLoadingError = () => {
 };
 
 // TODO перенести сообщение в старт загрузки
-if (store.state.isLoading) {
-  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
-}
+// if (store.state.isLoading) {
+// //   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
+// // }
 
 store.loadData()
   .then(appInit)
