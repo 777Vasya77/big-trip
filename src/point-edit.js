@@ -281,7 +281,6 @@ export default class PointEdit extends Component {
       .map((item) => {
         const title = (item.name) ? item.name : item.title;
         return `
-        <span>
         <input
           class="point__offers-input visually-hidden"
           type="checkbox"
@@ -292,7 +291,6 @@ export default class PointEdit extends Component {
         <label for="${title.toLowerCase().split(` `).join(`-`)}" class="point__offers-label">
           <span class="point__offer-service">${title}</span> + €<span class="point__offer-price">${item.price}</span>
         </label>
-        </span>
         `.trim();
       })
       .join(``);
