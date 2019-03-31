@@ -12,6 +12,10 @@ const LOADING_TEXT = `Loading route...`;
 const LOADING_FAILURE_TEXT = `Something went wrong while loading your route info. Check your connection or try again later`;
 const FUTURE_FILTER = `future`;
 const PAST_FILTER = `past`;
+const SAVE = `Save`;
+const SAVING = `Saving...`;
+const DELETE = `Delete`;
+const DELETING = `Deleting...`;
 
 const tripFilterElement = document.querySelector(`.trip-filter`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
@@ -100,49 +104,40 @@ const getTripPoints = (points) => {
     pointEdit.onCancel = renderPointComponent;
 
     pointEdit.onSubmit = (newData) => {
-      // TODO взять из компонента если нужно
-      const pointElement = document.querySelector(`.point`);
-      const pointFormElement = document.querySelector(`.point > form`);
-      const saveBtn = pointFormElement.querySelector(`.point__button--save`);
-      // TODO вынести в метод
-      saveBtn.innerText = `Saving...`;
-      errorBorder(pointElement, false);
-      disableForm(pointFormElement);
+      errorBorder(pointEdit.element, false);
+      pointEdit.block();
+      pointEdit.saveBtnTextChange(SAVING);
+
       updateObject(item, newData);
 
       store.updatePoint(item)
         .then(() => {
-          disableForm(pointFormElement, false);
+          pointEdit.unblock();
           renderPointComponent(newData);
         })
         .catch(() => {
-          // TODO вынести в метод
-          errorBorder(pointElement);
+          errorBorder(pointEdit.element);
           pointEdit.shake();
-          disableForm(pointFormElement, false);
-          saveBtn.innerText = `Save`;
+          pointEdit.unblock();
+          pointEdit.saveBtnTextChange(SAVE);
         });
     };
 
     pointEdit.onDelete = () => {
-      // TODO тут как в onSubmit
-      const pointElement = document.querySelector(`.point`);
-      const pointFormElement = document.querySelector(`.point > form`);
-      const deleteBtn = pointFormElement.querySelector(`.point__button[type=reset]`);
-      deleteBtn.innerText = `Deleting...`;
+      errorBorder(pointEdit.element, false);
+      pointEdit.block();
+      pointEdit.deleteBtnTextChange(DELETING);
 
-      errorBorder(pointElement, false);
-      disableForm(pointFormElement);
       store.deletePoint(item.id)
         .then(() => {
-          disableForm(pointFormElement, false);
+          pointEdit.unblock();
           pointEdit.unrender();
         })
         .catch(() => {
-          errorBorder(pointElement);
+          errorBorder(pointEdit.element);
           pointEdit.shake();
-          disableForm(pointFormElement, false);
-          deleteBtn.innerText = `Delete`;
+          pointEdit.unblock();
+          pointEdit.deleteBtnTextChange(DELETE);
         });
     };
 

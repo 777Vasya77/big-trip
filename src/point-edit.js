@@ -3,6 +3,9 @@ import flatpickr from 'flatpickr';
 import moment from 'moment';
 import {PointType} from './data';
 import store from './store';
+import {disableForm, errorBorder} from "./util";
+
+const IS_FAVORITE = `on`;
 
 export default class PointEdit extends Component {
 
@@ -192,6 +195,28 @@ export default class PointEdit extends Component {
     setTimeout(() => {
       this._element.style.animation = ``;
     }, ANIMATION_TIMEOUT);
+  }
+
+  block() {
+    const form = this._element.querySelector(`form`);
+    disableForm(form);
+  }
+
+  unblock() {
+    const form = this._element.querySelector(`form`);
+    disableForm(form, false);
+  }
+
+  deleteBtnTextChange(text) {
+    this._element
+      .querySelector(`.point__button[type=reset]`)
+      .innerText = text;
+  }
+
+  saveBtnTextChange(text) {
+    this._element
+      .querySelector(`.point__button--save`)
+      .innerText = text;
   }
 
   _getDestinationMarkdown() {
@@ -426,7 +451,7 @@ export default class PointEdit extends Component {
         // ToDo: Из формы приходит ["total-price", ""].
       },
       favorite(value) {
-        target.isFavorite = value === `on`; // TODO вынести в константы
+        target.isFavorite = value === IS_FAVORITE;
       }
     };
 
