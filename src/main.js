@@ -20,15 +20,17 @@ const statsSwitcher = document.querySelector(`a[href*=stat]`);
 const tableSwitcher = document.querySelector(`a[href*=table]`);
 const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
+// TODO брать данные из store
 const tripPoints = [];
 const offers = [];
 const destinations = [];
 
 statsSwitcher.addEventListener(`click`, (evt) => {
   evt.preventDefault();
-
+  // TODO classList.toggle
   table.classList.add(`visually-hidden`);
   stats.classList.remove(`visually-hidden`);
+  // TODO отрисовка статистики
 });
 
 tableSwitcher.addEventListener(`click`, (evt) => {
@@ -97,10 +99,11 @@ const getTripPoints = (points) => {
     pointEdit.onCancel = renderPointComponent;
 
     pointEdit.onSubmit = (newData) => {
+      // TODO взять из компонента если нужно
       const pointElement = document.querySelector(`.point`);
       const pointFormElement = document.querySelector(`.point > form`);
       const saveBtn = pointFormElement.querySelector(`.point__button--save`);
-
+      // TODO вынести в метод
       saveBtn.innerText = `Saving...`;
       errorBorder(pointElement, false);
       disableForm(pointFormElement);
@@ -112,6 +115,7 @@ const getTripPoints = (points) => {
           renderPointComponent(newData);
         })
         .catch(() => {
+          // TODO вынести в метод
           errorBorder(pointElement);
           pointEdit.shake();
           disableForm(pointFormElement, false);
@@ -120,6 +124,7 @@ const getTripPoints = (points) => {
     };
 
     pointEdit.onDelete = () => {
+      // TODO тут как в onSubmit
       const pointElement = document.querySelector(`.point`);
       const pointFormElement = document.querySelector(`.point > form`);
       const deleteBtn = pointFormElement.querySelector(`.point__button[type=reset]`);
@@ -153,6 +158,7 @@ const getTripPoints = (points) => {
 
       pointEdit.offers = offers.find((it) => it.type === evt.target.value);
       pointEdit.type = PointType[type];
+      // TODO отрендерить изменения
     };
 
     point.render();
@@ -186,6 +192,7 @@ const showLoadingError = () => {
   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;color:red;">${LOADING_FAILURE_TEXT}</h1>`;
 };
 
+// TODO перенести сообщение в старт загрузки
 if (store.state.isLoading) {
   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
 }
