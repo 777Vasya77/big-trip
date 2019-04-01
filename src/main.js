@@ -170,6 +170,7 @@ const getTripPoints = (points) => {
       store.updatePoint(item)
         .then(() => {
           pointEdit.unblock();
+          setTotalPrice();
           renderPointComponent(newData);
         })
         .catch(() => {
@@ -239,13 +240,16 @@ const countTotalPrice = (points) => {
   return Math.round(points.reduce((prev, cur) => +prev + +cur.price, 0));
 };
 
+const setTotalPrice = () => {
+  tripTotalCostElement.innerText = `€ ${countTotalPrice(store.state.points)}`;
+};
+
 const appInit = () => {
   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
   renderFilters();
   renderTripPoints();
   sortPoints(store.state.points);
-
-  tripTotalCostElement.innerText = `€ ${countTotalPrice(store.state.points)}`;
+  setTotalPrice();
   tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(store.state.points));
 };
 
@@ -285,6 +289,7 @@ const getNewPointForm = () => {
     store.storePoint(point)
       .then(() => {
         newPoint.unblock();
+        setTotalPrice();
         renderTripPoints();
         newPoint.unrender();
       })
