@@ -1,7 +1,7 @@
 export const generateTripPointsTitle = (points) => {
   return points
     .map((item) => item.destination.name)
-    .splice(0, 4)
+    .splice(0, 4) // todo тут лучше slice
     .join(`&nbsp;&mdash;&nbsp;`);
 };
 
@@ -17,6 +17,7 @@ export const removeFromArray = (array, item) => {
 };
 
 export const updateObject = (oldObject, newObject) => {
+  // todo посмотри на Object.assign
   Object.keys(newObject).forEach((key) => {
     oldObject[key] = newObject[key];
   });
@@ -32,12 +33,12 @@ export const disableForm = (form, action = true) => {
 
 const disableElements = (elements, action) => {
   Array.from(elements).forEach((item) => {
-    return (action) ?
+    return (action) ? // todo тут лучше явно if написать
       item.setAttribute(`disabled`, `disabled`) :
       item.removeAttribute(`disabled`);
   });
 };
 
-export const errorBorder = (none, action = true) => {
+export const errorBorder = (none, action = true) => { // todo функция просит глагол
   none.style.border = action ? `1px solid red` : `none`;
 };
