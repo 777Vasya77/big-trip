@@ -460,9 +460,6 @@ export default class PointEdit extends Component {
       destination(value) {
         target.destination = store.state.destinations.find((item) => item.name === value);
       },
-      [`total-price`]() {
-        // ToDo: Из формы приходит ["total-price", ""].
-      },
       favorite(value) {
         target.isFavorite = value === IS_FAVORITE;
       }
