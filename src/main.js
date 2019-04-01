@@ -116,6 +116,7 @@ const getFilters = (filters) => {
           renderTripPoints(futurePoints);
           moneyChart.init(futurePoints);
           transportChart.init(futurePoints);
+          sortPoints(futurePoints);
           return;
 
         case PAST_FILTER:
@@ -124,6 +125,7 @@ const getFilters = (filters) => {
           renderTripPoints(pastPoints);
           moneyChart.init(pastPoints);
           transportChart.init(pastPoints);
+          sortPoints(pastPoints);
           return;
 
         default:
