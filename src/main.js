@@ -1,4 +1,4 @@
-import {cities, PointType} from './data';
+import {PointType} from './data';
 import {errorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 import moneyChart from './money-chart';

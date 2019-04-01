@@ -40,9 +40,3 @@ export const PointType = {
     icon: `🍴️️`
   },
 };
-
-export const cities = [
-  `Amsterdam`,
-  `Geneva`,
-  `Chamonix`,
-];
