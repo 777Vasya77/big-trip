@@ -1,10 +1,13 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import moment from "moment";
 
-const getMoneyData = (tripPoints) => {
+const getTimeSpentData = (tripPoints) => {
   return tripPoints.reduce((prev, cur) => {
+    const duration = moment.duration(moment(cur.timetable.to).diff(moment(cur.timetable.from)));
+
     const prop = `${cur.type.icon} ${cur.type.title.toUpperCase()}`;
-    prev[prop] = (prev[prop] || 0) + +cur.price;
+    prev[prop] = (prev[prop] || 0) + Math.round(duration.asHours());
     return prev;
   }, {});
 };
@@ -12,22 +15,22 @@ const getMoneyData = (tripPoints) => {
 export default {
   _labels: [],
   _data: [],
-  _moneyCtx: null,
+  _timeSpendCtx: null,
   init(points) {
     const BAR_HEIGHT = 55;
-    const moneyCtx = document.querySelector(`.statistic__money`);
-    const moneyData = getMoneyData(points);
+    const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
+    const timeSpentData = getTimeSpentData(points);
 
-    this._moneyCtx = moneyCtx;
-    this._labels = [...new Set(Object.keys(moneyData))];
-    this._data = Object.values(moneyData);
+    this._timeSpendCtx = timeSpendCtx;
+    this._labels = [...new Set(Object.keys(timeSpentData))];
+    this._data = Object.values(timeSpentData);
 
-    moneyCtx.height = BAR_HEIGHT * this._labels.length;
+    timeSpendCtx.height = BAR_HEIGHT * this._labels.length;
 
     this.render();
   },
   render() {
-    return new Chart(this._moneyCtx, {
+    return new Chart(this._timeSpendCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -48,12 +51,12 @@ export default {
             color: `#000000`,
             anchor: `end`,
             align: `start`,
-            formatter: (val) => `€ ${val}`
+            formatter: (val) => `${val}H`
           }
         },
         title: {
           display: true,
-          text: `MONEY`,
+          text: `TRANSPORT`,
           fontColor: `#000000`,
           fontSize: 23,
           position: `left`

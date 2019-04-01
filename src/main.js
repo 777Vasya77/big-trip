@@ -3,6 +3,7 @@ import {errorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 import moneyChart from './money-chart';
 import transportChart from './transport-chart';
+import timeSpentChart from './time-spent-chart';
 import Point from './point';
 import PointEdit from './point-edit';
 import PointNew from './point-new';
@@ -94,6 +95,7 @@ statsSwitcher.addEventListener(`click`, (evt) => {
 
   moneyChart.init(store.state.points);
   transportChart.init(store.state.points);
+  timeSpentChart.init(store.state.points);
 });
 
 tableSwitcher.addEventListener(`click`, (evt) => {
