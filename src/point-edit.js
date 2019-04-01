@@ -7,7 +7,7 @@ import {disableForm} from "./util";
 
 const IS_FAVORITE = `on`;
 
-export default class PointEdit extends Component {
+export default class PointEdit extends Component { // todo хорошо бы заведомо общее с point-new вынести, может даже общий класс для них сделать
 
   constructor(data) {
     super();

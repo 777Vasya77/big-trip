@@ -1,3 +1,18 @@
+// todo давай тут сделаем модуль для констант
+
+// todo enum нам предлагает удобный способ сделать свой тип данных
+export const Point = {
+  TAXI: `taxi`,
+  BUS: `bus`
+};
+export const Title = {
+  [Point.TAXI]: `Taxi`,
+};
+
+export const Icon = {
+  [Point.BUS]: `🚕`,
+};
+
 export const PointType = {
   TAXI: {
     title: `Taxi`,

@@ -17,7 +17,7 @@ const PAST_FILTER = `past`;
 const SAVE = `Save`;
 const SAVING = `Saving...`;
 const DELETE = `Delete`;
-const DELETING = `Deleting...`;
+const DELETING = `Deleting...`; // todo я бы сообщения вынес в отдельный модуль
 
 const tripFilterElement = document.querySelector(`.trip-filter`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
@@ -29,6 +29,8 @@ const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
 const newEventElement = document.querySelector(`.new-event`);
 const tripTotalCostElement = document.querySelector(`.trip__total-cost`);
+
+// todo тут хочется оставить логику отрисовки приложения, а отдельные компоненты по модулям раскидать
 
 const showTableContent = () => {
   stats.classList.add(`visually-hidden`);
@@ -58,7 +60,8 @@ const sortPoints = (points) => {
   const priceTriggerElement = document.querySelector(`label[for="sorting-price"]`);
 
   eventTriggerElement.addEventListener(`click`, () => {
-    points.sort(sortByFromDate);
+
+    points.sort(sortByFromDate); // todo у нас теперь есть стор, можно в нем геттеры сделать
     renderTripPoints(points);
   });
 
@@ -183,6 +186,7 @@ const getTripPoints = (points, tripDayContainer) => {
 
     pointEdit.onOffer = (evt) => {
       const offerTitle = evt.target.value.toLowerCase().split(`-`).join(` `);
+      // todo лучше все данные в компоненте приготовить и сюда параметром передать
       item.offers.find((it) => it.title.toLowerCase() === offerTitle).accepted = evt.target.checked;
     };
 
@@ -218,7 +222,7 @@ const getTripPoints = (points, tripDayContainer) => {
 
       pointEdit.offers = store.state.offers.find((it) => it.type === evt.target.value);
       pointEdit.type = PointType[type];
-
+      // todo с разметкой лучше работать там где она объявлена, лучше метод сделать
       pointEdit.element.querySelector(`#travel-way__toggle`).checked = false;
     };
 
@@ -271,7 +275,7 @@ const renderNewPointForm = () => {
   tripPointsBlock.prepend(getNewPointForm());
 };
 
-const countTotalPrice = (points) => {
+const countTotalPrice = (points) => { // todo такое лучше в утилиты или в стор
   const pointsPrice = Math.round(points.reduce((prev, cur) => prev + +cur.price, 0));
   const offers = [].concat(...points.map((item) => item.offers));
   const offersPrice = offers.filter((item) => item.accepted).reduce((prev, cur) => prev + cur.price, 0);
@@ -283,7 +287,7 @@ const setTotalPrice = () => {
   tripTotalCostElement.innerText = `€ ${countTotalPrice(store.state.points)}`;
 };
 
-const appInit = () => {
+const appInit = () => { // todo тут в main хорошо бы только это оставить, а остальное по модулям раскидать
   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
   renderFilters();
   renderTripPoints();

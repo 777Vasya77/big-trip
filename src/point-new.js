@@ -5,7 +5,7 @@ import {PointType} from './data';
 import {disableForm} from './util';
 import store from './store';
 
-const DEFAULT_POINT_TYPE = PointType[Object.keys(PointType)[0]];
+const DEFAULT_POINT_TYPE = PointType[Object.keys(PointType)[0]]; // todo то что вычисляем это уже не константа, первый элемент можно деструктуризацией
 
 export default class PointNew extends Component {
 
@@ -13,7 +13,7 @@ export default class PointNew extends Component {
     super();
 
     this._type = DEFAULT_POINT_TYPE;
-    this._offers = store.state.offers.find((it) => it.type === this._type.title.toLowerCase()).offers;
+    this._offers = store.state.offers.find((it) => it.type === this._type.title.toLowerCase()).offers; // todo это лучше в store перенести
     this._timetable = {
       from: new Date(),
       to: new Date(),
@@ -22,7 +22,7 @@ export default class PointNew extends Component {
     this._destination = null;
     this._destinations = store.state.destinations;
 
-    this._onSubmit = null;
+    this._onSubmit = null; // todo я бы заглушкам функций поставил пустую функцию, безопасней, ее можно по ссылке сравнивать
     this._onCancel = null;
     this._onDelete = null;
     this._onType = null;
@@ -57,7 +57,7 @@ export default class PointNew extends Component {
     return this._destination && this._destination.description;
   }
 
-  get template() {
+  get template() { // todo разметку можно вынести в отдельный модуль с функцией, сделать папку для компонента и папку для компонентов
     return `
       <article class="point">
         <form>
@@ -165,7 +165,7 @@ export default class PointNew extends Component {
   }
 
   set onDestination(fn) {
-    if (typeof fn === `function`) {
+    if (typeof fn === `function`) { // todo такую дежурную проверку лучше в прототип, можно прям в родителя
       this._onDestination = fn;
     }
   }
@@ -181,7 +181,7 @@ export default class PointNew extends Component {
   }
 
   shake() {
-    const ANIMATION_TIMEOUT = 0.6;
+    const ANIMATION_TIMEOUT = 0.6; // todo в константы
     this._element.style.animation = `shake ${ANIMATION_TIMEOUT}s`;
     this._element.addEventListener(`animationend`, () => {
       this._element.style.animation = ``;
@@ -194,7 +194,7 @@ export default class PointNew extends Component {
       .innerText = text;
   }
 
-  _getTravelWaySelectMarkdown() {
+  _getTravelWaySelectMarkdown() { // todo иконки у нас в константах были и тут просится map по массиву
     return `
       <label class="travel-way__label" for="travel-way__toggle">${this.typeIcon}️</label>
       
@@ -339,7 +339,7 @@ export default class PointNew extends Component {
       .removeEventListener(`change`, this._onDestinationChange);
 
     flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`)).destroy();
-    flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`)).destroy();
+    flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`)).destroy(); // todo у нас теперь 3 экземпляра flatpickr
   }
 
   _onEscKeyup(evt) {
@@ -404,18 +404,18 @@ export default class PointNew extends Component {
         target.price = value;
       },
       offer(value) {
-        target.offers.forEach((item) => {
+        target.offers.forEach((item) => { // todo так мы на каждый offer всех offers обходим, можно в value сразу индекс писать
           const title = (item.title)
             ? item.title.toLowerCase().split(` `).join(`-`)
             : item.name.toLowerCase().split(` `).join(`-`);
 
-          if (title === value) {
+          if (title === value) { // todo там инпуты, может checked проверять?
             item.accepted = true;
           }
         });
       },
       destination(value) {
-        target.destination = store.state.destinations.find((item) => item.name === value);
+        target.destination = store.state.destinations.find((item) => item.name === value); // todo такое тоже лучше методом стора сделать
       }
     };
 
