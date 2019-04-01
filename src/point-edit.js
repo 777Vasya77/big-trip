@@ -418,9 +418,6 @@ export default class PointEdit extends Component {
 
   static createMapper(target) {
     return {
-      day() {
-        // ToDo: Из формы приходит ["day", ""]. Без понятия что это... Надо разобраться!
-      },
       [`travel-way`](value) {
         target.type = PointType[value.split(`-`).join(``).toUpperCase()];
       },

@@ -1,5 +1,8 @@
-export const generateTripPointsTitle = (array) => {
-  return array.join(`&nbsp;&mdash;&nbsp;`);
+export const generateTripPointsTitle = (points) => {
+  return points
+    .map((item) => item.destination.name)
+    .splice(0, 4)
+    .join(`&nbsp;&mdash;&nbsp;`);
 };
 
 export const createElement = (template) => {

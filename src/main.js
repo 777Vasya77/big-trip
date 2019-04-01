@@ -229,8 +229,6 @@ const renderTripPoints = (points = store.state.points) => {
 const renderFilters = () => {
   tripFilterElement.appendChild(getFilters(store.state.filters));
 };
-// TODO использовать актуальные города
-tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
 const renderNewPointForm = () => {
   tripPointsBlock.prepend(getNewPointForm());
@@ -241,6 +239,7 @@ const appInit = () => {
   renderFilters();
   renderTripPoints();
   sortPoints(store.state.points);
+  tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(store.state.points));
 };
 
 const showLoadingError = () => {
