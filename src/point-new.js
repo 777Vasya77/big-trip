@@ -180,6 +180,14 @@ export default class PointNew extends Component {
     disableForm(form, false);
   }
 
+  shake() {
+    const ANIMATION_TIMEOUT = 0.6;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT}s`;
+    this._element.addEventListener(`animationend`, () => {
+      this._element.style.animation = ``;
+    });
+  }
+
   saveBtnTextChange(text) {
     this._element
       .querySelector(`.point__button--save`)

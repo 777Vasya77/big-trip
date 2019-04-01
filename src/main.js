@@ -231,10 +231,22 @@ const getNewPointForm = () => {
   };
 
   newPoint.onSubmit = (point) => {
-    store.storePoint(point).then(() => {
-      renderTripPoints();
-      newPoint.unrender();
-    });
+    errorBorder(newPoint.element, false);
+    newPoint.block();
+    newPoint.saveBtnTextChange(SAVING);
+
+    store.storePoint(point)
+      .then(() => {
+        newPoint.unblock();
+        renderTripPoints();
+        newPoint.unrender();
+      })
+      .catch(() => {
+        errorBorder(newPoint.element);
+        newPoint.shake();
+        newPoint.unblock();
+        newPoint.saveBtnTextChange(SAVE);
+      });
   };
 
   return newPoint.element;
