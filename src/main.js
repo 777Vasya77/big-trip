@@ -1,5 +1,5 @@
 import {PointType} from './data';
-import {errorBorder, generateTripPointsTitle, updateObject} from './util';
+import {createElement, errorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 import moneyChart from './money-chart';
 import transportChart from './transport-chart';
@@ -134,7 +134,7 @@ const getFilters = (filters) => {
   return fragment;
 };
 
-const getTripPoints = (points) => {
+const getTripPoints = (points, tripDayContainer) => {
   const fragment = document.createDocumentFragment();
 
   points.forEach((item) => {
@@ -146,14 +146,14 @@ const getTripPoints = (points) => {
 
       point.update(item);
       point.render();
-      tripDayItemsElement.replaceChild(point.element, pointEdit.element);
+      tripDayContainer.querySelector(`.trip-day__items`).replaceChild(point.element, pointEdit.element);
       pointEdit.unrender();
     };
     const renderPointEditComponent = () => {
       pointEdit.destinations = store.state.destinations;
       pointEdit.update(item);
       pointEdit.render();
-      tripDayItemsElement.replaceChild(pointEdit.element, point.element);
+      tripDayContainer.querySelector(`.trip-day__items`).replaceChild(pointEdit.element, point.element);
       point.unrender();
     };
 
@@ -229,9 +229,38 @@ const getTripPoints = (points) => {
   return fragment;
 };
 
+const getTripDayMarkdown = (date, number) => {
+  return `
+      <section class="trip-day">
+        <article class="trip-day__info">
+          <span class="trip-day__caption">Day</span>
+          <p class="trip-day__number">${number + 1}</p>
+          <h2 class="trip-day__title">${date}</h2>
+        </article>
+
+        <div class="trip-day__items">
+        </div>
+      </section>
+    `.trim();
+};
+
+const getTripDays = (points = store.state.points) => {
+  const fragment = document.createDocumentFragment();
+  const days = new Set(points.map((item) => moment(item.timetable.from).format(`MMM D`)));
+
+  Array.from(days).forEach((item, index) => {
+    const tripDay = createElement(getTripDayMarkdown(item, index));
+    const pointsByDate = points.filter((it) => moment(it.timetable.from).format(`MMM D`) === item);
+    tripDay.querySelector(`.trip-day__items`).appendChild(getTripPoints(pointsByDate, tripDay));
+    fragment.appendChild(tripDay);
+  });
+
+  return fragment;
+};
+
 const renderTripPoints = (points = store.state.points) => {
-  tripDayItemsElement.innerHTML = ``;
-  tripDayItemsElement.appendChild(getTripPoints(points));
+  tripPointsBlock.innerHTML = ``;
+  tripPointsBlock.appendChild(getTripDays(points));
 };
 
 const renderFilters = () => {
