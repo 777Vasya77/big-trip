@@ -111,19 +111,25 @@ const getFilters = (filters) => {
     filter.onFilter = () => {
       switch (filter.name) {
         case FUTURE_FILTER:
-          renderTripPoints(
-              store.state.points.filter((it) => it.timetable.from > +moment().format(`x`))
-          );
+          const futurePoints = store.state.points.filter((it) => it.timetable.from > +moment().format(`x`));
+
+          renderTripPoints(futurePoints);
+          moneyChart.init(futurePoints);
+          transportChart.init(futurePoints);
           return;
 
         case PAST_FILTER:
-          renderTripPoints(
-              store.state.points.filter((it) => it.timetable.to < +moment().format(`x`))
-          );
+          const pastPoints = store.state.points.filter((it) => it.timetable.to < +moment().format(`x`));
+
+          renderTripPoints(pastPoints);
+          moneyChart.init(pastPoints);
+          transportChart.init(pastPoints);
           return;
 
         default:
           renderTripPoints();
+          moneyChart.init(store.state.points);
+          transportChart.init(store.state.points);
           return;
       }
     };
