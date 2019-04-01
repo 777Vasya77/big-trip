@@ -44,41 +44,31 @@ const showStatsContent = () => {
   stats.classList.remove(`visually-hidden`);
 };
 
+const sortByPrice = (a, b) => +a.price - +b.price;
+const sortByFromDate = (a, b) => +a.timetable.from - +b.timetable.from;
+const sortByDuration = (a, b) => {
+  const timeDiffA = moment.duration(moment(+a.timetable.to).diff(moment(+a.timetable.from)));
+  const timeDiffB = moment.duration(moment(+b.timetable.to).diff(moment(+b.timetable.from)));
+  return timeDiffA - timeDiffB;
+};
+
 const sortPoints = (points) => {
   const eventTriggerElement = document.querySelector(`label[for="sorting-event"]`);
   const timeTriggerElement = document.querySelector(`label[for="sorting-time"]`);
   const priceTriggerElement = document.querySelector(`label[for="sorting-price"]`);
 
   eventTriggerElement.addEventListener(`click`, () => {
-    points.sort((a, b) => {
-      const titleA = a.type.title.split(`-`).join(``).toLowerCase();
-      const titleB = b.type.title.split(`-`).join(``).toLowerCase();
-
-      if (titleA < titleB) {
-        return -1;
-      }
-
-      if (titleA > titleB) {
-        return 1;
-      }
-
-      return 0;
-    });
-
+    points.sort(sortByFromDate);
     renderTripPoints(points);
   });
 
   priceTriggerElement.addEventListener(`click`, () => {
-    points.sort((a, b) => +a.price - +b.price);
+    points.sort(sortByPrice);
     renderTripPoints(points);
   });
 
   timeTriggerElement.addEventListener(`click`, () => {
-    points.sort((a, b) => {
-      const timeDiffA = moment.duration(moment(+a.timetable.to).diff(moment(+a.timetable.from)));
-      const timeDiffB = moment.duration(moment(+b.timetable.to).diff(moment(+b.timetable.from)));
-      return timeDiffA - timeDiffB;
-    });
+    points.sort(sortByDuration);
     renderTripPoints(points);
   });
 
