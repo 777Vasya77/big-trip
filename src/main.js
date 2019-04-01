@@ -205,6 +205,7 @@ const getTripPoints = (points) => {
         .then(() => {
           pointEdit.unblock();
           pointEdit.unrender();
+          setTotalPrice();
         })
         .catch(() => {
           errorBorder(pointEdit.element);
