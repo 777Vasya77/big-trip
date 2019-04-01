@@ -5,8 +5,10 @@ import moneyChart from './money-chart';
 import transportChart from './transport-chart';
 import Point from './point';
 import PointEdit from './point-edit';
+import PointNew from './point-new';
 import Filter from './filter';
 import store from './store';
+import ModelPoint from "./model-point";
 
 const LOADING_TEXT = `Loading route...`;
 const LOADING_FAILURE_TEXT = `Something went wrong while loading your route info. Check your connection or try again later`;
@@ -19,11 +21,13 @@ const DELETING = `Deleting...`;
 
 const tripFilterElement = document.querySelector(`.trip-filter`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
+const tripPointsBlock = document.querySelector(`.trip-points`);
 const tripPointsElement = document.querySelector(`.trip__points`);
 const statsSwitcher = document.querySelector(`a[href*=stat]`);
 const tableSwitcher = document.querySelector(`a[href*=table]`);
 const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
+const newEventElement = document.querySelector(`.new-event`);
 
 const showTableContent = () => {
   stats.classList.add(`visually-hidden`);
@@ -38,6 +42,10 @@ const showStatsContent = () => {
   statsSwitcher.classList.add(`view-switch__item--active`);
   stats.classList.remove(`visually-hidden`);
 };
+
+newEventElement.addEventListener(`click`, () => {
+  renderNewPointForm();
+});
 
 statsSwitcher.addEventListener(`click`, (evt) => {
   evt.preventDefault();
@@ -163,6 +171,8 @@ const getTripPoints = (points) => {
 
       pointEdit.offers = store.state.offers.find((it) => it.type === evt.target.value);
       pointEdit.type = PointType[type];
+
+      pointEdit.element.querySelector(`#travel-way__toggle`).checked = false;
     };
 
     point.render();
@@ -183,6 +193,10 @@ const renderFilters = () => {
 // TODO использовать актуальные города
 tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(cities));
 
+const renderNewPointForm = () => {
+  tripPointsBlock.prepend(getNewPointForm());
+};
+
 const appInit = () => {
   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
   renderFilters();
@@ -191,6 +205,34 @@ const appInit = () => {
 
 const showLoadingError = () => {
   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;color:red;">${LOADING_FAILURE_TEXT}</h1>`;
+};
+
+const getNewPointForm = () => {
+  const newPoint = new PointNew();
+
+  newPoint.onCancel = () => {
+    newPoint.unrender();
+  };
+
+  newPoint.onDelete = () => {
+    newPoint.unrender();
+  };
+
+  newPoint.onType = (evt) => {
+    const type = evt.target.value.toUpperCase().split(`-`).join(``);
+
+    newPoint.offers = store.state.offers.find((it) => it.type === evt.target.value);
+    newPoint.type = PointType[type];
+
+    newPoint.element.querySelector(`#travel-way__toggle`).checked = false;
+  };
+
+  newPoint.onSubmit = (point) => {
+    // console.log(point.type.title);
+    store.storePoint(point);
+  };
+
+  return newPoint.element;
 };
 
 store.loadData()

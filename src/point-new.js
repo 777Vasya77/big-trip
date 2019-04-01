@@ -2,38 +2,34 @@ import Component from './component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
 import {PointType} from './data';
+import {disableForm} from './util';
 import store from './store';
-import {disableForm} from "./util";
 
-const IS_FAVORITE = `on`;
+const FIRST = Object.keys(PointType)[0];
 
-export default class PointEdit extends Component {
 
-  constructor(data) {
+export default class PointNew extends Component {
+
+  constructor() {
     super();
 
-    this._id = data.id;
-    this._type = data.type;
-    this._offers = data.offers;
-    this._timetable = data.timetable;
-    this._price = data.price;
-    this._destination = data.destination;
-    this._isFavorite = data.isFavorite;
-    this._destinations = null;
+    this._type = PointType[FIRST];
+    this._offers = store.state.offers.find((it) => it.type === this._type.title.toLowerCase()).offers;
+    this._timetable = {
+      from: new Date(),
+      to: new Date(),
+    };
+    this._price = 0;
 
     this._onSubmit = null;
     this._onCancel = null;
     this._onDelete = null;
-    this._onFavorite = null;
-    this._onDestination = null;
     this._onType = null;
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
-    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
-    this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDocumentClick = this._onDocumentClick.bind(this);
-    this._onDestinationChange = this._onDestinationChange.bind(this);
     this._onTypeChange = this._onTypeChange.bind(this);
   }
 
@@ -43,18 +39,6 @@ export default class PointEdit extends Component {
 
   get typeTitle() {
     return this._type.title;
-  }
-
-  get images() {
-    return this._destination.pictures
-      .map((item) => {
-        return `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`;
-      })
-      .join(``);
-  }
-
-  get description() {
-    return this._destination.description;
   }
 
   get template() {
@@ -71,14 +55,6 @@ export default class PointEdit extends Component {
               ${this._getTravelWaySelectMarkdown()}
             </div>
             
-            <div class="point__destination-wrap">
-              <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
-              <datalist id="destination-select">
-                ${this._getDestinationSelectMarkdown()}
-              </datalist>
-            </div>
-            
             <div class="point__time">
               choose time
               <input class="point__input" type="text" value="19:00" name="date-start" placeholder="19:00">
@@ -91,15 +67,11 @@ export default class PointEdit extends Component {
               <input class="point__input" type="text" value="${this._price}" name="price">
             </label>
       
-            <div class="point__buttons">
+            <div class="point__buttons" style="margin-left: auto;">
               <button class="point__button point__button--save" type="submit">Save</button>
               <button class="point__button" type="reset">Delete</button>
             </div>
-      
-            <div class="paint__favorite-wrap">
-              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
-              <label class="point__favorite" for="favorite">favorite</label>
-            </div>
+     
           </header>
         
           <section class="point__details">
@@ -112,26 +84,11 @@ export default class PointEdit extends Component {
               </div>
       
             </section>
-            <section class="point__destination">
-              ${this._getDestinationMarkdown()}
-            </section>
             <input type="hidden" class="point__total-price" name="total-price" value="">
           </section>
         </form>
       </article>
     `.trim();
-  }
-
-  set destinations(data) {
-    if (data) {
-      this._destinations = data;
-    }
-  }
-
-  set destination(data) {
-    if (data) {
-      this._destination = data;
-    }
   }
 
   set offers(data) {
@@ -150,27 +107,15 @@ export default class PointEdit extends Component {
     }
   }
 
-  set onSubmit(fn) {
-    if (typeof fn === `function`) {
-      this._onSubmit = fn;
-    }
-  }
-
   set onDelete(fn) {
     if (typeof fn === `function`) {
       this._onDelete = fn;
     }
   }
 
-  set onFavorite(fn) {
+  set onSubmit(fn) {
     if (typeof fn === `function`) {
-      this._onFavorite = fn;
-    }
-  }
-
-  set onDestination(fn) {
-    if (typeof fn === `function`) {
-      this._onDestination = fn;
+      this._onSubmit = fn;
     }
   }
 
@@ -178,22 +123,6 @@ export default class PointEdit extends Component {
     if (typeof fn === `function`) {
       this._onType = fn;
     }
-  }
-
-  update(data) {
-    this._type = data.type;
-    this._destination = data.destination;
-    this._timetable = data.timetable;
-    this._offers = data.offers;
-    this._price = data.price;
-  }
-
-  shake() {
-    const ANIMATION_TIMEOUT = 0.6;
-    this._element.style.animation = `shake ${ANIMATION_TIMEOUT}s`;
-    this._element.addEventListener(`animationend`, () => {
-      this._element.style.animation = ``;
-    });
   }
 
   block() {
@@ -206,33 +135,10 @@ export default class PointEdit extends Component {
     disableForm(form, false);
   }
 
-  deleteBtnTextChange(text) {
-    this._element
-      .querySelector(`.point__button[type=reset]`)
-      .innerText = text;
-  }
-
   saveBtnTextChange(text) {
     this._element
       .querySelector(`.point__button--save`)
       .innerText = text;
-  }
-
-  _getDestinationMarkdown() {
-    return `
-    <span>
-      <h3 class="point__details-title">Destination</h3>
-      <p class="point__destination-text">${this.description}</p>
-      <div class="point__destination-images">
-        ${this.images}
-      </div>
-    </span>`;
-  }
-
-  _getDestinationSelectMarkdown() {
-    return this._destinations.map((item) => {
-      return `<option value="${item.name}"></option>`.trim();
-    }).join(``);
   }
 
   _getTravelWaySelectMarkdown() {
@@ -308,18 +214,17 @@ export default class PointEdit extends Component {
       .querySelector(`button[type=reset]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
 
-    this._element
-      .querySelector(`.point__favorite`)
-      .addEventListener(`click`, this._onFavoriteButtonClick);
-
-    this.element
-      .querySelector(`.point__destination-input`)
-      .addEventListener(`change`, this._onDestinationChange);
-
     this.element
       .querySelector(`.travel-way__select`)
       .addEventListener(`change`, this._onTypeChange);
 
+    flatpickr(this._element.querySelector(`.point__input[name=day]`), {
+      altInput: true,
+      altFormat: `d M`,
+      [`time_24hr`]: true,
+      defaultDate: +this._timetable.from,
+      dateFormat: `U`
+    });
     flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`), {
       enableTime: true,
       altInput: true,
@@ -328,7 +233,6 @@ export default class PointEdit extends Component {
       defaultDate: +this._timetable.from,
       dateFormat: `U`
     });
-
     flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`), {
       enableTime: true,
       altInput: true,
@@ -351,14 +255,6 @@ export default class PointEdit extends Component {
     this._element
       .querySelector(`button[type=reset]`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
-
-    this._element
-      .querySelector(`.point__favorite`)
-      .removeEventListener(`click`, this._onFavoriteButtonClick);
-
-    this.element
-      .querySelector(`.point__destination-input`)
-      .removeEventListener(`change`, this._onDestinationChange);
 
     this.element
       .querySelector(`.travel-way__select`)
@@ -389,19 +285,9 @@ export default class PointEdit extends Component {
     this._onDelete();
   }
 
-  _onFavoriteButtonClick() {
-    this._onFavorite();
-  }
-
-  _onDestinationChange(evt) {
-    this._onDestination(evt);
-    this._element.querySelector(`.point__destination`).innerHTML = this._getDestinationMarkdown();
-  }
-
   _onTypeChange(evt) {
     this._onType(evt);
     this._element.querySelector(`.travel-way__label`).innerText = this.typeIcon;
-    this._element.querySelector(`.point__destination-label`).innerText = `${this.typeTitle} to`;
 
     this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersMarkdown();
   }
@@ -444,34 +330,22 @@ export default class PointEdit extends Component {
           }
         });
       },
-      destination(value) {
-        target.destination = store.state.destinations.find((item) => item.name === value);
-      },
-      [`total-price`]() {
-        // ToDo: Из формы приходит ["total-price", ""].
-      },
-      favorite(value) {
-        target.isFavorite = value === IS_FAVORITE;
-      }
     };
 
   }
 
   processForm(formData) {
     const entry = {
-      id: this._id,
       type: {},
       timetable: {
         from: new Date(),
         to: new Date()
       },
-      destination: [],
       offers: this._offers,
       price: 0,
-      isFavorite: false
     };
 
-    const pointEditMapper = PointEdit.createMapper(entry);
+    const pointEditMapper = PointNew.createMapper(entry);
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;

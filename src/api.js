@@ -28,9 +28,9 @@ export default class API {
       .then(toJSON);
   }
 
-  create({point}) {
+  create(url, {point}) {
     return this._load({
-      url: `points`,
+      url,
       method: Method.POST,
       body: JSON.stringify(point),
       headers: new Headers({'Content-Type': `application/json`})
