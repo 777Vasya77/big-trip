@@ -3,7 +3,7 @@ import ModelPoint from './model-point';
 import {removeFromArray} from './util';
 
 const LOADING_TEXT = `Loading route...`;
-const AUTHORIZATION = `Basic eo0w590ik298893a1`;
+const AUTHORIZATION = `Basic eo0w590ik298893a1qq`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const FilterName = {
   EVERYTHING: `Everything`,

@@ -33,10 +33,19 @@ export default class Point extends Component {
 
   get timeDiff() {
     const duration = moment.duration(moment(+this._timetable.to).diff(moment(+this._timetable.from)));
+    let format = `mm[M]`;
+
+    if (duration.asDays() > 1) {
+      format = `D[D] HH[H] mm[M]`;
+    }
+
+    if (duration.asDays() < 1 && duration.asHours() > 1) {
+      format = `HH[H] mm[M]`;
+    }
 
     return moment
       .utc(duration.as(`milliseconds`))
-      .format(`HH[H] mm[M]`);
+      .format(format);
   }
 
   get template() {
