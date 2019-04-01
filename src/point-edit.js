@@ -27,6 +27,7 @@ export default class PointEdit extends Component {
     this._onFavorite = null;
     this._onDestination = null;
     this._onType = null;
+    this._onOffer = null;
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
@@ -35,6 +36,7 @@ export default class PointEdit extends Component {
     this._onDocumentClick = this._onDocumentClick.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
     this._onTypeChange = this._onTypeChange.bind(this);
+    this._onOfferChange = this._onOfferChange.bind(this);
   }
 
   get typeIcon() {
@@ -180,6 +182,12 @@ export default class PointEdit extends Component {
     }
   }
 
+  set onOffer(fn) {
+    if (typeof fn === `function`) {
+      this._onOffer = fn;
+    }
+  }
+
   update(data) {
     this._type = data.type;
     this._destination = data.destination;
@@ -320,6 +328,10 @@ export default class PointEdit extends Component {
       .querySelector(`.travel-way__select`)
       .addEventListener(`change`, this._onTypeChange);
 
+    this._element
+      .querySelector(`.point__offers-wrap`)
+      .addEventListener(`change`, this._onOfferChange);
+
     flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`), {
       enableTime: true,
       altInput: true,
@@ -406,6 +418,10 @@ export default class PointEdit extends Component {
     this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersMarkdown();
   }
 
+  _onOfferChange(evt) {
+    this._onOffer(evt);
+  }
+
   _onDocumentClick(evt) {
     const flatpickrCalendars = document.querySelectorAll(`.flatpickr-calendar`);
     const isOnElementClick = this._element.contains(evt.target);
@@ -472,6 +488,7 @@ export default class PointEdit extends Component {
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
+
       if (pointEditMapper[property]) {
         pointEditMapper[property](value);
       }

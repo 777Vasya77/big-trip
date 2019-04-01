@@ -181,6 +181,11 @@ const getTripPoints = (points) => {
         });
     };
 
+    pointEdit.onOffer = (evt) => {
+      const offerTitle = evt.target.value.toLowerCase().split(`-`).join(` `);
+      item.offers.find((it) => it.title.toLowerCase() === offerTitle).accepted = evt.target.checked;
+    };
+
     pointEdit.onDelete = () => {
       errorBorder(pointEdit.element, false);
       pointEdit.block();
@@ -237,7 +242,11 @@ const renderNewPointForm = () => {
 };
 
 const countTotalPrice = (points) => {
-  return Math.round(points.reduce((prev, cur) => +prev + +cur.price, 0));
+  const pointsPrice = Math.round(points.reduce((prev, cur) => prev + +cur.price, 0));
+  const offers = [].concat(...points.map((item) => item.offers));
+  const offersPrice = offers.filter((item) => item.accepted).reduce((prev, cur) => prev + cur.price, 0);
+
+  return pointsPrice + offersPrice;
 };
 
 const setTotalPrice = () => {
