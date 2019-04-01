@@ -5,31 +5,34 @@ import {PointType} from './data';
 import {disableForm} from './util';
 import store from './store';
 
-const FIRST = Object.keys(PointType)[0];
-
+const DEFAULT_POINT_TYPE = PointType[Object.keys(PointType)[0]];
 
 export default class PointNew extends Component {
 
   constructor() {
     super();
 
-    this._type = PointType[FIRST];
+    this._type = DEFAULT_POINT_TYPE;
     this._offers = store.state.offers.find((it) => it.type === this._type.title.toLowerCase()).offers;
     this._timetable = {
       from: new Date(),
       to: new Date(),
     };
     this._price = 0;
+    this._destination = null;
+    this._destinations = store.state.destinations;
 
     this._onSubmit = null;
     this._onCancel = null;
     this._onDelete = null;
     this._onType = null;
+    this._onDestination = null;
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDocumentClick = this._onDocumentClick.bind(this);
+    this._onDestinationChange = this._onDestinationChange.bind(this);
     this._onTypeChange = this._onTypeChange.bind(this);
   }
 
@@ -39,6 +42,19 @@ export default class PointNew extends Component {
 
   get typeTitle() {
     return this._type.title;
+  }
+
+  get images() {
+    return this._destination &&
+      this._destination.pictures
+      .map((item) => {
+        return `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`;
+      })
+      .join(``);
+  }
+
+  get description() {
+    return this._destination && this._destination.description;
   }
 
   get template() {
@@ -55,6 +71,14 @@ export default class PointNew extends Component {
               ${this._getTravelWaySelectMarkdown()}
             </div>
             
+            <div class="point__destination-wrap">
+              <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
+              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination ? this._destination.name : ``}" name="destination" required>
+              <datalist id="destination-select">
+                ${this._getDestinationSelectMarkdown()}
+              </datalist>
+            </div>
+            
             <div class="point__time">
               choose time
               <input class="point__input" type="text" value="19:00" name="date-start" placeholder="19:00">
@@ -67,11 +91,11 @@ export default class PointNew extends Component {
               <input class="point__input" type="text" value="${this._price}" name="price">
             </label>
       
-            <div class="point__buttons" style="margin-left: auto;">
+            <div class="point__buttons">
               <button class="point__button point__button--save" type="submit">Save</button>
               <button class="point__button" type="reset">Delete</button>
             </div>
-     
+            
           </header>
         
           <section class="point__details">
@@ -83,6 +107,9 @@ export default class PointNew extends Component {
                 ${this._getOffersMarkdown()}
               </div>
       
+            </section>
+            <section class="point__destination">
+              ${this._getDestinationMarkdown()}
             </section>
             <input type="hidden" class="point__total-price" name="total-price" value="">
           </section>
@@ -98,6 +125,18 @@ export default class PointNew extends Component {
   set type(data) {
     if (data) {
       this._type = data;
+    }
+  }
+
+  set destinations(data) {
+    if (data) {
+      this._destinations = data;
+    }
+  }
+
+  set destination(data) {
+    if (data) {
+      this._destination = data;
     }
   }
 
@@ -122,6 +161,12 @@ export default class PointNew extends Component {
   set onType(fn) {
     if (typeof fn === `function`) {
       this._onType = fn;
+    }
+  }
+
+  set onDestination(fn) {
+    if (typeof fn === `function`) {
+      this._onDestination = fn;
     }
   }
 
@@ -201,6 +246,23 @@ export default class PointNew extends Component {
       .join(``);
   }
 
+  _getDestinationSelectMarkdown() {
+    return this._destinations.map((item) => {
+      return `<option value="${item.name}"></option>`.trim();
+    }).join(``);
+  }
+
+  _getDestinationMarkdown() {
+    return `
+    <span ${!this._destination && `style="display:none"`}>
+        <h3 class="point__details-title">Destination</h3>
+        <p class="point__destination-text">${this.description}</p>
+      <div class="point__destination-images">
+        ${this.images}
+      </div>
+    </span>`;
+  }
+
   _bind() {
     this._element
       .querySelector(`form`)
@@ -217,6 +279,10 @@ export default class PointNew extends Component {
     this.element
       .querySelector(`.travel-way__select`)
       .addEventListener(`change`, this._onTypeChange);
+
+    this.element
+      .querySelector(`.point__destination-input`)
+      .addEventListener(`change`, this._onDestinationChange);
 
     flatpickr(this._element.querySelector(`.point__input[name=day]`), {
       altInput: true,
@@ -260,6 +326,10 @@ export default class PointNew extends Component {
       .querySelector(`.travel-way__select`)
       .removeEventListener(`change`, this._onTypeChange);
 
+    this.element
+      .querySelector(`.point__destination-input`)
+      .removeEventListener(`change`, this._onDestinationChange);
+
     flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`)).destroy();
     flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`)).destroy();
   }
@@ -288,8 +358,14 @@ export default class PointNew extends Component {
   _onTypeChange(evt) {
     this._onType(evt);
     this._element.querySelector(`.travel-way__label`).innerText = this.typeIcon;
+    this._element.querySelector(`.point__destination-label`).innerText = `${this.typeTitle} to`;
 
     this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersMarkdown();
+  }
+
+  _onDestinationChange(evt) {
+    this._onDestination(evt);
+    this._element.querySelector(`.point__destination`).innerHTML = this._getDestinationMarkdown();
   }
 
   _onDocumentClick(evt) {
@@ -330,6 +406,9 @@ export default class PointNew extends Component {
           }
         });
       },
+      destination(value) {
+        target.destination = store.state.destinations.find((item) => item.name === value);
+      }
     };
 
   }
@@ -343,6 +422,7 @@ export default class PointNew extends Component {
       },
       offers: this._offers,
       price: 0,
+      destination: null
     };
 
     const pointEditMapper = PointNew.createMapper(entry);

@@ -3,7 +3,7 @@ import ModelPoint from './model-point';
 import {removeFromArray} from './util';
 
 const LOADING_TEXT = `Loading route...`;
-const AUTHORIZATION = `Basic eo0w590ik29889333a1`;
+const AUTHORIZATION = `Basic eo0w590ik298893a1`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const FilterName = {
   EVERYTHING: `Everything`,
@@ -73,15 +73,20 @@ export default {
   },
 
   storePoint(point) {
-    const newPoint = {
+    const pointData = {
       'type': point.type.title.toLowerCase(),
       'base_price': point.price,
       'date_from': +point.timetable.from,
       'date_to': +point.timetable.to,
       'offers': point.offers,
-      'destination': {}
+      'destination': point.destination,
+      'is_favorite': false
     };
-    api.create(`points`, {point: newPoint});
+    return api.create(`points`, {point: pointData})
+      .then((response) => ModelPoint.parsePoint(response))
+      .then((newPoint) => {
+        this.state.points.push(newPoint);
+      });
   },
 
   updatePoint(data) {

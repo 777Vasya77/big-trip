@@ -8,7 +8,6 @@ import PointEdit from './point-edit';
 import PointNew from './point-new';
 import Filter from './filter';
 import store from './store';
-import ModelPoint from "./model-point";
 
 const LOADING_TEXT = `Loading route...`;
 const LOADING_FAILURE_TEXT = `Something went wrong while loading your route info. Check your connection or try again later`;
@@ -227,9 +226,15 @@ const getNewPointForm = () => {
     newPoint.element.querySelector(`#travel-way__toggle`).checked = false;
   };
 
+  newPoint.onDestination = (evt) => {
+    newPoint.destination = store.state.destinations.find((it) => it.name === evt.target.value);
+  };
+
   newPoint.onSubmit = (point) => {
-    // console.log(point.type.title);
-    store.storePoint(point);
+    store.storePoint(point).then(() => {
+      renderTripPoints();
+      newPoint.unrender();
+    });
   };
 
   return newPoint.element;

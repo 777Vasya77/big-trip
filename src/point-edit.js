@@ -73,7 +73,7 @@ export default class PointEdit extends Component {
             
             <div class="point__destination-wrap">
               <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
+              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination" required>
               <datalist id="destination-select">
                 ${this._getDestinationSelectMarkdown()}
               </datalist>
