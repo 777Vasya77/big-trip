@@ -27,6 +27,7 @@ const tableSwitcher = document.querySelector(`a[href*=table]`);
 const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
 const newEventElement = document.querySelector(`.new-event`);
+const tripTotalCostElement = document.querySelector(`.trip__total-cost`);
 
 const showTableContent = () => {
   stats.classList.add(`visually-hidden`);
@@ -234,11 +235,17 @@ const renderNewPointForm = () => {
   tripPointsBlock.prepend(getNewPointForm());
 };
 
+const countTotalPrice = (points) => {
+  return Math.round(points.reduce((prev, cur) => +prev + +cur.price, 0));
+};
+
 const appInit = () => {
   tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
   renderFilters();
   renderTripPoints();
   sortPoints(store.state.points);
+
+  tripTotalCostElement.innerText = `€ ${countTotalPrice(store.state.points)}`;
   tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(store.state.points));
 };
 

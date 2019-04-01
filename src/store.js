@@ -74,6 +74,7 @@ export default {
 
   storePoint(point) {
     const pointData = {
+      'day': point.day,
       'type': point.type.title.toLowerCase(),
       'base_price': point.price,
       'date_from': +point.timetable.from,
@@ -85,7 +86,7 @@ export default {
     return api.create(`points`, {point: pointData})
       .then((response) => ModelPoint.parsePoint(response))
       .then((newPoint) => {
-        this.state.points.push(newPoint);
+        this.state.points.unshift(newPoint);
       });
   },
 

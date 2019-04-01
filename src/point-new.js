@@ -388,8 +388,8 @@ export default class PointNew extends Component {
 
   static createMapper(target) {
     return {
-      day() {
-        // ToDo: Из формы приходит ["day", ""]. Без понятия что это... Надо разобраться!
+      day(value) {
+        target.day = +moment.unix(value).format(`x`);
       },
       [`travel-way`](value) {
         target.type = PointType[value.split(`-`).join(``).toUpperCase()];
@@ -423,6 +423,7 @@ export default class PointNew extends Component {
 
   processForm(formData) {
     const entry = {
+      day: new Date(),
       type: {},
       timetable: {
         from: new Date(),
