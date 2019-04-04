@@ -1,9 +1,9 @@
-import Component from './component';
+import Component from '../component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import {Title, Icon} from './data';
-import store from './store';
-import {disableForm} from "./util";
+import {Title, Icon} from '../../data';
+import store from '../../store/store';
+import {disableForm} from "../../util";
 
 const IS_FAVORITE = `on`;
 

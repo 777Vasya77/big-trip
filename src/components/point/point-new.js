@@ -1,9 +1,9 @@
-import Component from './component';
+import Component from '../component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import {Title, Icon} from './data';
-import {disableForm} from './util';
-import store from './store';
+import {Title, Icon} from '../../data';
+import {disableForm} from '../../util';
+import store from '../../store/store';
 
 const DEFAULT_POINT_TYPE = {title: Title.taxi, icon: Icon.taxi};
 

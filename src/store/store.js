@@ -1,7 +1,7 @@
-import API from './api';
-import ModelPoint from './model-point';
-import {removeFromArray} from './util';
-import {FilterName} from './data';
+import API from '../api';
+import ModelPoint from '../models/model-point';
+import {removeFromArray} from '../util';
+import {FilterName} from '../data';
 
 const LOADING_TEXT = `Loading route...`;
 const AUTHORIZATION = `Basic eo0w52er4qzz1qq`;

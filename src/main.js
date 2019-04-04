@@ -1,14 +1,14 @@
 import {Title, Icon, Message, FilterName} from './data';
 import * as util from './util';
 import moment from 'moment';
-import moneyChart from './money-chart';
-import transportChart from './transport-chart';
-import timeSpentChart from './time-spent-chart';
-import Point from './point';
-import PointEdit from './point-edit';
-import PointNew from './point-new';
-import Filter from './filter';
-import store from './store';
+import moneyChart from './components/chart/money-chart';
+import transportChart from './components/chart/transport-chart';
+import timeSpentChart from './components/chart/time-spent-chart';
+import Point from './components/point/point';
+import PointEdit from './components/point/point-edit';
+import PointNew from './components/point/point-new';
+import Filter from './components/filter/filter';
+import store from './store/store';
 
 const tripFilterElement = document.querySelector(`.trip-filter`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);

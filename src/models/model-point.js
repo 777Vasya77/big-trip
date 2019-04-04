@@ -1,4 +1,4 @@
-import {Title, Icon} from './data';
+import {Title, Icon} from '../data';
 
 export default class ModelPoint {
   constructor(data) {

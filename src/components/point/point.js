@@ -1,5 +1,5 @@
 import moment from 'moment';
-import Component from './component';
+import Component from '../component';
 
 export default class Point extends Component {
 
