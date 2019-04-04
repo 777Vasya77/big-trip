@@ -16,7 +16,7 @@ const sortByDuration = (a, b) => {
 export const sortPoints = (points) => {
   eventTriggerElement.addEventListener(`click`, () => {
 
-    points.sort(sortByFromDate); // todo у нас теперь есть стор, можно в нем геттеры сделать
+    points.sort(sortByFromDate);
     renderTripPoints(points);
   });
 

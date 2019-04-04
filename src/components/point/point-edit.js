@@ -5,19 +5,21 @@ import {Title, Icon, IS_FAVORITE, ANIMATION_TIMEOUT, Point} from '../../data';
 import store from '../../store/store';
 import {disableForm} from '../../util';
 
-export default class PointEdit extends Component { // todo хорошо бы заведомо общее с point-new вынести, может даже общий класс для них сделать
+const DEFAULT_POINT_TYPE = {title: Title.taxi, icon: Icon.taxi};
+
+export default class PointEdit extends Component {
 
   constructor(data) {
     super();
 
-    this._id = data.id;
-    this._type = data.type;
-    this._offers = data.offers;
-    this._timetable = data.timetable;
-    this._price = data.price;
-    this._destination = data.destination;
-    this._isFavorite = data.isFavorite;
-    this._destinations = null;
+    this._id = (data) ? data.id : null;
+    this._type = (data) ? data.type : DEFAULT_POINT_TYPE;
+    this._offers = (data) ? data.offers : store.getTypeOffers(this._type.title);;
+    this._timetable = (data) ? data.timetable : {};
+    this._price = (data) ? data.price : 0;
+    this._destination = (data) ? data.destination : null;
+    this._destinations = store.state.destinations;
+    this._isFavorite = (data) ? data.isFavorite : false;
 
     this._onSubmit = () => {};
     this._onCancel = () => {};
@@ -46,15 +48,19 @@ export default class PointEdit extends Component { // todo хорошо бы з�
   }
 
   get images() {
-    return this._destination.pictures
-      .map((item) => {
-        return `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`;
-      })
-      .join(``);
+    if (this._destination) {
+      return this._destination.pictures
+        .map((item) => {
+          return `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`;
+        })
+        .join(``);
+    }
+
+    return [];
   }
 
   get description() {
-    return this._destination.description;
+    return (this._destination) ? this._destination.description : ``;
   }
 
   get template() {
@@ -73,7 +79,7 @@ export default class PointEdit extends Component { // todo хорошо бы з�
             
             <div class="point__destination-wrap">
               <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination" required>
+              <input class="point__destination-input" list="destination-select" id="destination" value="${(this._destination) ? this._destination.name : ``}" name="destination" required>
               <datalist id="destination-select">
                 ${this._getDestinationSelectMarkdown()}
               </datalist>
@@ -215,9 +221,9 @@ export default class PointEdit extends Component { // todo хорошо бы з�
 
   _getDestinationMarkdown() {
     return `
-    <span>
-      <h3 class="point__details-title">Destination</h3>
-      <p class="point__destination-text">${this.description}</p>
+    <span ${!this._destination && `style="display:none"`}>
+        <h3 class="point__details-title">Destination</h3>
+        <p class="point__destination-text">${this.description}</p>
       <div class="point__destination-images">
         ${this.images}
       </div>

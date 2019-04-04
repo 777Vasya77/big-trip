@@ -72,6 +72,7 @@ export default class Point extends Component {
 
   _getOffersMarkdown() {
     return this._offers
+      .slice(0, 3)
       .map((item) => {
         const title = (item.name) ? item.name : item.title;
         return `
