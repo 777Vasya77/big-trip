@@ -1,5 +1,5 @@
 import {Title, Icon, Message, FilterName} from './data';
-import {createElement, errorBorder, generateTripPointsTitle, updateObject} from './util';
+import {createElement, setErrorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 import moneyChart from './money-chart';
 import transportChart from './transport-chart';
@@ -155,7 +155,7 @@ const getTripPoints = (points, tripDayContainer) => {
     pointEdit.onCancel = renderPointComponent;
 
     pointEdit.onSubmit = (newData) => {
-      errorBorder(pointEdit.element, false);
+      setErrorBorder(pointEdit.element, false);
       pointEdit.block();
       pointEdit.saveBtnTextChange(Message.SAVING);
 
@@ -168,7 +168,7 @@ const getTripPoints = (points, tripDayContainer) => {
           renderPointComponent(newData);
         })
         .catch(() => {
-          errorBorder(pointEdit.element);
+          setErrorBorder(pointEdit.element);
           pointEdit.shake();
           pointEdit.unblock();
           pointEdit.saveBtnTextChange(Message.SAVE);
@@ -182,7 +182,7 @@ const getTripPoints = (points, tripDayContainer) => {
     };
 
     pointEdit.onDelete = () => {
-      errorBorder(pointEdit.element, false);
+      setErrorBorder(pointEdit.element, false);
       pointEdit.block();
       pointEdit.deleteBtnTextChange(Message.DELETING);
 
@@ -193,7 +193,7 @@ const getTripPoints = (points, tripDayContainer) => {
           setTotalPrice();
         })
         .catch(() => {
-          errorBorder(pointEdit.element);
+          setErrorBorder(pointEdit.element);
           pointEdit.shake();
           pointEdit.unblock();
           pointEdit.deleteBtnTextChange(Message.DELETE);
@@ -312,7 +312,7 @@ const getNewPointForm = () => {
   };
 
   newPoint.onSubmit = (point) => {
-    errorBorder(newPoint.element, false);
+    setErrorBorder(newPoint.element, false);
     newPoint.block();
     newPoint.saveBtnTextChange(Message.SAVING);
 
@@ -324,7 +324,7 @@ const getNewPointForm = () => {
         newPoint.unrender();
       })
       .catch(() => {
-        errorBorder(newPoint.element);
+        setErrorBorder(newPoint.element);
         newPoint.shake();
         newPoint.unblock();
         newPoint.saveBtnTextChange(Message.SAVE);
