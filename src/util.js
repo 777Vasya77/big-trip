@@ -1,3 +1,7 @@
+import store from './store/store';
+
+const tripTotalCostElement = document.querySelector(`.trip__total-cost`);
+
 export const generateTripPointsTitle = (points) => {
   return points
     .map((item) => item.destination.name)
@@ -47,4 +51,8 @@ export const countTotalPrice = (points) => {
   const offersPrice = offers.filter((item) => item.accepted).reduce((prev, cur) => prev + cur.price, 0);
 
   return pointsPrice + offersPrice;
+};
+
+export const setTotalPrice = () => {
+  tripTotalCostElement.innerText = `€ ${countTotalPrice(store.state.points)}`;
 };

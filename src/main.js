@@ -1,16 +1,14 @@
-import {Title, Icon, Message, FilterName} from './data';
+import {Title, Icon, Message} from './data';
 import * as util from './util';
 import moment from 'moment';
 import moneyChart from './components/chart/money-chart';
 import transportChart from './components/chart/transport-chart';
 import timeSpentChart from './components/chart/time-spent-chart';
-import Point from './components/point/point';
-import PointEdit from './components/point/point-edit';
 import PointNew from './components/point/point-new';
-import Filter from './components/filter/filter';
 import store from './store/store';
+import {renderFilters} from './components/filter/render-filter';
+import {renderTripPoints} from './components/point/render-points';
 
-const tripFilterElement = document.querySelector(`.trip-filter`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
 const tripPointsBlock = document.querySelector(`.trip-points`);
 const tripPointsElement = document.querySelector(`.trip__points`);
@@ -19,7 +17,6 @@ const tableSwitcher = document.querySelector(`a[href*=table]`);
 const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
 const newEventElement = document.querySelector(`.new-event`);
-const tripTotalCostElement = document.querySelector(`.trip__total-cost`);
 
 // todo тут хочется оставить логику отрисовки приложения, а отдельные компоненты по модулям раскидать
 
@@ -88,181 +85,8 @@ tableSwitcher.addEventListener(`click`, (evt) => {
   showTableContent();
 });
 
-const getFilters = (filters) => {
-  const fragment = document.createDocumentFragment();
-
-  filters.forEach((item) => {
-    const filter = new Filter(item);
-    filter.render();
-    filter.onFilter = () => {
-      switch (filter.name) {
-        case FilterName.FUTURE:
-          const futurePoints = store.state.points.filter((it) => it.timetable.from > +moment().format(`x`));
-
-          renderTripPoints(futurePoints);
-          moneyChart.init(futurePoints);
-          transportChart.init(futurePoints);
-          sortPoints(futurePoints);
-          return;
-
-        case FilterName.PAST:
-          const pastPoints = store.state.points.filter((it) => it.timetable.to < +moment().format(`x`));
-
-          renderTripPoints(pastPoints);
-          moneyChart.init(pastPoints);
-          transportChart.init(pastPoints);
-          sortPoints(pastPoints);
-          return;
-
-        default:
-          renderTripPoints();
-          moneyChart.init(store.state.points);
-          transportChart.init(store.state.points);
-          return;
-      }
-    };
-
-    fragment.appendChild(filter.element);
-  });
-
-  return fragment;
-};
-
-const getTripPoints = (points, tripDayContainer) => {
-  const fragment = document.createDocumentFragment();
-
-  points.forEach((item) => {
-    const point = new Point(item);
-    const pointEdit = new PointEdit(item);
-
-    const renderPointComponent = (newData = item) => {
-      item = newData;
-
-      point.update(item);
-      point.render();
-      tripDayContainer.querySelector(`.trip-day__items`).replaceChild(point.element, pointEdit.element);
-      pointEdit.unrender();
-    };
-    const renderPointEditComponent = () => {
-      pointEdit.destinations = store.state.destinations;
-      pointEdit.update(item);
-      pointEdit.render();
-      tripDayContainer.querySelector(`.trip-day__items`).replaceChild(pointEdit.element, point.element);
-      point.unrender();
-    };
-
-    point.onEdit = renderPointEditComponent;
-    pointEdit.onCancel = renderPointComponent;
-
-    pointEdit.onSubmit = (newData) => {
-      util.setErrorBorder(pointEdit.element, false);
-      pointEdit.block();
-      pointEdit.saveBtnTextChange(Message.SAVING);
-
-      util.updateObject(item, newData);
-
-      store.updatePoint(item)
-        .then(() => {
-          pointEdit.unblock();
-          setTotalPrice();
-          renderPointComponent(newData);
-        })
-        .catch(() => {
-          util.setErrorBorder(pointEdit.element);
-          pointEdit.shake();
-          pointEdit.unblock();
-          pointEdit.saveBtnTextChange(Message.SAVE);
-        });
-    };
-
-    pointEdit.onOffer = (offer, value) => {
-      offer.accepted = value;
-    };
-
-    pointEdit.onDelete = () => {
-      util.setErrorBorder(pointEdit.element, false);
-      pointEdit.block();
-      pointEdit.deleteBtnTextChange(Message.DELETING);
-
-      store.deletePoint(item.id)
-        .then(() => {
-          pointEdit.unblock();
-          pointEdit.unrender();
-          setTotalPrice();
-        })
-        .catch(() => {
-          util.setErrorBorder(pointEdit.element);
-          pointEdit.shake();
-          pointEdit.unblock();
-          pointEdit.deleteBtnTextChange(Message.DELETE);
-        });
-    };
-
-    pointEdit.onFavorite = () => {
-      item.isFavorite = !item.isFavorite;
-    };
-
-    pointEdit.onDestination = (evt) => {
-      pointEdit.destination = store.state.destinations.find((it) => it.name === evt.target.value);
-    };
-
-    pointEdit.onType = (evt) => {
-      pointEdit.offers = store.state.offers.find((it) => it.type === evt.target.value);
-      pointEdit.type = {title: Title[evt.target.value], icon: Icon[evt.target.value]};
-      pointEdit.closeTypeSelect();
-    };
-
-    point.render();
-    fragment.appendChild(point.element);
-  });
-
-  return fragment;
-};
-
-const getTripDayMarkdown = (date, number) => {
-  return `
-      <section class="trip-day">
-        <article class="trip-day__info">
-          <span class="trip-day__caption">Day</span>
-          <p class="trip-day__number">${number + 1}</p>
-          <h2 class="trip-day__title">${date}</h2>
-        </article>
-
-        <div class="trip-day__items">
-        </div>
-      </section>
-    `.trim();
-};
-
-const getTripDays = (points = store.state.points) => {
-  const fragment = document.createDocumentFragment();
-  const days = new Set(points.map((item) => moment(item.timetable.from).format(`MMM D`)));
-
-  Array.from(days).forEach((item, index) => {
-    const tripDay = util.createElement(getTripDayMarkdown(item, index));
-    const pointsByDate = points.filter((it) => moment(it.timetable.from).format(`MMM D`) === item);
-    tripDay.querySelector(`.trip-day__items`).appendChild(getTripPoints(pointsByDate, tripDay));
-    fragment.appendChild(tripDay);
-  });
-
-  return fragment;
-};
-
-const renderTripPoints = (points = store.state.points) => {
-  tripPointsBlock.innerHTML = ``;
-  tripPointsBlock.appendChild(getTripDays(points));
-};
-
-const renderFilters = () => {
-  tripFilterElement.appendChild(getFilters(store.state.filters));
-};
-
 const renderNewPointForm = () => {
   tripPointsBlock.prepend(getNewPointForm());
-};
-
-const setTotalPrice = () => {
-  tripTotalCostElement.innerText = `€ ${util.countTotalPrice(store.state.points)}`;
 };
 
 const appInit = () => { // todo тут в main хорошо бы только это оставить, а остальное по модулям раскидать
@@ -270,7 +94,7 @@ const appInit = () => { // todo тут в main хорошо бы только э
   renderFilters();
   renderTripPoints();
   sortPoints(store.state.points);
-  setTotalPrice();
+  util.setTotalPrice();
   tripPointsElement.insertAdjacentHTML(`beforeend`, util.generateTripPointsTitle(store.state.points));
 };
 
@@ -308,7 +132,7 @@ const getNewPointForm = () => {
     store.storePoint(point)
       .then(() => {
         newPoint.unblock();
-        setTotalPrice();
+        util.setTotalPrice();
         renderTripPoints();
         newPoint.unrender();
       })
