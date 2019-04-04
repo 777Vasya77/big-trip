@@ -8,8 +8,9 @@ export const Message = {
 };
 
 export const FilterName = {
-  FUTURE: `future`,
-  PAST: `past`
+  EVERYTHING: `Everything`,
+  FUTURE: `Future`,
+  PAST: `Past`
 };
 
 export const Point = {
