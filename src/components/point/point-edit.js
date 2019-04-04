@@ -3,7 +3,7 @@ import flatpickr from 'flatpickr';
 import moment from 'moment';
 import {Title, Icon} from '../../data';
 import store from '../../store/store';
-import {disableForm} from "../../util";
+import {disableForm} from '../../util';
 
 const IS_FAVORITE = `on`;
 
