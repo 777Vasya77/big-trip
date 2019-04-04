@@ -1,5 +1,5 @@
-import moment from "moment";
-import {renderTripPoints} from "./render-points";
+import moment from 'moment';
+import {renderTripPoints} from './render-points';
 
 const eventTriggerElement = document.querySelector(`label[for="sorting-event"]`);
 const timeTriggerElement = document.querySelector(`label[for="sorting-time"]`);

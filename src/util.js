@@ -1,6 +1,9 @@
 import store from './store/store';
+import {Message} from './data';
 
 const tripTotalCostElement = document.querySelector(`.trip__total-cost`);
+const tripDayItemsElement = document.querySelector(`.trip-day__items`);
+const tripPointsElement = document.querySelector(`.trip__points`);
 
 export const generateTripPointsTitle = (points) => {
   return points
@@ -55,4 +58,16 @@ export const countTotalPrice = (points) => {
 
 export const setTotalPrice = () => {
   tripTotalCostElement.innerText = `€ ${countTotalPrice(store.state.points)}`;
+};
+
+export const showLoadingMessage = () => {
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${Message.LOADING_TEXT}</h1>`;
+};
+
+export const showLoadingError = () => {
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;color:red;">${Message.LOADING_FAILURE_TEXT}</h1>`;
+};
+
+export const renderCitiesTitle = () => {
+  tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(store.state.points));
 };
