@@ -175,10 +175,8 @@ const getTripPoints = (points, tripDayContainer) => {
         });
     };
 
-    pointEdit.onOffer = (evt) => {
-      const offerTitle = evt.target.value.toLowerCase().split(`-`).join(` `);
-      // todo лучше все данные в компоненте приготовить и сюда параметром передать
-      item.offers.find((it) => it.title.toLowerCase() === offerTitle).accepted = evt.target.checked;
+    pointEdit.onOffer = (offer, value) => {
+      offer.accepted = value;
     };
 
     pointEdit.onDelete = () => {

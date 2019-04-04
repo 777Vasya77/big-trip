@@ -419,7 +419,13 @@ export default class PointEdit extends Component { // todo хорошо бы з�
   }
 
   _onOfferChange(evt) {
-    this._onOffer(evt);
+    const offer = this._offers.find((it) => {
+      const title = (it.title) ? `title` : `name`;
+      return it[title].toLowerCase().split(` `).join(`-`) === evt.target.value;
+    });
+    const value = evt.target.checked;
+
+    this._onOffer(offer, value);
   }
 
   _onDocumentClick(evt) {
