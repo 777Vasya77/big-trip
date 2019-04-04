@@ -1,57 +1,40 @@
 // todo давай тут сделаем модуль для констант
 
-// todo enum нам предлагает удобный способ сделать свой тип данных
 export const Point = {
   TAXI: `taxi`,
-  BUS: `bus`
+  BUS: `bus`,
+  TRAIN: `train`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
+  CHECKIN: `chick-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`,
 };
+
 export const Title = {
   [Point.TAXI]: `Taxi`,
+  [Point.BUS]: `Bus`,
+  [Point.TRAIN]: `Train`,
+  [Point.SHIP]: `Ship`,
+  [Point.TRANSPORT]: `Transport`,
+  [Point.CHECKIN]: `Checkin`,
+  [Point.DRIVE]: `Drive`,
+  [Point.FLIGHT]: `Flight`,
+  [Point.SIGHTSEEING]: `Sightseeing`,
+  [Point.RESTAURANT]: `Restaurant`,
 };
 
 export const Icon = {
-  [Point.BUS]: `🚕`,
-};
-
-export const PointType = {
-  TAXI: {
-    title: `Taxi`,
-    icon: `🚕`
-  },
-  BUS: {
-    title: `Bus`,
-    icon: `🚌`
-  },
-  TRAIN: {
-    title: `Train`,
-    icon: `🚂`
-  },
-  SHIP: {
-    title: `Ship`,
-    icon: `🛳️`
-  },
-  TRANSPORT: {
-    title: `Transport`,
-    icon: `🚊`
-  },
-  DRIVE: {
-    title: `Drive`,
-    icon: `🚗`
-  },
-  FLIGHT: {
-    title: `Flight`,
-    icon: `✈️️`
-  },
-  CHECKIN: {
-    title: `Check-in`,
-    icon: `🏨`
-  },
-  SIGHTSEEING: {
-    title: `Sightseeing`,
-    icon: `🏛️️️`
-  },
-  RESTAURANT: {
-    title: `Restaurant`,
-    icon: `🍴️️`
-  },
+  [Point.TAXI]: `🚕`,
+  [Point.BUS]: `🚌`,
+  [Point.TRAIN]: `🚂`,
+  [Point.SHIP]: `🛳️`,
+  [Point.TRANSPORT]: `🚊`,
+  [Point.DRIVE]: `🚗`,
+  [Point.FLIGHT]: `✈️️`,
+  [Point.CHECKIN]: `🏨`,
+  [Point.SIGHTSEEING]: `🏛️️️`,
+  [Point.RESTAURANT]: `🍴️️`,
 };

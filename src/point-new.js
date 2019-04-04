@@ -1,11 +1,11 @@
 import Component from './component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import {PointType} from './data';
+import {Title, Icon} from './data';
 import {disableForm} from './util';
 import store from './store';
 
-const DEFAULT_POINT_TYPE = PointType[Object.keys(PointType)[0]]; // todo то что вычисляем это уже не константа, первый элемент можно деструктуризацией
+const DEFAULT_POINT_TYPE = {title: Title.taxi, icon: Icon.taxi};
 
 export default class PointNew extends Component {
 
@@ -392,7 +392,7 @@ export default class PointNew extends Component {
         target.day = +moment.unix(value).format(`x`);
       },
       [`travel-way`](value) {
-        target.type = PointType[value.split(`-`).join(``).toUpperCase()];
+        target.type = {title: Title[value], icon: Icon[value]};
       },
       [`date-start`](value) {
         target.timetable.from = moment.unix(value).format(`x`);

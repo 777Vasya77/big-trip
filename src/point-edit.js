@@ -1,7 +1,7 @@
 import Component from './component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import {PointType} from './data';
+import {Title, Icon} from './data';
 import store from './store';
 import {disableForm} from "./util";
 
@@ -435,7 +435,7 @@ export default class PointEdit extends Component { // todo хорошо бы з�
   static createMapper(target) {
     return {
       [`travel-way`](value) {
-        target.type = PointType[value.split(`-`).join(``).toUpperCase()];
+        target.type = {title: Title[value], icon: Icon[value]};
       },
       [`date-start`](value) {
         target.timetable.from = moment.unix(value).format(`x`);

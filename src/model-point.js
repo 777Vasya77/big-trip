@@ -1,9 +1,12 @@
-import {PointType} from './data';
+import {Title, Icon} from './data';
 
 export default class ModelPoint {
   constructor(data) {
     this.id = data[`id`];
-    this.type = PointType[data[`type`].toUpperCase().split(`-`).join(``)];
+    this.type = {
+      title: Title[data[`type`]],
+      icon: Icon[data[`type`]]
+    };
     this.timetable = {
       from: data[`date_from`],
       to: data[`date_to`],
@@ -17,7 +20,7 @@ export default class ModelPoint {
   toRAW() {
     return {
       'id': this.id,
-      'type': this.type.title,
+      'type': this.type.title.toLowerCase(),
       'date_from': this.timetable.from,
       'date_to': this.timetable.to,
       'destination': this.destination,

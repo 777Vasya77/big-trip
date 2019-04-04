@@ -1,4 +1,4 @@
-import {PointType} from './data';
+import {Title, Icon} from './data';
 import {createElement, errorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 import moneyChart from './money-chart';
@@ -218,10 +218,8 @@ const getTripPoints = (points, tripDayContainer) => {
     };
 
     pointEdit.onType = (evt) => {
-      const type = evt.target.value.toUpperCase().split(`-`).join(``);
-
       pointEdit.offers = store.state.offers.find((it) => it.type === evt.target.value);
-      pointEdit.type = PointType[type];
+      pointEdit.type = {title: Title[evt.target.value], icon: Icon[evt.target.value]};
       // todo с разметкой лучше работать там где она объявлена, лучше метод сделать
       pointEdit.element.querySelector(`#travel-way__toggle`).checked = false;
     };
@@ -312,10 +310,8 @@ const getNewPointForm = () => {
   };
 
   newPoint.onType = (evt) => {
-    const type = evt.target.value.toUpperCase().split(`-`).join(``);
-
     newPoint.offers = store.state.offers.find((it) => it.type === evt.target.value);
-    newPoint.type = PointType[type];
+    newPoint.type = {title: Title[evt.target.value], icon: Icon[evt.target.value]};
 
     newPoint.element.querySelector(`#travel-way__toggle`).checked = false;
   };
