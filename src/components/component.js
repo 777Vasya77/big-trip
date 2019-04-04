@@ -20,6 +20,10 @@ export default class Component {
       : this.render();
   }
 
+  checkFunction(fn) {
+    return typeof fn === `function` && fn;
+  }
+
   render() {
     this._element = createElement(this.template);
     this._bind();

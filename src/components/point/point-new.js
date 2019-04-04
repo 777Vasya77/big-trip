@@ -141,33 +141,23 @@ export default class PointNew extends Component {
   }
 
   set onCancel(fn) {
-    if (typeof fn === `function`) {
-      this._onCancel = fn;
-    }
+    this._onCancel = this.checkFunction(fn) || this._onCancel;
   }
 
   set onDelete(fn) {
-    if (typeof fn === `function`) {
-      this._onDelete = fn;
-    }
+    this._onDelete = this.checkFunction(fn) || this._onDelete;
   }
 
   set onSubmit(fn) {
-    if (typeof fn === `function`) {
-      this._onSubmit = fn;
-    }
+    this._onSubmit = this.checkFunction(fn) || this._onSubmit;
   }
 
   set onType(fn) {
-    if (typeof fn === `function`) {
-      this._onType = fn;
-    }
+    this._onType = this.checkFunction(fn) || this._onType;
   }
 
   set onDestination(fn) {
-    if (typeof fn === `function`) { // todo такую дежурную проверку лучше в прототип, можно прям в родителя
-      this._onDestination = fn;
-    }
+    this._onDestination = this.checkFunction(fn) || this._onDestination;
   }
 
   block() {

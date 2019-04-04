@@ -1,7 +1,7 @@
 import Component from '../component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import {Title, Icon, IS_FAVORITE} from '../../data';
+import {Title, Icon, IS_FAVORITE, ANIMATION_TIMEOUT, Point} from '../../data';
 import store from '../../store/store';
 import {disableForm} from '../../util';
 
@@ -19,13 +19,13 @@ export default class PointEdit extends Component { // todo хорошо бы з�
     this._isFavorite = data.isFavorite;
     this._destinations = null;
 
-    this._onSubmit = null;
-    this._onCancel = null;
-    this._onDelete = null;
-    this._onFavorite = null;
-    this._onDestination = null;
-    this._onType = null;
-    this._onOffer = null;
+    this._onSubmit = () => {};
+    this._onCancel = () => {};
+    this._onDelete = () => {};
+    this._onFavorite = () => {};
+    this._onDestination = () => {};
+    this._onType = () => {};
+    this._onOffer = () => {};
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
@@ -145,45 +145,31 @@ export default class PointEdit extends Component { // todo хорошо бы з�
   }
 
   set onCancel(fn) {
-    if (typeof fn === `function`) {
-      this._onCancel = fn;
-    }
+    this._onCancel = this.checkFunction(fn) || this._onCancel;
   }
 
   set onSubmit(fn) {
-    if (typeof fn === `function`) {
-      this._onSubmit = fn;
-    }
+    this._onSubmit = this.checkFunction(fn) || this._onSubmit;
   }
 
   set onDelete(fn) {
-    if (typeof fn === `function`) {
-      this._onDelete = fn;
-    }
+    this._onDelete = this.checkFunction(fn) || this._onDelete;
   }
 
   set onFavorite(fn) {
-    if (typeof fn === `function`) {
-      this._onFavorite = fn;
-    }
+    this._onFavorite = this.checkFunction(fn) || this._onFavorite;
   }
 
   set onDestination(fn) {
-    if (typeof fn === `function`) {
-      this._onDestination = fn;
-    }
+    this._onDestination = this.checkFunction(fn) || this._onDestination;
   }
 
   set onType(fn) {
-    if (typeof fn === `function`) {
-      this._onType = fn;
-    }
+    this._onType = this.checkFunction(fn) || this._onType;
   }
 
   set onOffer(fn) {
-    if (typeof fn === `function`) {
-      this._onOffer = fn;
-    }
+    this._onOffer = this.checkFunction(fn) || this._onOffer;
   }
 
   update(data) {
@@ -195,7 +181,6 @@ export default class PointEdit extends Component { // todo хорошо бы з�
   }
 
   shake() {
-    const ANIMATION_TIMEOUT = 0.6;
     this._element.style.animation = `shake ${ANIMATION_TIMEOUT}s`;
     this._element.addEventListener(`animationend`, () => {
       this._element.style.animation = ``;
@@ -247,39 +232,17 @@ export default class PointEdit extends Component { // todo хорошо бы з�
 
   _getTravelWaySelectMarkdown() {
     return `
-      <label class="travel-way__label" for="travel-way__toggle">${this.typeIcon}️</label>
-      
-      <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-      <div class="travel-way__select">
-        <div class="travel-way__select-group">
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi" ${this.typeTitle === `Taxi` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus" ${this.typeTitle === `Bus` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train" ${this.typeTitle === `Train` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-ship" name="travel-way" value="ship" ${this.typeTitle === `Ship` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-ship">🛳 ship</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-transport" name="travel-way" value="transport" ${this.typeTitle === `Transport` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-transport">🚊 transport</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="flight" ${this.typeTitle === `Flight` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
-      </div>
-  
+    <label class="travel-way__label" for="travel-way__toggle">${this.typeIcon}️</label>
+    
+    <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+    <div class="travel-way__select">
       <div class="travel-way__select-group">
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in" ${this.typeTitle === `Check-in` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing" ${this.typeTitle === `Sightseeing` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-restaurant" name="travel-way" value="restaurant" ${this.typeTitle === `Restaurant` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-restaurant">🍴️️ Restaurant</label>
+        ${Object.values(Point).map((item) => {
+      return `
+            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${item}" name="travel-way" value="${item}" ${this.typeTitle === Title[item] && `checked`}>
+            <label class="travel-way__select-label" for="travel-way-${item}">${Icon[item]} ${Title[item]}</label>
+          `.trim();
+    }).join(``)}
       </div>
     </div>
     `;
