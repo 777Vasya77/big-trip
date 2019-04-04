@@ -1,4 +1,16 @@
-// todo давай тут сделаем модуль для констант
+export const Message = {
+  LOADING_TEXT: `Loading route...`,
+  LOADING_FAILURE_TEXT: `Something went wrong while loading your route info. Check your connection or try again later`,
+  SAVE: `Save`,
+  SAVING: `Saving...`,
+  DELETE: `Delete`,
+  DELETING: `Deleting...`,
+};
+
+export const FilterName = {
+  FUTURE: `future`,
+  PAST: `past`
+};
 
 export const Point = {
   TAXI: `taxi`,

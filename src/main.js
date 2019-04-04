@@ -1,4 +1,4 @@
-import {Title, Icon} from './data';
+import {Title, Icon, Message, FilterName} from './data';
 import {createElement, errorBorder, generateTripPointsTitle, updateObject} from './util';
 import moment from 'moment';
 import moneyChart from './money-chart';
@@ -9,15 +9,6 @@ import PointEdit from './point-edit';
 import PointNew from './point-new';
 import Filter from './filter';
 import store from './store';
-
-const LOADING_TEXT = `Loading route...`;
-const LOADING_FAILURE_TEXT = `Something went wrong while loading your route info. Check your connection or try again later`;
-const FUTURE_FILTER = `future`;
-const PAST_FILTER = `past`;
-const SAVE = `Save`;
-const SAVING = `Saving...`;
-const DELETE = `Delete`;
-const DELETING = `Deleting...`; // todo я бы сообщения вынес в отдельный модуль
 
 const tripFilterElement = document.querySelector(`.trip-filter`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
@@ -105,7 +96,7 @@ const getFilters = (filters) => {
     filter.render();
     filter.onFilter = () => {
       switch (filter.name) {
-        case FUTURE_FILTER:
+        case FilterName.FUTURE:
           const futurePoints = store.state.points.filter((it) => it.timetable.from > +moment().format(`x`));
 
           renderTripPoints(futurePoints);
@@ -114,7 +105,7 @@ const getFilters = (filters) => {
           sortPoints(futurePoints);
           return;
 
-        case PAST_FILTER:
+        case FilterName.PAST:
           const pastPoints = store.state.points.filter((it) => it.timetable.to < +moment().format(`x`));
 
           renderTripPoints(pastPoints);
@@ -166,7 +157,7 @@ const getTripPoints = (points, tripDayContainer) => {
     pointEdit.onSubmit = (newData) => {
       errorBorder(pointEdit.element, false);
       pointEdit.block();
-      pointEdit.saveBtnTextChange(SAVING);
+      pointEdit.saveBtnTextChange(Message.SAVING);
 
       updateObject(item, newData);
 
@@ -180,7 +171,7 @@ const getTripPoints = (points, tripDayContainer) => {
           errorBorder(pointEdit.element);
           pointEdit.shake();
           pointEdit.unblock();
-          pointEdit.saveBtnTextChange(SAVE);
+          pointEdit.saveBtnTextChange(Message.SAVE);
         });
     };
 
@@ -193,7 +184,7 @@ const getTripPoints = (points, tripDayContainer) => {
     pointEdit.onDelete = () => {
       errorBorder(pointEdit.element, false);
       pointEdit.block();
-      pointEdit.deleteBtnTextChange(DELETING);
+      pointEdit.deleteBtnTextChange(Message.DELETING);
 
       store.deletePoint(item.id)
         .then(() => {
@@ -205,7 +196,7 @@ const getTripPoints = (points, tripDayContainer) => {
           errorBorder(pointEdit.element);
           pointEdit.shake();
           pointEdit.unblock();
-          pointEdit.deleteBtnTextChange(DELETE);
+          pointEdit.deleteBtnTextChange(Message.DELETE);
         });
     };
 
@@ -286,7 +277,7 @@ const setTotalPrice = () => {
 };
 
 const appInit = () => { // todo тут в main хорошо бы только это оставить, а остальное по модулям раскидать
-  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${Message.LOADING_TEXT}</h1>`;
   renderFilters();
   renderTripPoints();
   sortPoints(store.state.points);
@@ -295,7 +286,7 @@ const appInit = () => { // todo тут в main хорошо бы только э
 };
 
 const showLoadingError = () => {
-  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;color:red;">${LOADING_FAILURE_TEXT}</h1>`;
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;color:red;">${Message.LOADING_FAILURE_TEXT}</h1>`;
 };
 
 const getNewPointForm = () => {
@@ -323,7 +314,7 @@ const getNewPointForm = () => {
   newPoint.onSubmit = (point) => {
     errorBorder(newPoint.element, false);
     newPoint.block();
-    newPoint.saveBtnTextChange(SAVING);
+    newPoint.saveBtnTextChange(Message.SAVING);
 
     store.storePoint(point)
       .then(() => {
@@ -336,7 +327,7 @@ const getNewPointForm = () => {
         errorBorder(newPoint.element);
         newPoint.shake();
         newPoint.unblock();
-        newPoint.saveBtnTextChange(SAVE);
+        newPoint.saveBtnTextChange(Message.SAVE);
       });
   };
 
