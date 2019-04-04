@@ -21,10 +21,10 @@ export default class ModelPoint {
     return {
       'id': this.id,
       'type': this.type.title.toLowerCase(),
-      'date_from': this.timetable.from,
-      'date_to': this.timetable.to,
+      'date_from': +this.timetable.from,
+      'date_to': +this.timetable.to,
       'destination': this.destination,
-      'base_price': this.price,
+      'base_price': +this.price,
       'is_favorite': this.isFavorite,
       'offers': this.offers
     };

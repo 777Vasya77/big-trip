@@ -1,6 +1,5 @@
 import {Title, Icon, Message} from './data';
 import * as util from './util';
-import moment from 'moment';
 import moneyChart from './components/chart/money-chart';
 import transportChart from './components/chart/transport-chart';
 import timeSpentChart from './components/chart/time-spent-chart';
@@ -8,6 +7,7 @@ import PointNew from './components/point/point-new';
 import store from './store/store';
 import {renderFilters} from './components/filter/render-filter';
 import {renderTripPoints} from './components/point/render-points';
+import {sortPoints} from './components/point/sort-points';
 
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
 const tripPointsBlock = document.querySelector(`.trip-points`);
@@ -32,37 +32,6 @@ const showStatsContent = () => {
   tableSwitcher.classList.remove(`view-switch__item--active`);
   statsSwitcher.classList.add(`view-switch__item--active`);
   stats.classList.remove(`visually-hidden`);
-};
-
-const sortByPrice = (a, b) => +a.price - +b.price;
-const sortByFromDate = (a, b) => +a.timetable.from - +b.timetable.from;
-const sortByDuration = (a, b) => {
-  const timeDiffA = moment.duration(moment(+a.timetable.to).diff(moment(+a.timetable.from)));
-  const timeDiffB = moment.duration(moment(+b.timetable.to).diff(moment(+b.timetable.from)));
-  return timeDiffA - timeDiffB;
-};
-
-const sortPoints = (points) => {
-  const eventTriggerElement = document.querySelector(`label[for="sorting-event"]`);
-  const timeTriggerElement = document.querySelector(`label[for="sorting-time"]`);
-  const priceTriggerElement = document.querySelector(`label[for="sorting-price"]`);
-
-  eventTriggerElement.addEventListener(`click`, () => {
-
-    points.sort(sortByFromDate); // todo у нас теперь есть стор, можно в нем геттеры сделать
-    renderTripPoints(points);
-  });
-
-  priceTriggerElement.addEventListener(`click`, () => {
-    points.sort(sortByPrice);
-    renderTripPoints(points);
-  });
-
-  timeTriggerElement.addEventListener(`click`, () => {
-    points.sort(sortByDuration);
-    renderTripPoints(points);
-  });
-
 };
 
 newEventElement.addEventListener(`click`, () => {

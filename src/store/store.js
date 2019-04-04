@@ -4,7 +4,7 @@ import {removeFromArray} from '../util';
 import {FilterName} from '../data';
 
 const LOADING_TEXT = `Loading route...`;
-const AUTHORIZATION = `Basic eo0w52er4qzz1qq`;
+const AUTHORIZATION = `Basic tytttxwel332144234wefjjwefhj`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);

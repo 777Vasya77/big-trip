@@ -5,6 +5,7 @@ import moment from 'moment';
 import moneyChart from '../chart/money-chart';
 import transportChart from '../chart/transport-chart';
 import {renderTripPoints} from '../point/render-points';
+import {sortPoints} from '../point/sort-points';
 
 const tripFilterElement = document.querySelector(`.trip-filter`);
 
@@ -22,7 +23,7 @@ const getFilters = (filters) => {
           renderTripPoints(futurePoints);
           moneyChart.init(futurePoints);
           transportChart.init(futurePoints);
-          // sortPoints(futurePoints);
+          sortPoints(futurePoints);
           return;
 
         case FilterName.PAST:
@@ -31,7 +32,7 @@ const getFilters = (filters) => {
           renderTripPoints(pastPoints);
           moneyChart.init(pastPoints);
           transportChart.init(pastPoints);
-          // sortPoints(pastPoints);
+          sortPoints(pastPoints);
           return;
 
         default:
