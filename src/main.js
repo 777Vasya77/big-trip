@@ -209,8 +209,7 @@ const getTripPoints = (points, tripDayContainer) => {
     pointEdit.onType = (evt) => {
       pointEdit.offers = store.state.offers.find((it) => it.type === evt.target.value);
       pointEdit.type = {title: Title[evt.target.value], icon: Icon[evt.target.value]};
-      // todo с разметкой лучше работать там где она объявлена, лучше метод сделать
-      pointEdit.element.querySelector(`#travel-way__toggle`).checked = false;
+      pointEdit.closeTypeSelect();
     };
 
     point.render();

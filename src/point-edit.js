@@ -226,6 +226,10 @@ export default class PointEdit extends Component { // todo хорошо бы з�
       .innerText = text;
   }
 
+  closeTypeSelect() {
+    this.element.querySelector(`#travel-way__toggle`).checked = false;
+  }
+
   _getDestinationMarkdown() {
     return `
     <span>
