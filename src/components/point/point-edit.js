@@ -1,11 +1,9 @@
 import Component from '../component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import {Title, Icon} from '../../data';
+import {Title, Icon, IS_FAVORITE} from '../../data';
 import store from '../../store/store';
 import {disableForm} from '../../util';
-
-const IS_FAVORITE = `on`;
 
 export default class PointEdit extends Component { // todo хорошо бы заведомо общее с point-new вынести, может даже общий класс для них сделать
 
@@ -457,18 +455,18 @@ export default class PointEdit extends Component { // todo хорошо бы з�
         target.price = value;
       },
       offer(value) {
-        target.offers.forEach((item) => {
+        const offer = target.offers.find((item) => {
           const title = (item.title)
             ? item.title.toLowerCase().split(` `).join(`-`)
             : item.name.toLowerCase().split(` `).join(`-`);
 
-          if (title === value) {
-            item.accepted = true;
-          }
+          return title === value;
         });
+
+        offer.accepted = true;
       },
       destination(value) {
-        target.destination = store.state.destinations.find((item) => item.name === value);
+        target.destination = store.getDestination(value);
       },
       favorite(value) {
         target.isFavorite = value === IS_FAVORITE;

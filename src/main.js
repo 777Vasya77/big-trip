@@ -6,8 +6,6 @@ import {sortPoints} from './components/point/sort-points';
 import {navbarInit} from './components/navbar/nav-bar';
 
 const appInit = () => {
-  util.showLoadingMessage();
-
   navbarInit();
   renderFilters();
   renderTripPoints();

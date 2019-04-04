@@ -1,3 +1,8 @@
+export const ApiData = {
+  AUTHORIZATION: `Basic tywel332144234wefjjwefhj`,
+  END_POINT: `https://es8-demo-srv.appspot.com/big-trip`
+};
+
 export const Message = {
   LOADING_TEXT: `Loading route...`,
   LOADING_FAILURE_TEXT: `Something went wrong while loading your route info. Check your connection or try again later`,
@@ -51,3 +56,6 @@ export const Icon = {
   [Point.SIGHTSEEING]: `🏛️️️`,
   [Point.RESTAURANT]: `🍴️️`,
 };
+
+export const ANIMATION_TIMEOUT = 0.6;
+export const IS_FAVORITE = `on`;

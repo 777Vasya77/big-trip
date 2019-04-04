@@ -1,7 +1,7 @@
 import Component from '../component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import {Title, Icon} from '../../data';
+import {Title, Icon, ANIMATION_TIMEOUT, Point} from '../../data';
 import {disableForm} from '../../util';
 import store from '../../store/store';
 
@@ -13,7 +13,7 @@ export default class PointNew extends Component {
     super();
 
     this._type = DEFAULT_POINT_TYPE;
-    this._offers = store.state.offers.find((it) => it.type === this._type.title.toLowerCase()).offers; // todo это лучше в store перенести
+    this._offers = store.getTypeOffers(this._type.title);
     this._timetable = {
       from: new Date(),
       to: new Date(),
@@ -22,11 +22,11 @@ export default class PointNew extends Component {
     this._destination = null;
     this._destinations = store.state.destinations;
 
-    this._onSubmit = null; // todo я бы заглушкам функций поставил пустую функцию, безопасней, ее можно по ссылке сравнивать
-    this._onCancel = null;
-    this._onDelete = null;
-    this._onType = null;
-    this._onDestination = null;
+    this._onSubmit = () => {};
+    this._onCancel = () => {};
+    this._onDelete = () => {};
+    this._onType = () => {};
+    this._onDestination = () => {};
 
     this._onEscKeyup = this._onEscKeyup.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
@@ -181,7 +181,6 @@ export default class PointNew extends Component {
   }
 
   shake() {
-    const ANIMATION_TIMEOUT = 0.6; // todo в константы
     this._element.style.animation = `shake ${ANIMATION_TIMEOUT}s`;
     this._element.addEventListener(`animationend`, () => {
       this._element.style.animation = ``;
@@ -194,41 +193,19 @@ export default class PointNew extends Component {
       .innerText = text;
   }
 
-  _getTravelWaySelectMarkdown() { // todo иконки у нас в константах были и тут просится map по массиву
+  _getTravelWaySelectMarkdown() {
     return `
-      <label class="travel-way__label" for="travel-way__toggle">${this.typeIcon}️</label>
-      
-      <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-      <div class="travel-way__select">
-        <div class="travel-way__select-group">
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi" ${this.typeTitle === `Taxi` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus" ${this.typeTitle === `Bus` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train" ${this.typeTitle === `Train` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-ship" name="travel-way" value="ship" ${this.typeTitle === `Ship` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-ship">🛳 ship</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-transport" name="travel-way" value="transport" ${this.typeTitle === `Transport` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-transport">🚊 transport</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="flight" ${this.typeTitle === `Flight` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
-      </div>
-  
+    <label class="travel-way__label" for="travel-way__toggle">${this.typeIcon}️</label>
+    
+    <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+    <div class="travel-way__select">
       <div class="travel-way__select-group">
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in" ${this.typeTitle === `Check-in` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing" ${this.typeTitle === `Sightseeing` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
-  
-        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-restaurant" name="travel-way" value="restaurant" ${this.typeTitle === `Restaurant` && `checked`}>
-        <label class="travel-way__select-label" for="travel-way-restaurant">🍴️️ Restaurant</label>
+        ${Object.values(Point).map((item) => {
+          return `
+            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${item}" name="travel-way" value="${item}" ${this.typeTitle === Title[item] && `checked`}>
+            <label class="travel-way__select-label" for="travel-way-${item}">${Icon[item]} ${Title[item]}</label>
+          `.trim();
+        }).join(``)}
       </div>
     </div>
     `;
@@ -338,8 +315,9 @@ export default class PointNew extends Component {
       .querySelector(`.point__destination-input`)
       .removeEventListener(`change`, this._onDestinationChange);
 
+    flatpickr(this._element.querySelector(`.point__input[name=day]`)).destroy();
     flatpickr(this._element.querySelector(`.point__time > input[name=date-start]`)).destroy();
-    flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`)).destroy(); // todo у нас теперь 3 экземпляра flatpickr
+    flatpickr(this._element.querySelector(`.point__time > input[name=date-end]`)).destroy();
   }
 
   _onEscKeyup(evt) {
@@ -404,18 +382,18 @@ export default class PointNew extends Component {
         target.price = value;
       },
       offer(value) {
-        target.offers.forEach((item) => { // todo так мы на каждый offer всех offers обходим, можно в value сразу индекс писать
+        const offer = target.offers.find((item) => {
           const title = (item.title)
             ? item.title.toLowerCase().split(` `).join(`-`)
             : item.name.toLowerCase().split(` `).join(`-`);
 
-          if (title === value) { // todo там инпуты, может checked проверять?
-            item.accepted = true;
-          }
+          return title === value;
         });
+
+        offer.accepted = true;
       },
       destination(value) {
-        target.destination = store.state.destinations.find((item) => item.name === value); // todo такое тоже лучше методом стора сделать
+        target.destination = store.getDestination(value);
       }
     };
 

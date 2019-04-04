@@ -1,15 +1,12 @@
 import API from '../api';
 import ModelPoint from '../models/model-point';
-import {removeFromArray} from '../util';
-import {FilterName} from '../data';
+import {removeFromArray, showLoadingMessage} from '../util';
+import {ApiData, FilterName} from '../data';
 
-const LOADING_TEXT = `Loading route...`;
-const AUTHORIZATION = `Basic tywel332144234wefjjwefhj`;
-const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
-
-const tripDayItemsElement = document.querySelector(`.trip-day__items`);
-
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+const api = new API({
+  endPoint: ApiData.END_POINT,
+  authorization: ApiData.AUTHORIZATION
+});
 
 export default {
   state: {
@@ -32,8 +29,17 @@ export default {
     ]
   },
 
+  getTypeOffers(type) {
+    return this.state.offers.find((item) => item.type === type.toLowerCase()).offers;
+  },
+
+  getDestination(name) {
+    return this.state.destinations.find((item) => item.name === name);
+  },
+
   loadData() {
-    tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${LOADING_TEXT}</h1>`;
+    showLoadingMessage();
+
     return Promise.all([
       this.fetchPoints(),
       this.fetchOffers(),
@@ -73,7 +79,7 @@ export default {
     const pointData = {
       'day': point.day,
       'type': point.type.title.toLowerCase(),
-      'base_price': point.price,
+      'base_price': +point.price,
       'date_from': +point.timetable.from,
       'date_to': +point.timetable.to,
       'offers': point.offers,
