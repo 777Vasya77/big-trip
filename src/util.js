@@ -40,3 +40,11 @@ const disableElements = (elements, action) => {
 export const setErrorBorder = (none, action = true) => {
   none.style.border = action ? `1px solid red` : `none`;
 };
+
+export const countTotalPrice = (points) => {
+  const pointsPrice = Math.round(points.reduce((prev, cur) => prev + +cur.price, 0));
+  const offers = [].concat(...points.map((item) => item.offers));
+  const offersPrice = offers.filter((item) => item.accepted).reduce((prev, cur) => prev + cur.price, 0);
+
+  return pointsPrice + offersPrice;
+};

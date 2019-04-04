@@ -1,5 +1,5 @@
 import {Title, Icon, Message, FilterName} from './data';
-import {createElement, setErrorBorder, generateTripPointsTitle, updateObject} from './util';
+import * as util from './util';
 import moment from 'moment';
 import moneyChart from './money-chart';
 import transportChart from './transport-chart';
@@ -155,11 +155,11 @@ const getTripPoints = (points, tripDayContainer) => {
     pointEdit.onCancel = renderPointComponent;
 
     pointEdit.onSubmit = (newData) => {
-      setErrorBorder(pointEdit.element, false);
+      util.setErrorBorder(pointEdit.element, false);
       pointEdit.block();
       pointEdit.saveBtnTextChange(Message.SAVING);
 
-      updateObject(item, newData);
+      util.updateObject(item, newData);
 
       store.updatePoint(item)
         .then(() => {
@@ -168,7 +168,7 @@ const getTripPoints = (points, tripDayContainer) => {
           renderPointComponent(newData);
         })
         .catch(() => {
-          setErrorBorder(pointEdit.element);
+          util.setErrorBorder(pointEdit.element);
           pointEdit.shake();
           pointEdit.unblock();
           pointEdit.saveBtnTextChange(Message.SAVE);
@@ -180,7 +180,7 @@ const getTripPoints = (points, tripDayContainer) => {
     };
 
     pointEdit.onDelete = () => {
-      setErrorBorder(pointEdit.element, false);
+      util.setErrorBorder(pointEdit.element, false);
       pointEdit.block();
       pointEdit.deleteBtnTextChange(Message.DELETING);
 
@@ -191,7 +191,7 @@ const getTripPoints = (points, tripDayContainer) => {
           setTotalPrice();
         })
         .catch(() => {
-          setErrorBorder(pointEdit.element);
+          util.setErrorBorder(pointEdit.element);
           pointEdit.shake();
           pointEdit.unblock();
           pointEdit.deleteBtnTextChange(Message.DELETE);
@@ -239,7 +239,7 @@ const getTripDays = (points = store.state.points) => {
   const days = new Set(points.map((item) => moment(item.timetable.from).format(`MMM D`)));
 
   Array.from(days).forEach((item, index) => {
-    const tripDay = createElement(getTripDayMarkdown(item, index));
+    const tripDay = util.createElement(getTripDayMarkdown(item, index));
     const pointsByDate = points.filter((it) => moment(it.timetable.from).format(`MMM D`) === item);
     tripDay.querySelector(`.trip-day__items`).appendChild(getTripPoints(pointsByDate, tripDay));
     fragment.appendChild(tripDay);
@@ -261,16 +261,8 @@ const renderNewPointForm = () => {
   tripPointsBlock.prepend(getNewPointForm());
 };
 
-const countTotalPrice = (points) => { // todo такое лучше в утилиты или в стор
-  const pointsPrice = Math.round(points.reduce((prev, cur) => prev + +cur.price, 0));
-  const offers = [].concat(...points.map((item) => item.offers));
-  const offersPrice = offers.filter((item) => item.accepted).reduce((prev, cur) => prev + cur.price, 0);
-
-  return pointsPrice + offersPrice;
-};
-
 const setTotalPrice = () => {
-  tripTotalCostElement.innerText = `€ ${countTotalPrice(store.state.points)}`;
+  tripTotalCostElement.innerText = `€ ${util.countTotalPrice(store.state.points)}`;
 };
 
 const appInit = () => { // todo тут в main хорошо бы только это оставить, а остальное по модулям раскидать
@@ -279,7 +271,7 @@ const appInit = () => { // todo тут в main хорошо бы только э
   renderTripPoints();
   sortPoints(store.state.points);
   setTotalPrice();
-  tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(store.state.points));
+  tripPointsElement.insertAdjacentHTML(`beforeend`, util.generateTripPointsTitle(store.state.points));
 };
 
 const showLoadingError = () => {
@@ -309,7 +301,7 @@ const getNewPointForm = () => {
   };
 
   newPoint.onSubmit = (point) => {
-    setErrorBorder(newPoint.element, false);
+    util.setErrorBorder(newPoint.element, false);
     newPoint.block();
     newPoint.saveBtnTextChange(Message.SAVING);
 
@@ -321,7 +313,7 @@ const getNewPointForm = () => {
         newPoint.unrender();
       })
       .catch(() => {
-        setErrorBorder(newPoint.element);
+        util.setErrorBorder(newPoint.element);
         newPoint.shake();
         newPoint.unblock();
         newPoint.saveBtnTextChange(Message.SAVE);
