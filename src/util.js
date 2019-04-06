@@ -1,7 +1,6 @@
 import store from './store/store';
 import {Message} from './data';
 
-const tripTotalCostElement = document.querySelector(`.trip__total-cost`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
 const tripPointsElement = document.querySelector(`.trip__points`);
 
@@ -42,26 +41,6 @@ const disableElements = (elements, action) => {
       item.setAttribute(`disabled`, `disabled`);
     }
   });
-};
-
-export const setErrorBorder = (none, action = true) => { // TODO это лучше перенести в point
-  none.style.border = action ? `1px solid red` : `none`;
-};
-
-export const countTotalPrice = (points) => { // TODO это лучше перенести в store
-  const pointsPrice = Math.round(points.reduce((prev, cur) => prev + +cur.price, 0));
-  const offers = [].concat(...points.map((item) => item.offers));
-  const offersPrice = offers.filter((item) => item.accepted).reduce((prev, cur) => prev + cur.price, 0);
-
-  return pointsPrice + offersPrice;
-};
-
-export const setTotalPrice = () => { // TODO это лучше перенести в navbar
-  tripTotalCostElement.innerText = `€ ${countTotalPrice(store.state.points)}`;
-};
-
-export const showLoadingMessage = () => { // TODO это лучше перенести в renderTripPoints
-  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${Message.LOADING_TEXT}</h1>`;
 };
 
 export const showLoadingError = () => {

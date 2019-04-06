@@ -18,7 +18,7 @@ export default class PointEdit extends Component {
 
     this._id = (data) ? data.id : null;
     this._type = (data) ? data.type : DEFAULT_POINT_TYPE;
-    this._offers = (data) ? data.offers : store.getTypeOffers(this._type.title);;
+    this._offers = (data) ? data.offers : store.getTypeOffers(this._type.title);
     this._timetable = (data) ? data.timetable : {};
     this._price = (data) ? data.price : 0;
     this._destination = (data) ? data.destination : null;
@@ -142,6 +142,10 @@ export default class PointEdit extends Component {
   unblock() {
     const form = this._element.querySelector(`form`);
     disableForm(form, false);
+  }
+
+  setErrorBorder(action = true) {
+    this.element.style.border = action ? `1px solid red` : `none`;
   }
 
   deleteBtnTextChange(text) {

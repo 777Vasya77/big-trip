@@ -101,5 +101,13 @@ export default {
     const point = this.state.points.find((item) => item.id === id);
 
     return api.delete(`points`, {id}).then(removeFromArray(this.state.points, point));
+  },
+
+  countTotalPrice() {
+    const pointsPrice = Math.round(this.state.points.reduce((prev, cur) => prev + +cur.price, 0));
+    const offers = [].concat(...this.state.points.map((item) => item.offers));
+    const offersPrice = offers.filter((item) => item.accepted).reduce((prev, cur) => prev + cur.price, 0);
+
+    return pointsPrice + offersPrice;
   }
 };

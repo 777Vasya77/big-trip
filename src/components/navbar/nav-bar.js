@@ -3,12 +3,18 @@ import moneyChart from '../chart/money-chart';
 import store from '../../store/store';
 import transportChart from '../chart/transport-chart';
 import timeSpentChart from '../chart/time-spent-chart';
+import * as util from '../../util';
 
 const statsSwitcher = document.querySelector(`a[href*=stat]`);
 const tableSwitcher = document.querySelector(`a[href*=table]`);
 const table = document.querySelector(`#table`);
 const stats = document.querySelector(`#stats`);
 const newEventElement = document.querySelector(`.new-event`);
+const tripTotalCostElement = document.querySelector(`.trip__total-cost`);
+
+export const setTotalPrice = () => {
+  tripTotalCostElement.innerText = `€ ${store.countTotalPrice(store.state.points)}`;
+};
 
 const showTableContent = () => {
   stats.classList.add(`visually-hidden`);
@@ -25,6 +31,9 @@ const showStatsContent = () => {
 };
 
 export const navbarInit = () => {
+  setTotalPrice();
+  util.renderCitiesTitle();
+
   newEventElement.addEventListener(`click`, () => {
     renderNewPointForm();
   });

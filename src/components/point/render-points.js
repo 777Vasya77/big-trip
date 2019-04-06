@@ -3,9 +3,16 @@ import PointEdit from './point-edit';
 import store from '../../store/store';
 import * as util from '../../util';
 import {Icon, Message, Title} from '../../data';
+import {setTotalPrice} from '../navbar/nav-bar';
 import moment from 'moment';
 
 const tripPointsBlock = document.querySelector(`.trip-points`);
+const tripDayItemsElement = document.querySelector(`.trip-day__items`);
+
+const showLoadingMessage = () => {
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;">${Message.LOADING_TEXT}</h1>`;
+};
+showLoadingMessage();
 
 const getTripPoints = (points, tripDayContainer) => {
   const fragment = document.createDocumentFragment();
@@ -33,7 +40,7 @@ const getTripPoints = (points, tripDayContainer) => {
     pointEdit.onCancel = renderPointComponent;
 
     pointEdit.onSubmit = (newData) => {
-      util.setErrorBorder(pointEdit.element, false);
+      pointEdit.setErrorBorder(false);
       pointEdit.block();
       pointEdit.saveBtnTextChange(Message.SAVING);
 
@@ -42,11 +49,11 @@ const getTripPoints = (points, tripDayContainer) => {
       store.updatePoint(item)
         .then(() => {
           pointEdit.unblock();
-          util.setTotalPrice();
+          setTotalPrice();
           renderPointComponent(newData);
         })
         .catch(() => {
-          util.setErrorBorder(pointEdit.element);
+          pointEdit.setErrorBorder();
           pointEdit.shake();
           pointEdit.unblock();
           pointEdit.saveBtnTextChange(Message.SAVE);
@@ -58,7 +65,7 @@ const getTripPoints = (points, tripDayContainer) => {
     };
 
     pointEdit.onDelete = () => {
-      util.setErrorBorder(pointEdit.element, false);
+      pointEdit.setErrorBorder(false);
       pointEdit.block();
       pointEdit.deleteBtnTextChange(Message.DELETING);
 
@@ -66,10 +73,10 @@ const getTripPoints = (points, tripDayContainer) => {
         .then(() => {
           pointEdit.unblock();
           pointEdit.unrender();
-          util.setTotalPrice();
+          setTotalPrice();
         })
         .catch(() => {
-          util.setErrorBorder(pointEdit.element);
+          pointEdit.setErrorBorder();
           pointEdit.shake();
           pointEdit.unblock();
           pointEdit.deleteBtnTextChange(Message.DELETE);

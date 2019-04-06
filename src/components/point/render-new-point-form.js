@@ -3,6 +3,7 @@ import {Icon, Message, Title} from '../../data';
 import * as util from '../../util';
 import {renderTripPoints} from './render-points';
 import {default as PointNew} from './point-edit';
+import {setTotalPrice} from "../navbar/nav-bar";
 
 const tripPointsBlock = document.querySelector(`.trip-points`);
 
@@ -29,19 +30,19 @@ const getNewPointForm = () => {
   };
 
   newPoint.onSubmit = (point) => {
-    util.setErrorBorder(newPoint.element, false);
+    newPoint.setErrorBorder(false);
     newPoint.block();
     newPoint.saveBtnTextChange(Message.SAVING);
 
     store.storePoint(point)
       .then(() => {
         newPoint.unblock();
-        util.setTotalPrice();
+        setTotalPrice();
         renderTripPoints();
         newPoint.unrender();
       })
       .catch(() => {
-        util.setErrorBorder(newPoint.element);
+        newPoint.setErrorBorder();
         newPoint.shake();
         newPoint.unblock();
         newPoint.saveBtnTextChange(Message.SAVE);
