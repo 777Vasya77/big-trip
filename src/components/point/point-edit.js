@@ -1,9 +1,13 @@
 import Component from '../component';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
-import {Title, Icon, IS_FAVORITE, ANIMATION_TIMEOUT, Point} from '../../data';
+import {Title, Icon, IS_FAVORITE, ANIMATION_TIMEOUT} from '../../data';
 import store from '../../store/store';
 import {disableForm} from '../../util';
+import {getDestinationMarkdown} from './markdown/get-destination-markdown';
+import {getTravelWaySelectMarkdown} from './markdown/get-travel-way-select-markdown';
+import {getOffersMarkdown} from './markdown/get-offers-markdown';
+import {getPointEditMarkdown} from './markdown/get-point-edit-markdown';
 
 const DEFAULT_POINT_TYPE = {title: Title.taxi, icon: Icon.taxi};
 
@@ -48,15 +52,13 @@ export default class PointEdit extends Component {
   }
 
   get images() {
-    if (this._destination) { // TODO тут лучше тернарный или даже дефолтное значение поставить
-      return this._destination.pictures
+    return (this._destination)
+      ? this._destination.pictures
         .map((item) => {
           return `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`;
         })
-        .join(``);
-    }
-
-    return [];
+        .join(``)
+      : [];
   }
 
   get description() {
@@ -64,68 +66,7 @@ export default class PointEdit extends Component {
   }
 
   get template() {
-    return `
-      <article class="point">
-        <form>
-          <header class="point__header">
-            <label class="point__date">
-              choose day
-              <input class="point__input" type="text" placeholder="MAR 18" name="day">
-            </label>
-      
-            <div class="travel-way">
-              ${this._getTravelWaySelectMarkdown()}
-            </div>
-            
-            <div class="point__destination-wrap">
-              <label class="point__destination-label" for="destination">${this.typeTitle} to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${(this._destination) ? this._destination.name : ``}" name="destination" required>
-              <datalist id="destination-select">
-                ${this._getDestinationSelectMarkdown()}
-              </datalist>
-            </div>
-            
-            <div class="point__time">
-              choose time
-              <input class="point__input" type="text" value="19:00" name="date-start" placeholder="19:00">
-              <input class="point__input" type="text" value="21:00" name="date-end" placeholder="21:00">
-            </div>
-            
-            <label class="point__price">
-              write price
-              <span class="point__price-currency">€</span>
-              <input class="point__input" type="text" value="${this._price}" name="price">
-            </label>
-      
-            <div class="point__buttons">
-              <button class="point__button point__button--save" type="submit">Save</button>
-              <button class="point__button" type="reset">Delete</button>
-            </div>
-      
-            <div class="paint__favorite-wrap">
-              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
-              <label class="point__favorite" for="favorite">favorite</label>
-            </div>
-          </header>
-        
-          <section class="point__details">
-            
-            <section class="point__offers">
-              <h3 class="point__details-title">offers</h3>
-      
-              <div class="point__offers-wrap">
-                ${this._getOffersMarkdown()}
-              </div>
-      
-            </section>
-            <section class="point__destination">
-              ${this._getDestinationMarkdown()}
-            </section>
-            <input type="hidden" class="point__total-price" name="total-price" value="">
-          </section>
-        </form>
-      </article>
-    `.trim();
+    return getPointEditMarkdown(this);
   }
 
   set destinations(data) {
@@ -219,59 +160,20 @@ export default class PointEdit extends Component {
     this.element.querySelector(`#travel-way__toggle`).checked = false;
   }
 
-  _getDestinationMarkdown() { // TODO давай разметку вынесем в отдельные модули функциями, а то 500 строк тут почти получилось
-    return `
-    <span ${!this._destination && `style="display:none"`}>
-        <h3 class="point__details-title">Destination</h3>
-        <p class="point__destination-text">${this.description}</p>
-      <div class="point__destination-images">
-        ${this.images}
-      </div>
-    </span>`;
+  getDestinationMarkdown() {
+    return getDestinationMarkdown(this);
   }
 
   _getDestinationSelectMarkdown() {
-    return this._destinations.map((item) => {
-      return `<option value="${item.name}"></option>`.trim();
-    }).join(``);
+    return getDestinationMarkdown(this);
   }
 
   _getTravelWaySelectMarkdown() {
-    return `
-    <label class="travel-way__label" for="travel-way__toggle">${this.typeIcon}️</label>
-    
-    <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-    <div class="travel-way__select">
-      <div class="travel-way__select-group">
-        ${Object.values(Point).map((item) => {
-      return `
-            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${item}" name="travel-way" value="${item}" ${this.typeTitle === Title[item] && `checked`}>
-            <label class="travel-way__select-label" for="travel-way-${item}">${Icon[item]} ${Title[item]}</label>
-          `.trim();
-    }).join(``)}
-      </div>
-    </div>
-    `;
+    return getTravelWaySelectMarkdown(this);
   }
 
   _getOffersMarkdown() {
-    return this._offers
-      .map((item) => {
-        const title = (item.name) ? item.name : item.title;
-        return `
-        <input
-          class="point__offers-input visually-hidden"
-          type="checkbox"
-          id="${title.toLowerCase().split(` `).join(`-`)}"
-          name="offer"
-          ${item.accepted && `checked`}
-          value="${title.toLowerCase().split(` `).join(`-`)}">
-        <label for="${title.toLowerCase().split(` `).join(`-`)}" class="point__offers-label">
-          <span class="point__offer-service">${title}</span> + €<span class="point__offer-price">${item.price}</span>
-        </label>
-        `.trim();
-      })
-      .join(``);
+    return getOffersMarkdown(this);
   }
 
   _bind() {
@@ -378,7 +280,7 @@ export default class PointEdit extends Component {
 
   _onDestinationChange(evt) {
     this._onDestination(evt);
-    this._element.querySelector(`.point__destination`).innerHTML = this._getDestinationMarkdown();
+    this._element.querySelector(`.point__destination`).innerHTML = this.getDestinationMarkdown();
   }
 
   _onTypeChange(evt) {

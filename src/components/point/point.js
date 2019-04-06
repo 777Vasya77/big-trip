@@ -1,5 +1,7 @@
 import moment from 'moment';
 import Component from '../component';
+import {getPointMarkdown} from './markdown/get-point-markdown';
+import {getTableOffersMarkdown} from './markdown/get-table-offers-markdown';
 
 export default class Point extends Component {
 
@@ -49,19 +51,7 @@ export default class Point extends Component {
   }
 
   get template() {
-    return `
-      <article class="trip-point">
-        <i class="trip-icon">${this._type.icon}</i>
-        <h3 class="trip-point__title">${this._type.title}</h3>
-        <p class="trip-point__schedule">
-          <span class="trip-point__timetable">${this.timeFrom} - ${this.timeTo}</span>
-          <span class="trip-point__duration">${this.timeDiff}</span>
-        </p>
-        <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
-        <ul class="trip-point__offers">
-          ${this._getOffersMarkdown(this._offers)}
-        </ul>
-      </article>`.trim();
+    return getPointMarkdown(this);
   }
 
   set onEdit(fn) {
@@ -71,16 +61,7 @@ export default class Point extends Component {
   }
 
   _getOffersMarkdown() {
-    return this._offers
-      .slice(0, 3)
-      .map((item) => {
-        const title = (item.name) ? item.name : item.title;
-        return `
-        <li>
-          <button class="trip-point__offer">${title} +&euro;&nbsp;${item.price}</button>
-        </li>`.trim();
-      })
-      .join(``);
+    return getTableOffersMarkdown(this);
   }
 
   _bind() {
