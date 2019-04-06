@@ -26,7 +26,7 @@ export const Point = {
   TRANSPORT: `transport`,
   DRIVE: `drive`,
   FLIGHT: `flight`,
-  CHECKIN: `chick-in`,
+  CHECKIN: `check-in`,
   SIGHTSEEING: `sightseeing`,
   RESTAURANT: `restaurant`,
 };

@@ -10,10 +10,11 @@ const appInit = () => {
   renderFilters();
   renderTripPoints();
   sortPoints(store.state.points);
-  util.setTotalPrice();
+  util.setTotalPrice(); // TODO это лучше перенести в navbar
   util.renderCitiesTitle();
 };
 
+util.showLoadingMessage(); // TODO это лучше перенести в renderTripPoints
 store.loadData()
   .then(appInit)
   .catch(util.showLoadingError);

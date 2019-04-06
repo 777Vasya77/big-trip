@@ -1,6 +1,6 @@
 import API from '../api';
 import ModelPoint from '../models/model-point';
-import {removeFromArray, showLoadingMessage} from '../util';
+import {removeFromArray} from '../util';
 import {ApiData, FilterName} from '../data';
 
 const api = new API({
@@ -38,8 +38,6 @@ export default {
   },
 
   loadData() {
-    showLoadingMessage();
-
     return Promise.all([
       this.fetchPoints(),
       this.fetchOffers(),

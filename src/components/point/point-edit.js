@@ -48,7 +48,7 @@ export default class PointEdit extends Component {
   }
 
   get images() {
-    if (this._destination) {
+    if (this._destination) { // TODO тут лучше тернарный или даже дефолтное значение поставить
       return this._destination.pictures
         .map((item) => {
           return `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`;
@@ -219,7 +219,7 @@ export default class PointEdit extends Component {
     this.element.querySelector(`#travel-way__toggle`).checked = false;
   }
 
-  _getDestinationMarkdown() {
+  _getDestinationMarkdown() { // TODO давай разметку вынесем в отдельные модули функциями, а то 500 строк тут почти получилось
     return `
     <span ${!this._destination && `style="display:none"`}>
         <h3 class="point__details-title">Destination</h3>
