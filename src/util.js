@@ -1,49 +1,14 @@
-import moment from 'moment';
+import store from './store/store';
+import {Message} from './data';
 
-export const getRandomInteger = (min, max) => {
-  const rand = min - 0.5 + Math.random() * (max - min + 1);
-  return Math.round(rand);
-};
+const tripDayItemsElement = document.querySelector(`.trip-day__items`);
+const tripPointsElement = document.querySelector(`.trip__points`);
 
-export const getRandomDate = () => {
-  return moment()
-    .subtract(`${getRandomInteger(1, 7)}`, `days`)
-    .add(`${getRandomInteger(1, 7)}`, `days`)
-    .format(`X`);
-};
-
-export const getRandomTimestampFrom = () => {
-  return moment()
-    .subtract(`${getRandomInteger(1, 12)}`, `hours`)
-    .format(`X`);
-};
-
-export const getRandomTimestampTo = () => {
-  return moment.unix(getRandomTimestampFrom())
-    .add(`${getRandomInteger(12, 24)}`, `hours`)
-    .format(`X`);
-};
-
-export const getRandomText = (text) => {
-  return text
-    .split(`. `)
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 3)
-    .join(``);
-};
-
-export const getRandomArrayItem = (array) => {
-  return array[getRandomInteger(0, array.length - 1)];
-};
-
-export const getRandomArrayItems = (array, itemsCount) => {
-  return array
-    .sort(() => 0.5 - Math.random())
-    .slice(0, itemsCount);
-};
-
-export const generateTripPointsTitle = (array) => {
-  return array.join(`&nbsp;&mdash;&nbsp;`);
+export const generateTripPointsTitle = (points) => {
+  return points
+    .map((item) => item.destination.name)
+    .slice(0, 4)
+    .join(`&nbsp;&mdash;&nbsp;`);
 };
 
 export const createElement = (template) => {
@@ -52,12 +17,36 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export const parseTimestamp = (string) => {
-  const [from, to] = string.split(` to `);
-  return {from, to};
-};
-
 export const removeFromArray = (array, item) => {
   const index = array.findIndex((it) => it === item);
   array.splice(index, 1);
+};
+
+export const updateObject = (oldObject, newObject) => {
+  Object.assign(oldObject, newObject);
+};
+
+export const disableForm = (form, action = true) => {
+  const inputs = form.querySelectorAll(`input`);
+  const buttons = form.querySelectorAll(`button`);
+
+  disableElements(inputs, action);
+  disableElements(buttons, action);
+};
+
+const disableElements = (elements, action) => {
+  Array.from(elements).forEach((item) => {
+    item.removeAttribute(`disabled`);
+    if (action) {
+      item.setAttribute(`disabled`, `disabled`);
+    }
+  });
+};
+
+export const showLoadingError = () => {
+  tripDayItemsElement.innerHTML = `<h1 style="text-align:center;color:red;">${Message.LOADING_FAILURE_TEXT}</h1>`;
+};
+
+export const renderCitiesTitle = () => {
+  tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(store.state.points));
 };

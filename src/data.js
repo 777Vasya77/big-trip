@@ -1,178 +1,61 @@
-import * as util from './util';
-
-const POINT_DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-const MIN_POINT_PRICE = 20;
-const MAX_POINT_PRICE = 100;
-const MAX_OFFERS_COUNT = 2;
-
-const offers = [
-  {
-    title: `Add luggage`,
-    price: util.getRandomInteger(10, 100)
-  },
-  {
-    title: `Switch to comfort class`,
-    price: util.getRandomInteger(10, 100)
-  },
-  {
-    title: `Add meal`,
-    price: util.getRandomInteger(10, 100)
-  },
-  {
-    title: `Choose seats`,
-    price: util.getRandomInteger(10, 100)
-  }
-];
-
-const pointTypes = [
-  {
-    title: `Taxi`,
-    icon: `🚕`
-  },
-  {
-    title: `Bus`,
-    icon: `🚌`
-  },
-  {
-    title: `Train`,
-    icon: `🚂`
-  },
-  {
-    title: `Ship`,
-    icon: `🛳️`
-  },
-  {
-    title: `Transport`,
-    icon: `🚊`
-  },
-  {
-    title: `Drive`,
-    icon: `🚗`
-  },
-  {
-    title: `Flight`,
-    icon: `✈️️`
-  },
-  {
-    title: `Check-in`,
-    icon: `🏨`
-  },
-  {
-    title: `Sightseeing`,
-    icon: `🏛️️️`
-  },
-  {
-    title: `Restaurant`,
-    icon: `🍴️️`
-  },
-];
-
-const FilterName = {
-  EVERYTHING: `Everything`,
-  FUTURE: `Future`,
-  PAST: `Past`
+export const ApiData = {
+  AUTHORIZATION: `Basic tywel332144234wefjjwefhj`,
+  END_POINT: `https://es8-demo-srv.appspot.com/big-trip`
 };
 
-export const dataFilters = [
-  {
-    name: FilterName.EVERYTHING,
-    checked: true
-  },
-  {
-    name: FilterName.FUTURE,
-    checked: false
-  },
-  {
-    name: FilterName.PAST,
-    checked: false
-  }
-];
-
-export const PointType = {
-  TAXI: {
-    title: `Taxi`,
-    icon: `🚕`
-  },
-  BUS: {
-    title: `Bus`,
-    icon: `🚌`
-  },
-  TRAIN: {
-    title: `Train`,
-    icon: `🚂`
-  },
-  SHIP: {
-    title: `Ship`,
-    icon: `🛳️`
-  },
-  TRANSPORT: {
-    title: `Transport`,
-    icon: `🚊`
-  },
-  DRIVE: {
-    title: `Drive`,
-    icon: `🚗`
-  },
-  FLIGHT: {
-    title: `Flight`,
-    icon: `✈️️`
-  },
-  CHECKIN: {
-    title: `Check-in`,
-    icon: `🏨`
-  },
-  SIGHTSEEING: {
-    title: `Sightseeing`,
-    icon: `🏛️️️`
-  },
-  RESTAURANT: {
-    title: `Restaurant`,
-    icon: `🍴️️`
-  },
+export const Message = {
+  LOADING_TEXT: `Loading route...`,
+  LOADING_FAILURE_TEXT: `Something went wrong while loading your route info. Check your connection or try again later`,
+  SAVE: `Save`,
+  SAVING: `Saving...`,
+  DELETE: `Delete`,
+  DELETING: `Deleting...`,
 };
 
-export const Offer = {
-  ADD_LUGGAGE: {
-    title: `Add luggage`,
-    price: util.getRandomInteger(10, 100)
-  },
-  SWITCH_TO_COMFORT_CLASS: {
-    title: `Switch to comfort class`,
-    price: util.getRandomInteger(10, 100)
-  },
-  ADD_MEAL: {
-    title: `Add meal`,
-    price: util.getRandomInteger(10, 100)
-  },
-  CHOOSE_SEATS: {
-    title: `Choose seats`,
-    price: util.getRandomInteger(10, 100)
-  }
+export const FilterName = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
 };
 
-export const cities = [
-  `Amsterdam`,
-  `Geneva`,
-  `Chamonix`,
-];
+export const Point = {
+  TAXI: `taxi`,
+  BUS: `bus`,
+  TRAIN: `train`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
+  CHECKIN: `check-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`,
+};
 
-export const getTripPointData = () => (
-  {
-    date: util.getRandomDate(),
-    type: util.getRandomArrayItem(pointTypes),
-    timetable: {
-      from: util.getRandomTimestampFrom(),
-      to: util.getRandomTimestampTo()
-    },
-    offers: util.getRandomArrayItems(offers, util.getRandomInteger(0, MAX_OFFERS_COUNT)),
-    price: util.getRandomInteger(MIN_POINT_PRICE, MAX_POINT_PRICE),
-    description: util.getRandomText(POINT_DESCRIPTION),
-    images: new Array(3).fill(`http://picsum.photos/300/150}`),
-    isFavorite: [true, false][util.getRandomInteger(0, 1)],
-    money: util.getRandomInteger(10, 100)
-  }
-);
+export const Title = {
+  [Point.TAXI]: `Taxi`,
+  [Point.BUS]: `Bus`,
+  [Point.TRAIN]: `Train`,
+  [Point.SHIP]: `Ship`,
+  [Point.TRANSPORT]: `Transport`,
+  [Point.CHECKIN]: `Checkin`,
+  [Point.DRIVE]: `Drive`,
+  [Point.FLIGHT]: `Flight`,
+  [Point.SIGHTSEEING]: `Sightseeing`,
+  [Point.RESTAURANT]: `Restaurant`,
+};
 
-export const tripPoints = new Array(7)
-  .fill(``)
-  .map(() => getTripPointData());
+export const Icon = {
+  [Point.TAXI]: `🚕`,
+  [Point.BUS]: `🚌`,
+  [Point.TRAIN]: `🚂`,
+  [Point.SHIP]: `🛳️`,
+  [Point.TRANSPORT]: `🚊`,
+  [Point.DRIVE]: `🚗`,
+  [Point.FLIGHT]: `✈️️`,
+  [Point.CHECKIN]: `🏨`,
+  [Point.SIGHTSEEING]: `🏛️️️`,
+  [Point.RESTAURANT]: `🍴️️`,
+};
+
+export const ANIMATION_TIMEOUT = 0.6;
+export const IS_FAVORITE = `on`;

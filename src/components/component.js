@@ -1,4 +1,4 @@
-import {createElement} from './util';
+import {createElement} from '../util';
 
 export default class Component {
 
@@ -18,6 +18,10 @@ export default class Component {
     return (this._element)
       ? this._element
       : this.render();
+  }
+
+  checkFunction(fn) {
+    return typeof fn === `function` && fn;
   }
 
   render() {
