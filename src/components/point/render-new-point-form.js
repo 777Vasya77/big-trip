@@ -2,7 +2,7 @@ import store from '../../store/store';
 import {Icon, Message, Title} from '../../data';
 import {renderTripPoints} from './render-points';
 import {default as PointNew} from './point-edit';
-import {setTotalPrice} from "../navbar/nav-bar";
+import {setTotalPrice} from '../navbar/nav-bar';
 
 const tripPointsBlock = document.querySelector(`.trip-points`);
 

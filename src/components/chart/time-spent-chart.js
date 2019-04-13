@@ -1,6 +1,6 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from "moment";
+import moment from 'moment';
 
 const getTimeSpentData = (tripPoints) => {
   return tripPoints.reduce((prev, cur) => {
