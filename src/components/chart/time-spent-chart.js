@@ -1,6 +1,10 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
+import {BAR_HEIGHT} from '../../data';
+import {clearChart} from "../../util";
+
+const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
 
 const getTimeSpentData = (tripPoints) => {
   return tripPoints.reduce((prev, cur) => {
@@ -13,12 +17,13 @@ const getTimeSpentData = (tripPoints) => {
 };
 
 export default {
+  _chart: null,
   _labels: [],
   _data: [],
   _timeSpendCtx: null,
   init(points) {
-    const BAR_HEIGHT = 55;
-    const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
+    clearChart(this._chart);
+
     const timeSpentData = getTimeSpentData(points);
 
     this._timeSpendCtx = timeSpendCtx;
@@ -30,7 +35,7 @@ export default {
     this.render();
   },
   render() {
-    return new Chart(this._timeSpendCtx, {
+    const chart = new Chart(this._timeSpendCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -94,5 +99,8 @@ export default {
         }
       }
     });
+    this._chart = chart;
+
+    return chart;
   }
 };

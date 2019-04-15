@@ -1,5 +1,8 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {BAR_HEIGHT} from '../../data';
+import {clearChart} from "../../util";
+const transportCtx = document.querySelector(`.statistic__transport`);
 
 const getTransportData = (tripPoints) => {
   return tripPoints.reduce((prev, cur) => {
@@ -10,12 +13,13 @@ const getTransportData = (tripPoints) => {
 };
 
 export default {
+  _chart: null,
   _labels: [],
   _data: [],
   _transportCtx: null,
   init(points) {
-    const BAR_HEIGHT = 55;
-    const transportCtx = document.querySelector(`.statistic__transport`);
+    clearChart(this._chart);
+
     const transportData = getTransportData(points);
 
     this._transportCtx = transportCtx;
@@ -27,7 +31,7 @@ export default {
     this.render();
   },
   render() {
-    return new Chart(this._transportCtx, {
+    const chart = new Chart(this._transportCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -91,5 +95,8 @@ export default {
         }
       }
     });
+    this._chart = chart;
+
+    return chart;
   }
 };

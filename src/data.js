@@ -60,3 +60,4 @@ export const Icon = {
 export const ANIMATION_TIMEOUT = 0.6;
 export const IS_FAVORITE = `on`;
 export const POINTS_STORE_KEY = `tasks-store-key`;
+export const BAR_HEIGHT = 55;

@@ -1,5 +1,9 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {BAR_HEIGHT} from '../../data';
+import {clearChart} from '../../util';
+
+const moneyCtx = document.querySelector(`.statistic__money`);
 
 const getMoneyData = (tripPoints) => {
   return tripPoints.reduce((prev, cur) => {
@@ -10,14 +14,14 @@ const getMoneyData = (tripPoints) => {
 };
 
 export default {
+  _chart: null,
   _labels: [],
   _data: [],
   _moneyCtx: null,
   init(points) {
-    const BAR_HEIGHT = 55;
-    const moneyCtx = document.querySelector(`.statistic__money`);
-    const moneyData = getMoneyData(points);
+    clearChart(this._chart);
 
+    const moneyData = getMoneyData(points);
     this._moneyCtx = moneyCtx;
     this._labels = [...new Set(Object.keys(moneyData))];
     this._data = Object.values(moneyData);
@@ -27,7 +31,7 @@ export default {
     this.render();
   },
   render() {
-    return new Chart(this._moneyCtx, {
+    const chart = new Chart(this._moneyCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -91,5 +95,8 @@ export default {
         }
       }
     });
+    this._chart = chart;
+
+    return chart;
   }
 };

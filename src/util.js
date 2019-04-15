@@ -52,3 +52,7 @@ export const showLoadingError = () => {
 export const renderCitiesTitle = () => {
   tripPointsElement.insertAdjacentHTML(`beforeend`, generateTripPointsTitle(store.state.points));
 };
+
+export const clearChart = (chart) => {
+  return chart && chart.destroy();
+};
