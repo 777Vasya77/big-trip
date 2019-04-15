@@ -1,5 +1,5 @@
 export const ApiData = {
-  AUTHORIZATION: `Basic tywel332144234wefjjwefhj`,
+  AUTHORIZATION: `Basic tyweefjjwefhj444333ee`,
   END_POINT: `https://es8-demo-srv.appspot.com/big-trip`
 };
 
@@ -59,3 +59,4 @@ export const Icon = {
 
 export const ANIMATION_TIMEOUT = 0.6;
 export const IS_FAVORITE = `on`;
+export const POINTS_STORE_KEY = `tasks-store-key`;

@@ -6,7 +6,9 @@ const tripPointsElement = document.querySelector(`.trip__points`);
 
 export const generateTripPointsTitle = (points) => {
   return points
-    .map((item) => item.destination.name)
+    .map((item) => {
+      return item.destination.name;
+    })
     .slice(0, 4)
     .join(`&nbsp;&mdash;&nbsp;`);
 };

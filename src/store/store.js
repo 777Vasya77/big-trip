@@ -1,11 +1,26 @@
 import API from '../api';
 import ModelPoint from '../models/model-point';
+import PointProvider from '../provider';
+import OfflineStore from './offline-store';
 import {removeFromArray} from '../util';
-import {ApiData, FilterName} from '../data';
+import {ApiData, FilterName, POINTS_STORE_KEY} from '../data';
 
 const api = new API({
   endPoint: ApiData.END_POINT,
   authorization: ApiData.AUTHORIZATION
+});
+const offlineStore = new OfflineStore({
+  key: POINTS_STORE_KEY,
+  storage: localStorage
+});
+const provider = new PointProvider(api, offlineStore, () => String(Date.now()));
+
+window.addEventListener(`offline`, () => {
+  document.title = `${document.title}[OFFLINE]`;
+});
+window.addEventListener(`online`, () => {
+  document.title = document.title.split(`[OFFLINE]`)[0];
+  provider.syncPoints();
 });
 
 export default {
@@ -52,7 +67,7 @@ export default {
   },
 
   fetchPoints() {
-    return api.get(`points`)
+    return provider.get(`points`)
       .then((data) => ModelPoint.parsePoints(data))
       .then((data) => {
         this.state.points = data;
@@ -84,7 +99,7 @@ export default {
       'destination': point.destination,
       'is_favorite': false
     };
-    return api.create(`points`, {point: pointData})
+    return provider.create(`points`, {point: pointData})
       .then((response) => ModelPoint.parsePoint(response))
       .then((newPoint) => {
         this.state.points.unshift(newPoint);
@@ -94,13 +109,13 @@ export default {
   updatePoint(data) {
     const point = this.state.points.find((item) => item.id === data.id);
 
-    return api.update(`points`, {id: data.id, data: point.toRAW()});
+    return provider.update(`points`, {id: data.id, data: point.toRAW()});
   },
 
   deletePoint(id) {
     const point = this.state.points.find((item) => item.id === id);
 
-    return api.delete(`points`, {id}).then(removeFromArray(this.state.points, point));
+    return provider.delete(`points`, {id}).then(removeFromArray(this.state.points, point));
   },
 
   countTotalPrice() {
