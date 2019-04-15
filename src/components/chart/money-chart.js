@@ -4,7 +4,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 const getMoneyData = (tripPoints) => {
   return tripPoints.reduce((prev, cur) => {
     const prop = `${cur.type.icon} ${cur.type.title.toUpperCase()}`;
-    prev[prop] = (prev[prop] || 0) + +cur.price;
+    prev[prop] = (prev[prop] || 0) + +cur.price + cur.offers.reduce((current, previous) => current + previous.price, 0);
     return prev;
   }, {});
 };
