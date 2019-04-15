@@ -125,6 +125,7 @@ export default class PointEdit extends Component {
     this._timetable = data.timetable;
     this._offers = data.offers;
     this._price = data.price;
+    this._isFavorite = data.isFavorite;
   }
 
   shake() {

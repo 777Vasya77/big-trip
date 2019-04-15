@@ -88,10 +88,6 @@ const getTripPoints = (points, tripDayContainer) => {
         });
     };
 
-    pointEdit.onFavorite = () => {
-      item.isFavorite = !item.isFavorite;
-    };
-
     pointEdit.onDestination = (evt) => {
       pointEdit.destination = store.state.destinations.find((it) => it.name === evt.target.value);
     };
