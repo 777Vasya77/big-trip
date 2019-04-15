@@ -1,5 +1,5 @@
 export const ApiData = {
-  AUTHORIZATION: `Basic tyweefjjwefhj444333ee`,
+  AUTHORIZATION: `Basic tyweefj3333wefhjres44433`,
   END_POINT: `https://es8-demo-srv.appspot.com/big-trip`
 };
 

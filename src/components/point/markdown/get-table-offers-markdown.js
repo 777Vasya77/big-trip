@@ -1,5 +1,6 @@
 export const getTableOffersMarkdown = (data) => {
   return data._offers
+    .filter((item) => item.accepted === false || !item.accepted)
     .slice(0, 3)
     .map((item) => {
       const title = (item.name) ? item.name : item.title;

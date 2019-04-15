@@ -36,6 +36,11 @@ const getTripPoints = (points, tripDayContainer) => {
       tripDayContainer.querySelector(`.trip-day__items`).replaceChild(pointEdit.element, point.element);
       point.unrender();
     };
+    point.onOffer = () => {
+      store.updatePoint(item);
+      point.updateOffersMarkdown();
+      setTotalPrice();
+    };
 
     pointEdit.onCancel = renderPointComponent;
 

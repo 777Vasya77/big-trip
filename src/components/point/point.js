@@ -13,9 +13,11 @@ export default class Point extends Component {
     this._timetable = data.timetable;
     this._price = data.price;
 
-    this._onEdit = null;
+    this._onEdit = () => {};
+    this._onOffer = () => {};
 
     this._onElementClick = this._onElementClick.bind(this);
+    this._onOfferClick = this._onOfferClick.bind(this);
   }
 
   update(data) {
@@ -23,6 +25,10 @@ export default class Point extends Component {
     this._timetable = data.timetable;
     this._offers = data.offers;
     this._price = data.price;
+  }
+
+  updateOffersMarkdown() {
+    this._element.querySelector(`.trip-point__offers`).innerHTML = this._getOffersMarkdown();
   }
 
   get timeFrom() {
@@ -55,9 +61,11 @@ export default class Point extends Component {
   }
 
   set onEdit(fn) {
-    if (typeof fn === `function`) {
-      this._onEdit = fn;
-    }
+    this._onEdit = this.checkFunction(fn) || this._onEdit;
+  }
+
+  set onOffer(fn) {
+    this._onOffer = this.checkFunction(fn) || this._onOffer;
   }
 
   _getOffersMarkdown() {
@@ -66,14 +74,39 @@ export default class Point extends Component {
 
   _bind() {
     this._element.addEventListener(`click`, this._onElementClick);
+    this._element
+      .querySelector(`.trip-point__offers`)
+      .addEventListener(`click`, this._onOfferClick);
   }
 
   _unbind() {
     this._element.removeEventListener(`click`, this._onElementClick);
+    this._element
+      .querySelector(`.trip-point__offers`)
+      .removeEventListener(`click`, this._onOfferClick);
   }
 
   _onElementClick() {
     this._onEdit();
+  }
+
+  _onOfferClick(evt) {
+    evt.stopPropagation();
+    const offerName = evt.target.innerText
+      .split(`+`)[0]
+      .trim();
+    const offer = this._offers.find((item) => {
+      const title = (item.title) ? `title` : `name`;
+      return item[title] === offerName;
+    });
+
+    if (`accepted` in offer) {
+      offer.accepted = true;
+    } else {
+      Object.defineProperty(offer, `accepted`, {value: true});
+    }
+
+    this._onOffer();
   }
 
 }
