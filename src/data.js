@@ -21,6 +21,7 @@ export const FilterName = {
 export const FilterMethod = {
   GET_PAST_POINTS: `getPastPoints`,
   GET_FUTURE_POINTS: `getFuturePoints`,
+  GET_EVERYTHING_POINTS: `getEverythingPoints`
 };
 
 export const SortName = {

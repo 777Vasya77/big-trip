@@ -57,8 +57,8 @@ export default {
         checked: false
       }
     ],
-    currentSort: null,
-    currentFilter: null
+    currentSort: SortMethod.SORT_BY_FROM_DATE,
+    currentFilter: FilterMethod.GET_EVERYTHING_POINTS
   },
 
   getTypeOffers(type) {
@@ -79,12 +79,21 @@ export default {
     return this.state.points.filter((it) => it.timetable.from > +moment().format(`x`));
   },
 
+  getEverythingPoints() {
+    this.state.currentFilter = FilterMethod.GET_EVERYTHING_POINTS;
+    return this.state.points;
+  },
+
   getPastPointsCount() {
-    return this.getPastPoints().length;
+    const pointsCount = this.getPastPoints().length;
+    this.state.currentFilter = FilterMethod.GET_EVERYTHING_POINTS;
+    return pointsCount;
   },
 
   getFuturePointsCount() {
-    return this.getFuturePoints().length;
+    const pointsCount = this.getFuturePoints().length;
+    this.state.currentFilter = FilterMethod.GET_EVERYTHING_POINTS;
+    return pointsCount;
   },
 
   getSortablePoint(method = SortMethod.SORT_BY_FROM_DATE, points = this.state.points) {
