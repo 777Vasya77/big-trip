@@ -3,7 +3,7 @@ import ModelPoint from '../models/model-point';
 import PointProvider from '../provider';
 import OfflineStore from './offline-store';
 import {removeFromArray} from '../util';
-import {ApiData, FilterName, POINTS_STORE_KEY} from '../data';
+import {ApiData, FilterName, SortName, POINTS_STORE_KEY} from '../data';
 import moment from 'moment';
 
 const api = new API({
@@ -42,7 +42,23 @@ export default {
         name: FilterName.PAST,
         checked: false
       }
-    ]
+    ],
+    sorts: [
+      {
+        name: SortName.EVENT,
+        checked: true
+      },
+      {
+        name: SortName.TIME,
+        checked: false
+      },
+      {
+        name: SortName.PRICE,
+        checked: false
+      }
+    ],
+    currentSort: null,
+    currentFilter: null
   },
 
   getTypeOffers(type) {
@@ -54,10 +70,12 @@ export default {
   },
 
   getPastPoints() {
+    this.state.currentFilter = `getPastPoints`;
     return this.state.points.filter((it) => it.timetable.to < +moment().format(`x`));
   },
 
   getFuturePoints() {
+    this.state.currentFilter = `getFuturePoints`;
     return this.state.points.filter((it) => it.timetable.from > +moment().format(`x`));
   },
 
@@ -67,6 +85,29 @@ export default {
 
   getFuturePointsCount() {
     return this.getFuturePoints().length;
+  },
+
+  getSortablePoint(method = `sortByFromDate`, points = this.state.points) {
+    if (this.state.currentFilter) {
+      points = this[this.state.currentFilter]();
+    }
+
+    this.state.currentSort = method;
+    return points.sort(this[method]);
+  },
+
+  sortByPrice(a, b) {
+    return +a.price - +b.price;
+  },
+
+  sortByFromDate(a, b) {
+    return +a.timetable.from - +b.timetable.from;
+  },
+
+  sortByDuration(a, b) {
+    const timeDiffA = moment.duration(moment(+a.timetable.to).diff(moment(+a.timetable.from)));
+    const timeDiffB = moment.duration(moment(+b.timetable.to).diff(moment(+b.timetable.from)));
+    return timeDiffA - timeDiffB;
   },
 
   loadData() {

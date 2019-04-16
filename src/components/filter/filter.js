@@ -7,7 +7,7 @@ export default class Filter extends Component {
     this._name = data.name;
     this._checked = data.checked;
 
-    this._onFilter = null;
+    this._onFilter = () => {};
 
     this._onFilterClick = this._onFilterClick.bind(this);
   }

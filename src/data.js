@@ -18,6 +18,12 @@ export const FilterName = {
   PAST: `past`
 };
 
+export const SortName = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
+};
+
 export const Point = {
   TAXI: `taxi`,
   BUS: `bus`,

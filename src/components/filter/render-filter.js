@@ -4,7 +4,6 @@ import store from '../../store/store';
 import moneyChart from '../chart/money-chart';
 import transportChart from '../chart/transport-chart';
 import {renderTripPoints} from '../point/render-points';
-import {sortPoints} from '../point/sort-points';
 
 const tripFilterElement = document.querySelector(`.trip-filter`);
 
@@ -19,19 +18,23 @@ const getFilters = (filters) => {
         case FilterName.FUTURE:
           const futurePoints = store.getFuturePoints();
 
-          renderTripPoints(futurePoints);
+          renderTripPoints(
+              store.getSortablePoint(store.state.currentSort, futurePoints)
+          );
+
           moneyChart.init(futurePoints);
           transportChart.init(futurePoints);
-          sortPoints(futurePoints);
           return;
 
         case FilterName.PAST:
           const pastPoints = store.getPastPoints();
 
-          renderTripPoints(pastPoints);
+          renderTripPoints(
+              store.getSortablePoint(store.state.currentSort, pastPoints)
+          );
+
           moneyChart.init(pastPoints);
           transportChart.init(pastPoints);
-          sortPoints(pastPoints);
           return;
 
         default:

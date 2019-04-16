@@ -129,7 +129,7 @@ const getTripDays = (points = store.state.points) => {
   const fragment = document.createDocumentFragment();
   const days = new Set(points.map((item) => moment(item.timetable.from).format(`MMM D`)));
 
-  Array.from(days).forEach((item, index) => {
+  Array.from([...days].sort()).forEach((item, index) => {
     const tripDay = util.createElement(getTripDayMarkdown(item, index));
     const pointsByDate = points.filter((it) => moment(it.timetable.from).format(`MMM D`) === item);
     tripDay.querySelector(`.trip-day__items`).appendChild(getTripPoints(pointsByDate, tripDay));
