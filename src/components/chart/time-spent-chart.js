@@ -2,7 +2,7 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 import {BAR_HEIGHT} from '../../data';
-import {clearChart} from "../../util";
+import {clearChart} from '../../util';
 
 const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
 
