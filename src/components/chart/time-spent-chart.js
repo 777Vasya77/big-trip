@@ -61,7 +61,7 @@ export default {
         },
         title: {
           display: true,
-          text: `TRANSPORT`,
+          text: `TIME SPENT`,
           fontColor: `#000000`,
           fontSize: 23,
           position: `left`
