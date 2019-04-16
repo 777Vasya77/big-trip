@@ -18,10 +18,21 @@ export const FilterName = {
   PAST: `past`
 };
 
+export const FilterMethod = {
+  GET_PAST_POINTS: `getPastPoints`,
+  GET_FUTURE_POINTS: `getFuturePoints`,
+};
+
 export const SortName = {
   EVENT: `event`,
   TIME: `time`,
   PRICE: `price`
+};
+
+export const SortMethod = {
+  SORT_BY_DURATION: `sortByDuration`,
+  SORT_BY_PRICE: `sortByPrice`,
+  SORT_BY_FROM_DATE: `sortByFromDate`
 };
 
 export const Point = {

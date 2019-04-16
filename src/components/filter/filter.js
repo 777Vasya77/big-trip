@@ -12,7 +12,7 @@ export default class Filter extends Component {
     this._onFilter = () => {};
     this._onChecked = () => {};
 
-    this._onFilterClick = this._onFilterClick.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
     this._onFilterChecked = this._onFilterChecked.bind(this);
   }
 
@@ -65,20 +65,20 @@ export default class Filter extends Component {
   }
 
   _bind() {
-    this._element.addEventListener(`change`, this._onFilterClick);
+    this._element.addEventListener(`change`, this._onFilterChange);
     this._element
       .querySelector(`input[name=filter]`)
       .addEventListener(`change`, this._onFilterChecked);
   }
 
   _unbind() {
-    this._element.removeEventListener(`change`, this._onFilterClick);
+    this._element.removeEventListener(`change`, this._onFilterChange);
     this._element
       .querySelector(`input[name=filter]`)
       .removeEventListener(`change`, this._onFilterChecked);
   }
 
-  _onFilterClick() {
+  _onFilterChange() {
     return this._onFilter && this._onFilter();
   }
 

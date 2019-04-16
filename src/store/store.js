@@ -3,7 +3,7 @@ import ModelPoint from '../models/model-point';
 import PointProvider from '../provider';
 import OfflineStore from './offline-store';
 import {removeFromArray} from '../util';
-import {ApiData, FilterName, SortName, POINTS_STORE_KEY} from '../data';
+import {ApiData, FilterName, SortName, POINTS_STORE_KEY, SortMethod, FilterMethod} from '../data';
 import moment from 'moment';
 
 const api = new API({
@@ -70,12 +70,12 @@ export default {
   },
 
   getPastPoints() {
-    this.state.currentFilter = `getPastPoints`;
+    this.state.currentFilter = FilterMethod.GET_PAST_POINTS;
     return this.state.points.filter((it) => it.timetable.to < +moment().format(`x`));
   },
 
   getFuturePoints() {
-    this.state.currentFilter = `getFuturePoints`;
+    this.state.currentFilter = FilterMethod.GET_FUTURE_POINTS;
     return this.state.points.filter((it) => it.timetable.from > +moment().format(`x`));
   },
 
@@ -87,7 +87,7 @@ export default {
     return this.getFuturePoints().length;
   },
 
-  getSortablePoint(method = `sortByFromDate`, points = this.state.points) {
+  getSortablePoint(method = SortMethod.SORT_BY_FROM_DATE, points = this.state.points) {
     if (this.state.currentFilter) {
       points = this[this.state.currentFilter]();
     }

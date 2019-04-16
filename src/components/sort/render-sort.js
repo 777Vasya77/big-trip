@@ -1,5 +1,5 @@
 import Sort from './sort';
-import {SortName} from '../../data';
+import {SortMethod, SortName} from '../../data';
 import store from '../../store/store';
 import {renderTripPoints} from '../point/render-points';
 
@@ -15,19 +15,19 @@ const getSorts = (sorts) => {
       switch (sort.name) {
         case SortName.TIME:
           renderTripPoints(
-              store.getSortablePoint(`sortByDuration`)
+              store.getSortablePoint(SortMethod.SORT_BY_DURATION)
           );
           return;
 
         case SortName.PRICE:
           renderTripPoints(
-              store.getSortablePoint(`sortByPrice`)
+              store.getSortablePoint(SortMethod.SORT_BY_PRICE)
           );
           return;
 
         default:
           renderTripPoints(
-              store.getSortablePoint(`sortByFromDate`)
+              store.getSortablePoint(SortMethod.SORT_BY_FROM_DATE)
           );
           return;
       }
