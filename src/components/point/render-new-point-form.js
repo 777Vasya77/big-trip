@@ -3,6 +3,7 @@ import {Icon, Message, Title} from '../../data';
 import {renderTripPoints} from './render-points';
 import {default as PointNew} from './point-edit';
 import {setTotalPrice} from '../navbar/nav-bar';
+import {renderFilters} from '../filter/render-filter';
 
 const tripPointsBlock = document.querySelector(`.trip-points`);
 
@@ -38,6 +39,7 @@ const getNewPointForm = () => {
         newPoint.unblock();
         setTotalPrice();
         renderTripPoints();
+        renderFilters();
         newPoint.unrender();
       })
       .catch(() => {

@@ -13,6 +13,10 @@ const getFilters = (filters) => {
   filters.forEach((item) => {
     const filter = new Filter(item);
     filter.render();
+    filter.checkFilteredItems();
+    filter.onChecked = () => {
+      store.checkedFilter(filter);
+    };
     filter.onFilter = () => {
       switch (filter.name) {
         case FilterName.FUTURE:
@@ -52,5 +56,6 @@ const getFilters = (filters) => {
 };
 
 export const renderFilters = () => {
+  tripFilterElement.innerHTML = ``;
   tripFilterElement.appendChild(getFilters(store.state.filters));
 };

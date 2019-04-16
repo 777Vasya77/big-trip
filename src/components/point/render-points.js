@@ -5,6 +5,7 @@ import * as util from '../../util';
 import {Icon, Message, Title} from '../../data';
 import {setTotalPrice} from '../navbar/nav-bar';
 import moment from 'moment';
+import {renderFilters} from '../filter/render-filter';
 
 const tripPointsBlock = document.querySelector(`.trip-points`);
 const tripDayItemsElement = document.querySelector(`.trip-day__items`);
@@ -55,6 +56,7 @@ const getTripPoints = (points, tripDayContainer) => {
         .then(() => {
           pointEdit.unblock();
           setTotalPrice();
+          renderFilters();
           renderPointComponent(newData);
         })
         .catch(() => {
@@ -78,6 +80,7 @@ const getTripPoints = (points, tripDayContainer) => {
         .then(() => {
           pointEdit.unblock();
           pointEdit.unrender();
+          renderFilters();
           setTotalPrice();
         })
         .catch(() => {

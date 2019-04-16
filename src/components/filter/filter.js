@@ -1,4 +1,6 @@
 import Component from '../component';
+import {FilterName} from '../../data';
+import store from '../../store/store';
 
 export default class Filter extends Component {
   constructor(data) {
@@ -8,8 +10,10 @@ export default class Filter extends Component {
     this._checked = data.checked;
 
     this._onFilter = () => {};
+    this._onChecked = () => {};
 
     this._onFilterClick = this._onFilterClick.bind(this);
+    this._onFilterChecked = this._onFilterChecked.bind(this);
   }
 
   get name() {
@@ -34,20 +38,51 @@ export default class Filter extends Component {
   }
 
   set onFilter(fn) {
-    if (typeof fn === `function`) {
-      this._onFilter = fn;
+    this._onFilter = this.checkFunction(fn) || this._onFilter;
+  }
+
+  set onChecked(fn) {
+    this._onChecked = this.checkFunction(fn) || this._onChecked;
+  }
+
+  checkFilteredItems() {
+    switch (this.name) {
+      case FilterName.FUTURE:
+        return store.getFuturePointsCount() === 0 && this._disabled();
+
+      case FilterName.PAST:
+        return store.getPastPointsCount() === 0 && this._disabled();
+
+      default:
+        return false;
     }
+  }
+
+  _disabled() {
+    this._element
+      .querySelector(`input[name=filter]`)
+      .setAttribute(`disabled`, `disabled`);
   }
 
   _bind() {
     this._element.addEventListener(`change`, this._onFilterClick);
+    this._element
+      .querySelector(`input[name=filter]`)
+      .addEventListener(`change`, this._onFilterChecked);
   }
 
   _unbind() {
     this._element.removeEventListener(`change`, this._onFilterClick);
+    this._element
+      .querySelector(`input[name=filter]`)
+      .removeEventListener(`change`, this._onFilterChecked);
   }
 
   _onFilterClick() {
     return this._onFilter && this._onFilter();
+  }
+
+  _onFilterChecked() {
+    return this._onChecked() && this._onChecked();
   }
 }

@@ -110,6 +110,13 @@ export default {
     return timeDiffA - timeDiffB;
   },
 
+  checkedFilter(filter) {
+    this.state.filters.forEach((item) => {
+      item.checked = false;
+    });
+    this.state.filters.find((it) => it.name === filter.name).checked = true;
+  },
+
   loadData() {
     return Promise.all([
       this.fetchPoints(),
