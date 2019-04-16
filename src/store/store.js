@@ -4,6 +4,7 @@ import PointProvider from '../provider';
 import OfflineStore from './offline-store';
 import {removeFromArray} from '../util';
 import {ApiData, FilterName, POINTS_STORE_KEY} from '../data';
+import moment from 'moment';
 
 const api = new API({
   endPoint: ApiData.END_POINT,
@@ -50,6 +51,22 @@ export default {
 
   getDestination(name) {
     return this.state.destinations.find((item) => item.name === name);
+  },
+
+  getPastPoints() {
+    return this.state.points.filter((it) => it.timetable.to < +moment().format(`x`));
+  },
+
+  getFuturePoints() {
+    return this.state.points.filter((it) => it.timetable.from > +moment().format(`x`));
+  },
+
+  getPastPointsCount() {
+    return this.getPastPoints().length;
+  },
+
+  getFuturePointsCount() {
+    return this.getFuturePoints().length;
   },
 
   loadData() {

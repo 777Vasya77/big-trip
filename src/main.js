@@ -14,4 +14,4 @@ const appInit = () => {
 
 store.loadData()
   .then(appInit)
-  .catch(showLoadingError);
+  // .catch(showLoadingError);

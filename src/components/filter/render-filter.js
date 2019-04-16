@@ -1,7 +1,6 @@
 import Filter from './filter';
 import {FilterName} from '../../data';
 import store from '../../store/store';
-import moment from 'moment';
 import moneyChart from '../chart/money-chart';
 import transportChart from '../chart/transport-chart';
 import {renderTripPoints} from '../point/render-points';
@@ -18,7 +17,7 @@ const getFilters = (filters) => {
     filter.onFilter = () => {
       switch (filter.name) {
         case FilterName.FUTURE:
-          const futurePoints = store.state.points.filter((it) => it.timetable.from > +moment().format(`x`));
+          const futurePoints = store.getFuturePoints();
 
           renderTripPoints(futurePoints);
           moneyChart.init(futurePoints);
@@ -27,7 +26,7 @@ const getFilters = (filters) => {
           return;
 
         case FilterName.PAST:
-          const pastPoints = store.state.points.filter((it) => it.timetable.to < +moment().format(`x`));
+          const pastPoints = store.getPastPoints();
 
           renderTripPoints(pastPoints);
           moneyChart.init(pastPoints);
